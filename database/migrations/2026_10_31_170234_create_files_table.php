@@ -20,9 +20,9 @@ class CreateFilesTable extends Migration
             $table->string('case_number')->nullable(); // যেমন: ১২/২০২৬-২৭
             
             $table->string('badi_name')->nullable();
-            $table->string('badi_phone')->nullable();
+            $table->string('badi_mobile')->nullable();
             $table->string('bibadi_name')->nullable();
-            $table->string('bibadi_phone')->nullable();
+            $table->string('bibadi_mobile')->nullable();
             
             $table->string('status'); // তদন্তাধীন, শুনানির জন্য, আদেশের জন্য ইত্যাদি
             $table->foreignId('current_desk_id')->constrained('users'); // বর্তমানে কার কাছে আছে
