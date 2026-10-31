@@ -240,28 +240,45 @@ class DashboardController extends Controller
     {
         $user = User::findOrFail($id);
         
-        // ১. ইউজারের ডেস্কে বর্তমানে থাকা ফাইলসমূহ এবং লেটেস্ট মুভমেন্ট লগ
-        $filesOnDesk = File::where('current_desk_id', $user->id)
-            ->with(['movements' => function ($query) use ($user) {
-                $query->where('to_user_id', $user->id)->latest();
-            }])
-            ->latest()
-            ->get();
+        // ডেস্কে থাকা নথির বেস ক্যোয়ারি
+        $query = File::where('current_desk_id', $user->id)
+            ->with(['movements' => function ($q) {
+                $q->latest();
+            }]);
 
-        // ২. এই ইউজার মোট কতগুলো ফাইল অন্য ডেস্কে ফরোয়ার্ড/প্রসেস করেছেন
-        $totalProcessed = FileMovement::where('from_user_id', $user->id)
-            ->where('to_user_id', '!=', $user->id)
-            ->count();
+        // ১. টেক্সট সার্চ ফিল্টার (মামলা নম্বর, বাদি, বিবাদি, মোবাইল, ইউইউআইডি)
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function ($q) use ($search) {
+                $q->where('case_number', 'LIKE', "%{$search}%")
+                  ->orWhere('badi_name', 'LIKE', "%{$search}%")
+                  ->orWhere('bibadi_name', 'LIKE', "%{$search}%")
+                  ->orWhere('badi_mobile', 'LIKE', "%{$search}%")
+                  ->orWhere('bibadi_mobile', 'LIKE', "%{$search}%")
+                  ->orWhere('uuid', 'LIKE', "%{$search}%");
+            });
+        }
 
-        // ৩. কতগুলো ফাইল ৭ দিনের বেশি সময় ধরে উনার ডেস্কে আটকে আছে (Overdue)
-        $overdueCount = 0;
-        foreach ($filesOnDesk as $file) {
+        // ২. নথির ধরন ফিল্টার
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        $filesOnDesk = $query->latest()->get();
+
+        // বাম পাশের সমারি মেট্রিকে সার্বিক হিসাব রাখার জন্য মূল পেন্ডিং কাউন্ট
+        $pendingCount = File::where('current_desk_id', $user->id)->count();
+
+        // ৭ দিনের বেশি আটকে থাকা ফাইলের সংখ্যা
+        $allDeskFiles = File::where('current_desk_id', $user->id)->with('movements')->get();
+        $overdueCount = $allDeskFiles->filter(function ($file) {
             $lastMovement = $file->movements->first();
             $receivedAt = $lastMovement ? ($lastMovement->received_at ?? $lastMovement->created_at) : $file->created_at;
-            if (Carbon::parse($receivedAt)->diffInDays(now()) > 7) {
-                $overdueCount++;
-            }
-        }
+            return \Carbon\Carbon::parse($receivedAt)->diffInDays(now()) > 7;
+        })->count();
+
+        // মোট প্রসেসকৃত ফাইল
+        $totalProcessed = FileMovement::where('from_user_id', $user->id)->pluck('file_id')->unique()->count();
         
         return view('dashboard.users.single', compact('user', 'filesOnDesk', 'pendingCount', 'overdueCount', 'totalProcessed'));
     }
