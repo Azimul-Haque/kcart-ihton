@@ -69,11 +69,11 @@
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     <label>আবেদনকারী / বাদির নাম</label>
-                                    <input type="text" name="badi_name" class="form-control" placeholder="বাদির নাম">
+                                    <input type="text" name="badi_name" value="{{ old('badi_name') }}" class="form-control" placeholder="বাদির নাম">
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label>বাদির মোবাইল নম্বর</label>
-                                    <input type="text" name="badi_mobile" class="form-control" placeholder="01700000000">
+                                    <input type="text" name="badi_mobile" value="{{ old('badi_mobile') }}" class="form-control" placeholder="01700000000">
                                 </div>
                             </div>
 
@@ -84,7 +84,7 @@
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label>বিবাদির মোবাইল নম্বর</label>
-                                    <input type="text" name="bibadi_mobile" class="form-control" placeholder="01700000000">
+                                    <input type="text" name="bibadi_mobile" value="{{ old('bibadi_mobile') }}" class="form-control" placeholder="01700000000">
                                 </div>
                             </div>
 
