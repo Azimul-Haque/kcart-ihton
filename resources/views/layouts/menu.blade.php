@@ -15,37 +15,6 @@
 </li>
 @endif
 
-{{-- @if(Auth::user()->role == 'admin')
-<li class="nav-item">
-    <a href="{{ route('dashboard.payments') }}" class="nav-link {{ Request::is('dashboard/payments') ? 'active' : '' }} {{ Request::is('dashboard/payments/*') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-hand-holding-usd"></i>
-        <p>পেমেন্টসমূহ</p>
-    </a>
-</li>
-@endif --}}
-
-{{-- @if(Auth::user()->role == 'admin')
-<li class="nav-item">
-    <a href="{{ route('dashboard.packages') }}" class="nav-link {{ Request::is('dashboard/packages') ? 'active' : '' }} {{ Request::is('dashboard/packages/*') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-coins"></i>
-        <p>প্যাকেজ</p>
-    </a>
-</li>
-@endif --}}
-
-{{-- আপাতত দেখাব না --}}
-{{-- আপাতত দেখাব না --}}
-{{-- আপাতত দেখাব না --}}
-{{-- আপাতত দেখাব না --}}
-{{-- আপাতত দেখাব না --}}
-{{-- @if(Auth::user()->role == 'admin' || Auth::user()->role == 'manager')
-<li class="nav-item">
-    <a href="{{ route('dashboard.questions') }}" class="nav-link {{ Request::is('dashboard/questions') ? 'active' : '' }} {{ Request::is('dashboard/questions/*') ? 'active' : '' }}">
-        <i class="nav-icon far fa-folder-open"></i>
-        <p>প্রশ্নব্যাংক</p>
-    </a>
-</li>
-@endif --}}
 
 @if(Auth::user()->role == 'admin' || Auth::user()->role == 'manager')
 <li class="nav-item">
@@ -89,12 +58,7 @@
 </li>
 @endif
 
-{{-- <li class="nav-item">
-    <a href="{{ route('dashboard.components') }}" class="nav-link {{ Request::is('dashboard/components') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-laptop-code"></i>
-        <p>Components</p>
-    </a>
-</li> --}}
+
 <li class="nav-item">
     <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="nav-link">
         <i class="nav-icon fas fa-sign-out-alt"></i>
