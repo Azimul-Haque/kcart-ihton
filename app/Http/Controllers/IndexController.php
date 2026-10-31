@@ -39,7 +39,8 @@ class IndexController extends Controller
      */
     public function index()
     {
-        return view('index.index');
+        return redirect()->route('public.case_list');
+        // return view('index.index');
     }
 
     public function publicCaseList()
