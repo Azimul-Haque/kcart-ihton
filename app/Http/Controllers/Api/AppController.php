@@ -12,19 +12,17 @@ use App\Models\FileMovement;
 
 class AppController extends Controller
 {
-    // ১. লগইন (মোবাইল ও পাসওয়ার্ড দিয়ে)
+    // ১. লগইন (মোবাইল ও পাসওয়ার্ড দিয়ে)
     public function login(Request $request)
     {
         $request->validate(['mobile' => 'required', 'password' => 'required']);
 
-        // আমরা ধরে নিচ্ছি users টেবিলে mobile ফিল্ড আছে (অথবা email ফিল্ডে মোবাইল নাম্বার রাখছেন)
         $user = User::where('mobile', $request->mobile)->orWhere('email', $request->mobile)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'মোবাইল নম্বর বা পাসওয়ার্ড ভুল!'], 401);
+            return response()->json(['message' => 'মোবাইল নম্বর বা পাসওয়ার্ড ভুল!'], 401);
         }
 
-        // ২ সপ্তাহের জন্য টোকেন ভ্যালিডিটি (Sanctum default is long-lived)
         $token = $user->createToken('app-token')->plainTextToken;
 
         return response()->json([
@@ -37,22 +35,50 @@ class AppController extends Controller
         ]);
     }
 
-    // ২. ড্যাশবোর্ড সামারি
+    // ২. ড্যাশবোর্ড সামারি (নিষ্পত্তিকৃত ফাইল বাদ ও ১৪+ দিন ঝুলন্ত সংখ্যাসহ)
     public function dashboard(Request $request)
     {
         $userId = Auth::id();
-        $pendingFilesCount = File::where('current_desk_id', $userId)->count();
+
+        // ডেস্কে জমা থাকা চলমান নথি (নিষ্পত্তিকৃত ফাইল বাদ)
+        $pendingFilesCount = File::where('current_desk_id', $userId)
+            ->where('status', '!=', 'নিষ্পত্তি')
+            ->count();
         
+        // অপেক্ষমান (রিসিভ করা হয়নি) নথি
         $unreceivedCount = FileMovement::where('to_user_id', $userId)
                                        ->where('is_received', false)->count();
+
+        // ডেস্কে ১৪+ দিন ঝুলন্ত ফাইলের সংখ্যা
+        $fourteenDaysAgo = now()->subDays(14);
+        $overdueCount = File::where('current_desk_id', $userId)
+            ->where('status', '!=', 'নিষ্পত্তি')
+            ->where(function ($q) use ($fourteenDaysAgo) {
+                $q->whereHas('movements', function ($mq) use ($fourteenDaysAgo) {
+                    $mq->whereRaw('id = (select max(id) from file_movements where file_id = files.id)')
+                       ->where(function ($sq) use ($fourteenDaysAgo) {
+                           $sq->where('received_at', '<=', $fourteenDaysAgo)
+                              ->orWhere(function ($ssq) use ($fourteenDaysAgo) {
+                                  $ssq->whereNull('received_at')
+                                      ->where('created_at', '<=', $fourteenDaysAgo);
+                              });
+                       });
+                })
+                ->orWhere(function ($fq) use ($fourteenDaysAgo) {
+                    $fq->doesntHave('movements')
+                       ->where('created_at', '<=', $fourteenDaysAgo);
+                });
+            })
+            ->count();
 
         return response()->json([
             'pending_count' => $pendingFilesCount,
             'unreceived_count' => $unreceivedCount,
+            'overdue_count' => $overdueCount, // অ্যাপ চাইলে সরাসরি অ্যালার্ট দেখাতে পারবে
         ]);
     }
 
-    // ৩. আমার ডেস্ক (যে ফাইলগুলো আমার কাছে আছে বা পাঠানো হয়েছে)
+    // ৩. আমার ডেস্ক (যে ফাইলগুলো আমার কাছে আছে বা পাঠানো হয়েছে)
     public function myDesk(Request $request)
     {
         $userId = Auth::id();
@@ -60,17 +86,15 @@ class AppController extends Controller
         // ১. অপেক্ষমান (Incoming) ফাইলসমূহ
         $incoming = FileMovement::where('to_user_id', $userId)
             ->where('is_received', false)
-            // সতর্কতা: আপনার FileMovement মডেলে সম্পর্কটির নাম fromUser না হয়ে from_user হলে নিচের লাইনে 'from_user:id,name,designation' লিখবেন।
             ->with(['file', 'fromUser:id,name,designation']) 
             ->latest()
             ->get();
 
-        // অপেক্ষমান ফাইলের আইডিগুলো আলাদা করা হলো
         $incomingFileIds = $incoming->pluck('file_id')->toArray();
 
-        // ২. রিসিভ করা ডেস্কে থাকা ফাইলসমূহ
+        // ২. রিসিভ করা ডেস্কে থাকা ফাইলসমূহ (নিষ্পত্তিকৃত ফাইল বাদ)
         $onDesk = File::where('current_desk_id', $userId)
-            // যে ফাইলগুলো এখনো ইনকামিং-এ আছে, সেগুলো যেন ডেস্কে ডাবল না দেখায় তার ফিল্টার
+            ->where('status', '!=', 'নিষ্পত্তি')
             ->whereNotIn('id', $incomingFileIds) 
             ->latest()
             ->get();
@@ -86,12 +110,12 @@ class AppController extends Controller
     public function fileDetails($uuid)
     {
         $file = File::where('uuid', $uuid)->with('currentDesk')->first();
-        if(!$file) return response()->json(['message' => 'ফাইলটি সিস্টেমে পাওয়া যায়নি'], 404);
+        if(!$file) return response()->json(['message' => 'ফাইলটি সিস্টেমে পাওয়া যায়নি'], 404);
         
         return response()->json(['file' => $file]);
     }
 
-    // ৫. নথি রিসিভ করা (QR স্ক্যান করে বা ম্যানুয়ালি)
+    // ৫. নথি রিসিভ করা (QR স্ক্যান করে বা ম্যানুয়ালি)
     public function receiveFile(Request $request, $file_id)
     {
         $movement = FileMovement::where('file_id', $file_id)
@@ -104,7 +128,11 @@ class AppController extends Controller
                 'is_received' => true,
                 'received_at' => now(),
             ]);
-            return response()->json(['message' => 'নথিটি সফলভাবে রিসিভ করা হয়েছে।']);
+
+            // নথির বর্তমান ডেস্ক নিশ্চিত করা
+            File::where('id', $file_id)->update(['current_desk_id' => Auth::id()]);
+
+            return response()->json(['message' => 'নথিটি সফলভাবে রিসিভ করা হয়েছে।']);
         }
         return response()->json(['message' => 'এই নথিটি আপনার ডেস্কে অপেক্ষমান নেই।'], 400);
     }
@@ -115,6 +143,15 @@ class AppController extends Controller
         $request->validate(['to_user_id' => 'required', 'remarks' => 'nullable']);
         
         $file = File::findOrFail($file_id);
+
+        if ($file->status == 'নিষ্পত্তি') {
+            return response()->json(['message' => 'নিষ্পত্তিকৃত নথি ফরোয়ার্ড করা সম্ভব নয়।'], 400);
+        }
+
+        // নিরাপত্তা চেক: ফাইলটি বর্তমানে তার ডেস্কে আছে কিনা
+        if ($file->current_desk_id != Auth::id() && Auth::user()->role != 'admin') {
+            return response()->json(['message' => 'এই নথিটি আপনার ডেস্কে নেই, ফরোয়ার্ড করা যাবে না।'], 403);
+        }
         
         FileMovement::create([
             'file_id' => $file->id,
@@ -126,7 +163,7 @@ class AppController extends Controller
 
         $file->update(['current_desk_id' => $request->to_user_id]);
 
-        return response()->json(['message' => 'নথিটি ফরোয়ার্ড করা হয়েছে।']);
+        return response()->json(['message' => 'নথিটি ফরোয়ার্ড করা হয়েছে।']);
     }
 
     public function logout(Request $request)
