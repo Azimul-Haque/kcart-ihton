@@ -18,7 +18,7 @@ class Controller extends BaseController
     public function __construct() 
     {
       // etake cache korte hobe sathe sathe reported question gular cound dhukaite hobe
-      $unresolvedmessagecount = Message::where('status', 0)->count();
-      View::share('unresolvedmessagecount', $unresolvedmessagecount);
+      // $unresolvedmessagecount = Message::where('status', 0)->count();
+      // View::share('unresolvedmessagecount', $unresolvedmessagecount);
     }
 }
