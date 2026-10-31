@@ -110,12 +110,6 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         
-        // ১. শুনানির তারিখ ডেটপিকার
-        flatpickr("#hearing_date", {
-            dateFormat: "Y-m-d",
-            defaultDate: "today"
-        });
-
         // ২. পরবর্তী ধার্য তারিখ (সোম ও বুধবার স্বয়ংস্ক্রিয় হাইলাইট)
         flatpickr("#next_hearing_date", {
             dateFormat: "Y-m-d",
