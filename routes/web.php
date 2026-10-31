@@ -54,7 +54,11 @@ Route::middleware(['auth'])->group(function () {
 
     // 3. Hearings (শুনানি) Routes
     Route::get('/dashboard/hearings/today', [HearingController::class, 'todayHearings'])->name('hearings.today');
+    Route::delete('/hearings/{hearing}', [HearingController::class, 'destroy'])->name('hearings.destroy');
     Route::post('/dashboard/files/{file}/hearings', [HearingController::class, 'store'])->name('hearings.store');
+
+    
+	Route::get('/files/{file}/print-slip', [FileController::class, 'printSlip'])->name('files.print_slip');
 
 
     // 4. Staff & User Management Routes
