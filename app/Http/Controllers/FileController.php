@@ -32,8 +32,9 @@ class FileController extends Controller
      */
     public function index(Request $request)
     {
-        $query = File::with(['currentDesk', 'movements' => function ($q) {
-            $q->latest();
+        $query = File::where('status', '!=', 'নিষ্পত্তি')
+        ->with(['currentDesk', 'movements' => function ($q) { 
+            $q->latest(); 
         }]);
 
         if ($request->filled('search')) {
