@@ -75,7 +75,9 @@
 
                                     <td>
                                         <strong class="text-primary font-weight-bold">
-                                            {{ $file->case_number ? bangla($file->case_number) : 'রুজু হয়নি' }}
+                                            <a href="{{ route('files.show', $file->id) }}" title="শুনানি গ্রহন ও আদেশ লিখুন">
+                                                {{ $file->case_number ? bangla($file->case_number) : 'রুজু হয়নি' }}
+                                            </a>
                                         </strong>
                                         <div class="small text-muted">আইডি: <code>{{ substr($file->uuid, 0, 8) }}</code></div>
                                     </td>
