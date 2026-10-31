@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+
 use App\Models\File;
 use App\Models\User;
 use App\Models\FileMovement;
