@@ -47,6 +47,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/files/transit', [FileController::class, 'transit'])->name('files.transit');
     Route::get('/dashboard/files/{file}/receipt', [FileController::class, 'receipt'])->name('files.receipt');
     Route::post('/dashboard/files/{file}/transfer', [FileController::class, 'transfer'])->name('files.transfer');
+    Route::get('/files/{file}/print-slip', [FileController::class, 'printSlip'])->name('files.print_slip');
     
     // Resource Route for Files
     Route::resource('dashboard/files', FileController::class)->except(['destroy']);
@@ -58,7 +59,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/dashboard/files/{file}/hearings', [HearingController::class, 'store'])->name('hearings.store');
 
     
-	Route::get('/files/{file}/print-slip', [FileController::class, 'printSlip'])->name('files.print_slip');
+	
 
 
     // 4. Staff & User Management Routes
