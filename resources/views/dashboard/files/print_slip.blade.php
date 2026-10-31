@@ -44,9 +44,9 @@
         }
 
         @media print {
-            body { padding: 0; }
+            body { background: white; padding: 0; }
             .no-print { display: none !important; }
-            .pos-slip { width: 100%; padding: 0; }
+            .pos-slip { border: none; width: 58mm; padding: 1mm 1mm; }
             @page { margin: 0; size: auto; }
         }
         @media print {
