@@ -93,7 +93,7 @@
                             <!-- শুনানির তারিখ ও প্রাথমিক ডেস্ক নির্বাচন -->
                             <div class="row">
                                 <div class="col-md-6 form-group">
-                                    <label>পরবর্তী শুনানির তারিখ</label>
+                                    <label>পরবর্তী শুনানির তারিখ <span class="text-danger">*</span></label>
                                     <input type="text" name="next_hearing_date" id="next_hearing_date" class="form-control bg-white" placeholder="তারিখ সিলেক্ট করুন" required readonly>
                                 </div>
                                 <div class="col-md-6 form-group">
