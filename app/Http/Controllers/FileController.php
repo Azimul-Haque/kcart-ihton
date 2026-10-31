@@ -66,52 +66,6 @@ class FileController extends Controller
         return view('dashboard.files.index', compact('files', 'users'));
     }
 
-    /**
-     * শুধুমাত্র নিজের ডেস্কে থাকা ফাইলসমূহ (My Desk)
-     */
-    public function myDesk(Request $request)
-    {
-        $query = File::where('current_desk_id', Auth::id())
-            ->with(['currentDesk', 'movements' => function ($q) {
-                $q->latest();
-            }]);
-
-        if ($request->filled('search')) {
-            $search = trim($request->search);
-            $query->where(function ($q) use ($search) {
-                $q->where('case_number', 'LIKE', "%{$search}%")
-                  ->orWhere('badi_name', 'LIKE', "%{$search}%")
-                  ->orWhere('bibadi_name', 'LIKE', "%{$search}%");
-            });
-        }
-
-        $files = $query->latest()->paginate(15)->withQueryString();
-        $users = User::orderBy('name')->get();
-
-        return view('dashboard.files.index', compact('files', 'users'))->with('isMyDesk', true);
-    }
-
-    /**
-     * ট্রানজিটে থাকা নথি (পাঠানো হয়েছে কিন্তু এখনো স্ক্যান করে গ্রহণ করা হয়নি)
-     */
-    public function transit(Request $request)
-    {
-        $unreceivedFileIds = FileMovement::where('is_received', false)
-            ->pluck('file_id')
-            ->unique();
-
-        $files = File::whereIn('id', $unreceivedFileIds)
-            ->with(['currentDesk', 'movements' => function ($q) {
-                $q->latest();
-            }])
-            ->latest()
-            ->paginate(15);
-
-        $users = User::orderBy('name')->get();
-
-        return view('dashboard.files.index', compact('files', 'users'))->with('isTransit', true);
-    }
-
     public function create()
     {
         return view('dashboard.files.create');
