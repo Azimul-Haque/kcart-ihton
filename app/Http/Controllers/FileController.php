@@ -229,4 +229,9 @@ class FileController extends Controller
     {
         return view('dashboard.files.receipt', compact('file'));
     }
+
+    public function printSlip(File $file)
+    {
+        return view('files.print_slip', compact('file'));
+    }
 }
