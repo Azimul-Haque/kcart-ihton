@@ -14,7 +14,6 @@
             padding: 1.5mm 1mm;
             border: 1px solid #ccc;
             color: #000;
-            display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 2px;
