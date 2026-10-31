@@ -15,6 +15,14 @@ class CreateHearingsTable extends Migration
     {
         Schema::create('hearings', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('file_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('conducted_by')->constrained('users'); // কে শুনানি নিলেন
+            
+            $table->date('hearing_date');
+            $table->date('next_hearing_date')->nullable();
+            
+            $table->text('order_details')->nullable(); // আদেশ বা বিবরণ
+            $table->boolean('sms_sent')->default(false);
             $table->timestamps();
         });
     }
