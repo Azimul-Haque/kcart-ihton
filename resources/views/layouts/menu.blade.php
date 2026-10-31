@@ -1,4 +1,3 @@
-<!-- need to remove -->
 <li class="nav-item">
     <a href="{{ route('dashboard.index') }}" class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}">
         <i class="nav-icon fas fa-home"></i>
