@@ -12,6 +12,7 @@
         	background: #fff;
             width: 58mm;
             padding: 1.5mm 1mm;
+            border: 1px solid #ccc;
             color: #000;
         }
 
