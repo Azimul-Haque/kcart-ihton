@@ -148,7 +148,7 @@
                             </div>
                             <div class="col-6 form-group mb-2">
                                 <label class="small mb-1 font-weight-bold">পরবর্তী ধার্য তারিখ <small class="text-success">(সোম/বুধ)</small></label>
-                                <input type="text" name="next_hearing_date" id="next_hearing_date" class="form-control form-control-sm bg-white" placeholder="তারিখ সিলেক্ট করুন" requiredreadonly>
+                                <input type="text" name="next_hearing_date" id="next_hearing_date" class="form-control form-control-sm bg-white" placeholder="তারিখ সিলেক্ট করুন" required >
                             </div>
                         </div>
 
