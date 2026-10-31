@@ -65,7 +65,7 @@
                         <div class="text-muted small">
                             <code>UUID: {{ $file->uuid }}</code> | 
                             <a href="{{ route('files.receipt', $file->id) }}" target="_blank" class="text-info font-weight-bold ml-1">
-                                <i class="fas fa-print"></i> QR স্টিকার ప్రింట్
+                                <i class="fas fa-print"></i> QR স্টিকার
                             </a>
                         </div>
                     </div>
