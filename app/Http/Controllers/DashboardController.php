@@ -51,66 +51,106 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        // if user is a manager, redirect him to his profile
-        // if user is a manager, redirect him to his profile
-        if(Auth::user()->role == 'user') {
-            abort(403, 'Access Denied');
-        } elseif(Auth::user()->role == 'volunteer') {
-            // echo 'ase';
-            return redirect()->route('dashboard.questions.reported');
-        }
+        $user = Auth::user();
 
-        // $totalsites = Site::count();
-        $totalusers = User::count();
+        // 1. Role-based Access Control (Optional, modify as needed)
+        // If you only want Admins (AC Land) to see this broad dashboard:
+        // if ($user->role !== 'admin') {
+        //     return redirect()->route('files.my_desk'); // Redirect normal staff to their desk
+        // }
 
+        // ---------------------------------------------------------
+        // 2. Summary & Stats for Top Cards
+        // ---------------------------------------------------------
         
-
+        $totalFiles = File::count();
         
+        // Hearings scheduled for today
+        $todaysHearings = Hearing::whereDate('hearing_date', Carbon::today())
+                                 ->orWhereDate('next_hearing_date', Carbon::today())
+                                 ->count();
 
-        $totalpayment = Payment::sum('store_amount');
-        // $totalbalance = Balance::sum('store_amount');
-        // $totalexpense = Expense::sum('store_amount');
+        // Files currently sitting on the logged-in user's desk
+        $myPendingFiles = File::where('current_desk_id', $user->id)->count();
 
-        $totalmonthlypayment = DB::table('payments')
-                                ->select(DB::raw('SUM(store_amount) as totalamount'))
-                                ->where(DB::raw("DATE_FORMAT(created_at, '%Y-%m')"), "=", Carbon::now()->format('Y-m'))
-                                // ->groupBy(DB::raw("DATE_FORMAT(created_at, '%Y-%m')"))
-                                ->first();
-        $last14daysusersdaily = DB::table('users')
-                                    ->select('created_at', DB::raw('COUNT(*) as totalusers'))
-                                    ->groupBy(DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d')"))
-                                    ->orderBy('created_at', 'DESC')
-                                    ->take(14)
-                                    ->get();
-        $daysforchartc = [];
-        foreach ($last14daysusersdaily as $key => $days) {
-            $daysforchartc[] = date_format(date_create($days->created_at), "M d");
+        // Critical: Files transferred but NOT received by the destination user (Lost in Transit)
+        $unreceivedFiles = FileMovement::where('is_received', false)->count();
+
+
+        // ---------------------------------------------------------
+        // 3. Data for "Pending Files by Desk" Bar Chart
+        // ---------------------------------------------------------
+        
+        // Group files by current_desk_id and join with users table to get the names
+        $deskPendingData = File::select('current_desk_id', DB::raw('count(*) as total'))
+            ->groupBy('current_desk_id')
+            ->with('currentDesk:id,name,designation') // Assuming relationship exists
+            ->get();
+
+        $deskNames = [];
+        $deskPendingCounts = [];
+
+        foreach ($deskPendingData as $data) {
+            // Using designation or name for the chart labels
+            $label = $data->currentDesk ? $data->currentDesk->designation . ' (' . $data->currentDesk->name . ')' : 'Unknown';
+            $deskNames[] = $label;
+            $deskPendingCounts[] = $data->total;
         }
-        $daysforchartc = json_encode(array_reverse($daysforchartc));
 
-        $totalusersforchartc = [];
-        foreach ($last14daysusersdaily as $key => $days) {
-            $totalusersforchartc[] = $days->totalusers;
+        // Encode for JavaScript Chart.js
+        $deskNamesJson = json_encode($deskNames);
+        $deskPendingCountsJson = json_encode($deskPendingCounts);
+
+
+        // ---------------------------------------------------------
+        // 4. Data for "File Initiation Trend" Line Chart (Last 14 Days)
+        // ---------------------------------------------------------
+        
+        $last14DaysFiles = File::select(DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d') as date"), DB::raw('COUNT(*) as total'))
+            ->where('created_at', '>=', Carbon::now()->subDays(14))
+            ->groupBy('date')
+            ->orderBy('date', 'ASC')
+            ->get();
+
+        $trendDates = [];
+        $trendCounts = [];
+
+        // To ensure days with 0 files are still plotted, we generate a 14-day date range array
+        $dateRange = collect();
+        for ($i = 13; $i >= 0; $i--) {
+            $dateRange->push(Carbon::now()->subDays($i)->format('Y-m-d'));
         }
-        $originalforcumulitive = array_reverse($totalusersforchartc);
-        $totalusersforchartc = json_encode(array_reverse($totalusersforchartc));
 
-        $totaluserscumulitiveforchartc = [];
-        $cumulitiveusersprimary = 0;
-        foreach ($originalforcumulitive as $totalusersforc) {
-            $cumulitiveusersprimary += $totalusersforc;
-            $totaluserscumulitiveforchartc[] = $cumulitiveusersprimary;
+        foreach ($dateRange as $dateStr) {
+            // Format for display (e.g., '14 Oct')
+            $trendDates[] = Carbon::parse($dateStr)->format('j M'); 
+            
+            // Find if we have data for this date, otherwise 0
+            $match = $last14DaysFiles->firstWhere('date', $dateStr);
+            $trendCounts[] = $match ? $match->total : 0;
         }
-        $totaluserscumulitiveforchartc = json_encode($totaluserscumulitiveforchartc);
-        // dd($totaluserscumulitiveforchartc);
 
-        return view('dashboard.index')->withTotalusers($totalusers)
-                                      ->withTotalpayment($totalpayment)
-                                      ->withTotalmonthlypayment($totalmonthlypayment)
-                                      ->withTotalexamsattendedtoday($totalexamsattendedtoday)
-                                      ->withDaysforchartc($daysforchartc)
-                                      ->withTotalusersforchartc($totalusersforchartc)
-                                      ->withTotaluserscumulitiveforchartc($totaluserscumulitiveforchartc);
+        // Encode for JavaScript Chart.js
+        $trendDatesJson = json_encode($trendDates);
+        $trendCountsJson = json_encode($trendCounts);
+
+
+        // ---------------------------------------------------------
+        // 5. Return View with Data
+        // ---------------------------------------------------------
+        
+        return view('dashboard.index', [
+            'totalFiles' => $totalFiles,
+            'todaysHearings' => $todaysHearings,
+            'myPendingFiles' => $myPendingFiles,
+            'unreceivedFiles' => $unreceivedFiles,
+            
+            // Chart Data
+            'deskNames' => $deskNamesJson,
+            'deskPendingCounts' => $deskPendingCountsJson,
+            'trendDates' => $trendDatesJson,
+            'trendCounts' => $trendCountsJson,
+        ]);
     }
 
     public function clearQueryCache()
