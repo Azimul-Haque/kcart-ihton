@@ -60,7 +60,7 @@
                         @forelse($users as $user)
                             <tr>
                                 <td>
-                                    <span class="user-name-link"><<a href="{{ route('dashboard.users.single', $user->id) }}" title=""></a>{{ $user->name }}</span>
+                                    <span class="user-name-link"><a href="{{ route('dashboard.users.single', $user->id) }}" title="">{{ $user->name }}</a></span>
                                     <div class="date-info mt-1">যোগদান: {{ date('d M, Y', strtotime($user->created_at)) }}</div>
                                 </td>
 
