@@ -132,7 +132,7 @@
                                                             <div class="col-md-6 mb-2">
                                                                 <label>পদবী</label>
                                                                 <select name="designation" class="form-control" required>
-                                                                    @php $designations = ['সহকারী কমিশনার (ভূমি)', 'কানুনগো', 'সার্ভেয়ার', 'ইভূসক (পৌর)', 'ইভূসক (শিমুলকান্দি)', 'ইভূসক (সাদেকপুর)', 'ইভূসক (আগানগর)', 'নাজির', 'পেশকার', 'অফিস সহকারী', 'জারিকারক', 'অফিস সহায়ক', ]; @endphp
+                                                                    @php $designations = ['সহকারী কমিশনার (ভূমি)', 'কানুনগো', 'সার্ভেয়ার', 'ইভূসক (পৌর)', 'ইভূসক (শিমুলকান্দি)', 'ইভূসক (সাদেকপুর)', 'ইভূসক (আগানগর)', 'নাজির', 'পেশকার', 'অফিস সহকারী', 'কম্পিউটার অপারেটর',  'জারিকারক', 'অফিস সহায়ক', ]; @endphp
                                                                     @foreach($designations as $desig)
                                                                         <option value="{{ $desig }}" @if($user->designation == $desig) selected @endif>{{ $desig }}</option>
                                                                     @endforeach
