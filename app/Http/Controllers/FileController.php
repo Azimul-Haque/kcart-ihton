@@ -118,7 +118,7 @@ class FileController extends Controller
 
     public function create()
     {
-        return view('files.create');
+        return view('dashboard.files.create');
     }
 
     /**
@@ -136,7 +136,7 @@ class FileController extends Controller
 
         $users = User::orderBy('name')->get();
 
-        return view('files.show', compact('file', 'users'));
+        return view('dashboard.files.show', compact('file', 'users'));
     }
 
     /**
