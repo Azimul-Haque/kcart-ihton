@@ -181,6 +181,53 @@ class FileController extends Controller
         return view('dashboard.files.index', compact('files', 'users'))->with('isMyDesk', true);
     }
 
+    public function dispose(Request $request, File $file)
+    {
+        $request->validate([
+            'order_signed' => 'required|in:yes,no',
+            'disposal_note' => 'nullable|string',
+        ]);
+
+        if ($request->order_signed === 'no') {
+            return redirect()->back()->with('error', 'আদেশ স্বাক্ষরিত না হওয়া পর্যন্ত নথি নিষ্পত্তি করা যাবে না।');
+        }
+
+        // নথির স্ট্যাটাস ও পরবর্তী শুনানির তারিখ আপডেট
+        $file->update([
+            'status' => 'নিষ্পত্তি',
+            'next_hearing_date' => null, // নিষ্পত্তির পর আর শুনানির তারিখ থাকবে না
+        ]);
+
+        // শুনানির ইতিহাসে নিষ্পত্তির নোট সেভ করা
+        $file->hearings()->create([
+            'user_id' => Auth::id(),
+            'hearing_date' => now()->toDateString(),
+            'next_hearing_date' => null,
+            'order_details' => 'নথি চূড়ান্ত নিষ্পত্তি করা হয়েছে। Note: ' . ($request->disposal_note ?? 'চূড়ান্ত আদেশ প্রদান করা হলো।'),
+            'sms_sent' => false
+        ]);
+
+        return redirect()->back()->with('success', 'নথিটি সফলভাবে চূড়ান্ত নিষ্পত্তি ও আর্কাইভ করা হয়েছে।');
+    }
+
+    /**
+     * ৪. নিষ্পত্তিকৃত ও আর্কাইভকৃত নথিসমূহের আলাদা তালিকা
+     */
+    public function archivedList(Request $request)
+    {
+        $query = File::where('status', 'নিষ্পত্তি')
+            ->with(['currentDesk', 'movements' => function ($q) { 
+                $q->latest(); 
+            }]);
+
+        $this->applyFilters($query, $request);
+
+        $files = $query->latest()->paginate(15)->withQueryString();
+        $users = User::orderBy('name')->get();
+
+        return view('dashboard.files.index', compact('files', 'users'))->with('isArchived', true);
+    }
+
     /**
      * ট্রানজিটে থাকা ফাইলসমূহ
      */
