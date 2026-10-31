@@ -44,10 +44,10 @@
         }
 
         @media print {
-            body { padding: 0; }
+            body { background: white; padding: 0; }
             .no-print { display: none !important; }
-            .pos-slip { width: 100%; padding: 0; }
-            @page { margin: 0; size: auto; }
+            .sticker-card { border: none; width: 58mm; padding: 1mm 1mm; }
+            @page { size: 58mm auto; margin: 0mm; }
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
