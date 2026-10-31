@@ -13,6 +13,17 @@ use Carbon\Carbon;
 
 class HearingController extends Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+
+        $unresolvedmessagecount = Message::where('status', 0)->count();
+        View::share('unresolvedmessagecount', $unresolvedmessagecount);
+
+        // $this->middleware('auth')->except('clear');
+        // $this->middleware(['admin'])->only('getUsers', 'storeUser', 'updateUser', 'deleteUser', 'getUser', 'getMessages', 'updateMessage', 'getNotifications', 'sendSingleNotification', 'sendSingleSMS', 'getExamSolvePDF');
+        
+    }
     /**
      * ধার্য তারিখে বা আজকের শুনানির তালিকা প্রদর্শন
      */
