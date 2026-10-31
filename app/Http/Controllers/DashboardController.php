@@ -238,14 +238,6 @@ class DashboardController extends Controller
     {
         $user = User::findOrFail($id);
         
-        
-
-        return view('dashboard.users.single')
-                    ->withUser($user);
-    }
-
-    public function singleUser(User $user)
-    {
         // ১. ইউজারের ডেস্কে বর্তমানে থাকা ফাইলসমূহ এবং লেটেস্ট মুভমেন্ট লগ
         $filesOnDesk = File::where('current_desk_id', $user->id)
             ->with(['movements' => function ($query) use ($user) {
@@ -268,6 +260,15 @@ class DashboardController extends Controller
                 $overdueCount++;
             }
         }
+        
+
+        return view('dashboard.users.single')
+                    ->withUser($user);
+    }
+
+    public function singleUser(User $user)
+    {
+        
 
         return view('users.single', compact('user', 'filesOnDesk', 'totalProcessed', 'overdueCount'));
     }
