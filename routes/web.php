@@ -50,10 +50,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/files/{file}/receipt', [FileController::class, 'receipt'])->name('files.receipt');
     Route::post('/dashboard/files/{file}/transfer', [FileController::class, 'transfer'])->name('files.transfer');
     Route::get('/dashboard/files/{file}/print-slip', [FileController::class, 'printSlip'])->name('files.print_slip');
-    // ১. নথি চূড়ান্ত নিষ্পত্তি/আর্কাইভ করার অ্যাকশন রাউট
     Route::post('/dashboard/files/{file}/dispose', [FileController::class, 'dispose'])->name('files.dispose');
-
-    // ২. নিষ্পত্তিকৃত নথিসমূহের আলাদা আর্কাইভ তালিকা
     Route::get('/dashboard/files/archived', [FileController::class, 'archivedList'])->name('files.archived');
     
     // Resource Route for Files
