@@ -80,7 +80,7 @@
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     <label>বিবাদি / অপর পক্ষের নাম</label>
-                                    <input type="text" name="bibadi_name" class="form-control" placeholder="বিবাদির নাম">
+                                    <input type="text" name="bibadi_name" value="{{ old('bibadi_name') }}" class="form-control" placeholder="বিবাদির নাম">
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label>বিবাদির মোবাইল নম্বর</label>
