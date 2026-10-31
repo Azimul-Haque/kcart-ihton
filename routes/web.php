@@ -77,10 +77,3 @@ Route::resource('dashboard/files', FileController::class)->except(['edit', 'upda
 // শুনানি রাউটস
 Route::get('/dashboard/hearings/today', [HearingController::class, 'todayHearings'])->name('hearings.today');
 Route::post('/dashboard/files/{file}/hearings', [HearingController::class, 'store'])->name('hearings.store');
-
-// ---------------------------------------------------------
-// Hearings (শুনানি) Routes
-// ---------------------------------------------------------
-
-Route::get('/dashboard/hearings/today', [HearingController::class, 'todayHearings'])->name('hearings.today'); // আজকের শুনানি তালিকা
-Route::post('/dashboard/files/{file}/hearings', [HearingController::class, 'store'])->name('hearings.store'); // নতুন শুনানির আদেশ সেভ করা
