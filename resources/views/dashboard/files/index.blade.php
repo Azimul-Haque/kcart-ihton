@@ -98,7 +98,7 @@
                     <i class="fas fa-list text-primary mr-1"></i> নথির তালিকা ({{ bangla($files->total()) }} টি)
                 </h3>
                 @if(Auth::user()->role == 'admin' || Auth::user()->designation == 'পেশকার')
-                <a href="{{ route('files.create') }}" class="btn btn-success btn-sm">
+                <a href="{{ route('files.create') }}" class="btn btn-success btn-sm text-white">
                     <i class="fas fa-plus-circle"></i> নতুন নথি এন্ট্রি
                 </a>
                 @endif
