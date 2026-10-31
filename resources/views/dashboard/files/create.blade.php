@@ -46,7 +46,7 @@
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label>বাদির মোবাইল নম্বর</label>
-                                    <input type="phone" name="badi_mobile" class="form-control" placeholder="01700000000">
+                                    <input type="number" name="badi_mobile" class="form-control" placeholder="01700000000">
                                 </div>
                             </div>
 
@@ -57,7 +57,7 @@
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label>বিবাদির মোবাইল নম্বর</label>
-                                    <input type="phone" name="bibadi_mobile" class="form-control" placeholder="01700000000">
+                                    <input type="number" name="bibadi_mobile" class="form-control" placeholder="01700000000">
                                 </div>
                             </div>
 
