@@ -104,7 +104,7 @@
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label>পরবর্তী শুনানির তারিখ</label>
-                                    <input type="date" name="next_hearing_date" id="next_hearing_date" class="form-control" value="{{ $file->next_hearing_date ? date('Y-m-d', strtotime($file->next_hearing_date)) : '' }}">
+                                    <input type="text" name="next_hearing_date" id="next_hearing_date" class="form-control" value="{{ $file->next_hearing_date ? date('Y-m-d', strtotime($file->next_hearing_date)) : '' }}">
                                 </div>
                             </div>
 
