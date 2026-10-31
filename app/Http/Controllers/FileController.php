@@ -233,13 +233,20 @@ class FileController extends Controller
      */
     public function transit(Request $request)
     {
+        // ১. রিসিভ না হওয়া মুভমেন্টগুলোর ফাইল আইডি বের করা
         $unreceivedFileIds = FileMovement::where('is_received', false)->pluck('file_id')->unique();
 
-        $files = File::whereIn('id', $unreceivedFileIds)
-            ->with(['currentDesk', 'movements' => function ($q) { $q->latest(); }])
-            ->latest()
-            ->paginate(15);
+        // ২. ট্রানজিটে থাকা ফাইলসমূহ (নিষ্পত্তিকৃত ফাইল সম্পূর্ণ বাদ দেওয়া হলো)
+        $query = File::whereIn('id', $unreceivedFileIds)
+            ->where('status', '!=', 'নিষ্পত্তি')
+            ->with(['currentDesk', 'movements' => function ($q) { 
+                $q->latest(); 
+            }]);
 
+        // ফিল্টার হেলপার কল (টেক্সট সার্চ ও টাইপ ফিল্টার সহ)
+        $this->applyFilters($query, $request);
+
+        $files = $query->latest()->paginate(15)->withQueryString();
         $users = User::orderBy('name')->get();
 
         return view('dashboard.files.index', compact('files', 'users'))->with('isTransit', true);
