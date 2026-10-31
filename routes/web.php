@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Api\ExamController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
