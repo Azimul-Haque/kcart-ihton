@@ -115,7 +115,7 @@
                                                 </div>
                                                 <form method="post" action="{{ route('dashboard.users.update', $user->id) ?? '#' }}">
                                                     @csrf
-                                                    @method('PUT')
+                                                    @method('POST')
                                                     <div class="modal-body">
                                                         <div class="row">
                                                             <div class="col-md-6 mb-2">
