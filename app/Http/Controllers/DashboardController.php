@@ -236,9 +236,9 @@ class DashboardController extends Controller
 
     public function getUser($id)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         
-        // dd($totaldeposit);
+        
 
         return view('dashboard.users.single')
                     ->withUser($user);
