@@ -261,8 +261,7 @@ class DashboardController extends Controller
             }
         }
         
-
-        return view('dashboard.users.single')
+        return view('dashboard.users.single', compact('user', 'filesOnDesk', 'totalProcessed', 'overdueCount'));
                     ->withUser($user);
     }
 
