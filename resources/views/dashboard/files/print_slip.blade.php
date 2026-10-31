@@ -44,6 +44,12 @@
         }
 
         @media print {
+            body { padding: 0; }
+            .no-print { display: none !important; }
+            .pos-slip { width: 100%; padding: 0; }
+            @page { margin: 0; size: auto; }
+        }
+        @media print {
             body { background: white; padding: 0; }
             .no-print { display: none !important; }
             .sticker-card { border: none; width: 58mm; padding: 1mm 1mm; }
