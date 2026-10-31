@@ -296,49 +296,10 @@ class DashboardController extends Controller
         return redirect()->route('dashboard.users');
     }
 
-    public function toggleApprove($id)
-    {
-        $user = User::findOrFail($id);
-        
-        // বর্তমান স্ট্যাটাসটি উল্টে দিবে (১ থাকলে ০ হবে, ০ থাকলে ১ হবে)
-        $user->is_approved = !$user->is_approved;
-        $user->save();
-
-        // মেসেজ তৈরি
-        $status = $user->is_approved ? 'অনুমোদিত' : 'অনুমোদন বাতিল';
-
-        Cache::forget('user_approval_status_' . $user->id);
-        
-        return redirect()->back()->with('success', "ব্যবহারকারীর স্ট্যাটাস সফলভাবে {$status} করা হয়েছে।");
-    }
-
-    public function updateBulkPackageDate(Request $request)
-    {
-        $this->validate($request,array(
-            'numbers'                      => 'required',
-            'packageexpirydatebulk'        => 'required',
-        ));
-
-        $numbersarray = explode(',', $request->numbers);
-
-        $counter = 0;
-        foreach($numbersarray as $number) {
-            $user = User::where('mobile', 'LIKE', '%' . $number . '%')->first();
-            if($user) {
-                $user->package_expiry_date = date('Y-m-d', strtotime($request->packageexpirydatebulk)) . ' 23:59:59';
-                $user->save();
-                $counter++;
-            }
-        }
-
-        Session::flash('success', $counter . ' Users updated successfully!');
-        return redirect()->route('dashboard.users');
-    }
 
     public function deleteUser($id)
     {
         $user = User::find($id);
-        Cache::forget('user_approval_status_' . $user->id);
         $user->delete();
 
         Session::flash('success', 'User deleted successfully!');
