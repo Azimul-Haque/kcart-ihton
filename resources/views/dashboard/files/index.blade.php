@@ -33,12 +33,14 @@
 
 @section('content')
     @section('page-header') 
-        @if(isset($isMyDesk))
+        @if(isset($isArchived))
+            আর্কাইভকৃত / নিষ্পত্তিকৃত নথি তালিকা
+        @elseif(isset($isMyDesk))
             আমার ডেস্কে থাকা নথিসমূহ
         @elseif(isset($isTransit))
             ট্রানজিটে থাকা নথি (রিসিভ অপেক্ষমান)
         @else
-            সকল নথি ও মোকদ্দমা তালিকা
+            সকল চলমান নথি ও মোকদ্দমা তালিকা
         @endif
     @endsection
 
@@ -93,7 +95,7 @@
                         <button type="submit" class="btn btn-primary btn-sm flex-fill mr-1">
                             <i class="fas fa-filter"></i> ফিল্টার
                         </button>
-                        <a href="{{ route('files.index') }}" class="btn btn-outline-secondary btn-sm" title="ফিল্টার মুছুন">
+                        <a href="{{ url()->current() }}" class="btn btn-outline-secondary btn-sm" title="ফিল্টার মুছুন">
                             <i class="fas fa-undo"></i>
                         </a>
                     </div>
@@ -105,13 +107,30 @@
         <div class="card shadow-sm">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
                 <h3 class="card-title text-dark font-weight-bold mb-0">
-                    <i class="fas fa-list text-primary mr-1"></i> নথির তালিকা ({{ bangla($files->total()) }} টি)
+                    <i class="fas fa-list text-primary mr-1"></i> 
+                    @if(isset($isArchived))
+                        নিষ্পত্তিকৃত নথির রেকর্ড ({{ bangla($files->total()) }} টি)
+                    @else
+                        নথির তালিকা ({{ bangla($files->total()) }} টি)
+                    @endif
                 </h3>
-                @if(Auth::user()->role == 'admin' || Auth::user()->designation == 'পেশকার')
-                <a href="{{ route('files.create') }}" class="btn btn-success btn-sm">
-                    <i class="fas fa-plus-circle"></i> নতুন নথি এন্ট্রি
-                </a>
-                @endif
+                <div class="d-flex align-items-center">
+                    @if(!isset($isArchived))
+                    <a href="{{ route('files.archived') }}" class="btn btn-outline-dark btn-sm mr-2">
+                        <i class="fas fa-archive"></i> আর্কাইভ / নিষ্পত্তিকৃত তালিকা
+                    </a>
+                    @else
+                    <a href="{{ route('files.index') }}" class="btn btn-outline-primary btn-sm mr-2">
+                        <i class="fas fa-list"></i> চলমান সকল নথি
+                    </a>
+                    @endif
+
+                    @if(Auth::user()->role == 'admin' || Auth::user()->designation == 'পেশকার')
+                    <a href="{{ route('files.create') }}" class="btn btn-success btn-sm">
+                        <i class="fas fa-plus-circle"></i> নতুন নথি এন্ট্রি
+                    </a>
+                    @endif
+                </div>
             </div>
 
             <div class="card-body p-0">
@@ -135,7 +154,9 @@
                                     $receivedAt = $lastMovement ? ($lastMovement->received_at ?? $lastMovement->created_at) : $file->created_at;
                                     $daysAtDesk = \Carbon\Carbon::parse($receivedAt)->diffInDays(now());
                                     
-                                    if ($daysAtDesk >= 14) {
+                                    if ($file->status == 'নিষ্পত্তি') {
+                                        $agingClass = 'bg-secondary text-white';
+                                    } elseif ($daysAtDesk >= 14) {
                                         $agingClass = 'aging-critical';
                                     } elseif ($daysAtDesk > 7) {
                                         $agingClass = 'bg-danger text-white';
@@ -145,10 +166,10 @@
                                         $agingClass = 'bg-success text-white';
                                     }
                                 @endphp
-                                <tr class="{{ $daysAtDesk >= 14 ? 'table-danger' : '' }}">
+                                <tr class="{{ ($daysAtDesk >= 14 && $file->status != 'নিষ্পত্তি') ? 'table-danger' : '' }}">
                                     <td>
                                         <strong class="text-primary font-weight-bold">
-                                            <a href="{{ route('files.show', $file->id) }}" title="শুনানি গ্রহন ও আদেশ লিখুন">
+                                            <a href="{{ route('files.show', $file->id) }}" title="নথি বিবরণ ও শুনানি ইতিহাস">
                                                 {{ $file->case_number ? bangla($file->case_number) : 'রুজু হয়নি' }}
                                             </a>
                                         </strong>
@@ -176,16 +197,16 @@
                                         </span>
                                         <small class="text-muted">{{ $file->currentDesk->name ?? '' }}</small>
                                         
-                                        @if($lastMovement && !$lastMovement->is_received)
+                                        @if($lastMovement && !$lastMovement->is_received && $file->status != 'নিষ্পত্তি')
                                             <div class="badge badge-warning d-block mt-1">রিসিভ অপেক্ষমান</div>
                                         @endif
                                     </td>
 
                                     <td>
-                                        <span class="badge badge-info badge-status">
+                                        <span class="badge {{ $file->status == 'নিষ্পত্তি' ? 'badge-dark' : 'badge-info' }} badge-status">
                                             {{ $file->status }}
                                         </span>
-                                        @if($file->next_hearing_date)
+                                        @if($file->next_hearing_date && $file->status != 'নিষ্পত্তি')
                                             <div class="small text-danger mt-1">
                                                 <i class="far fa-calendar-alt"></i> {{ bangla(date('d/m/Y', strtotime($file->next_hearing_date))) }}
                                             </div>
@@ -194,7 +215,9 @@
 
                                     <td>
                                         <span class="badge {{ $agingClass }} aging-badge" title="ডেস্কে আসার পর থেকে সময়">
-                                            @if($daysAtDesk >= 14)
+                                            @if($file->status == 'নিষ্পত্তি')
+                                                <i class="fas fa-check-circle"></i> আর্কাইভকৃত
+                                            @elseif($daysAtDesk >= 14)
                                                 <i class="fas fa-exclamation-triangle"></i> {{ bangla($daysAtDesk) }} দিন (ঝুলন্ত)
                                             @else
                                                 <i class="far fa-clock"></i> {{ bangla($daysAtDesk) }} দিন ধরে
@@ -204,7 +227,7 @@
 
                                     <td class="text-right">
                                         <div class="btn-group">
-                                            <!-- সরাসরি শুনানি গ্রহণ বাটন -->
+                                            <!-- শুনানি বাটন -->
                                             <a href="{{ route('files.show', $file->id) }}" class="btn btn-success btn-sm" title="শুনানি গ্রহন ও আদেশ লিখুন">
                                                 <i class="fas fa-gavel"></i> শুনানি
                                             </a>
@@ -214,20 +237,27 @@
                                                 <i class="fas fa-edit"></i>
                                             </a>
 
-                                            <!-- QR / Receipt Print -->
+                                            <!-- QR Print -->
                                             <a href="{{ route('files.receipt', $file->id) }}" target="_blank" class="btn btn-outline-info btn-sm" title="58mm QR স্টিকার প্রিন্ট">
                                                 <i class="fas fa-print"></i>
                                             </a>
 
                                             <!-- ফাইল ট্রান্সফার বাটন -->
-                                            @if($file->current_desk_id == Auth::id() || Auth::user()->role == 'admin')
+                                            @if($file->status != 'নিষ্পত্তি' && ($file->current_desk_id == Auth::id() || Auth::user()->role == 'admin'))
                                             <button type="button" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#transferModal{{ $file->id }}" title="অন্য ডেস্কে পাঠান">
                                                 <i class="fas fa-paper-plane"></i>
                                             </button>
                                             @endif
+
+                                            <!-- ফাইল চূড়ান্ত নিষ্পত্তি বাটন -->
+                                            @if($file->status != 'নিষ্পত্তি' && ($file->current_desk_id == Auth::id() || Auth::user()->role == 'admin'))
+                                            <button type="button" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#disposeModal{{ $file->id }}" title="নথি চূড়ান্ত নিষ্পত্তি করুন">
+                                                <i class="fas fa-check-double"></i> নিষ্পত্তি
+                                            </button>
+                                            @endif
                                         </div>
 
-                                        <!-- ফাইল ট্রান্সফার মডাল -->
+                                        <!-- ১. ফাইল ট্রান্সফার মডাল -->
                                         <div class="modal fade text-left" id="transferModal{{ $file->id }}" tabindex="-1" role="dialog" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
@@ -261,6 +291,47 @@
                                                         <div class="modal-footer bg-light">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">বাতিল</button>
                                                             <button type="submit" class="btn btn-warning font-weight-bold">পাঠিয়ে দিন</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- ২. ফাইল চূড়ান্ত নিষ্পত্তি ও আর্কাইভ মডাল -->
+                                        <div class="modal fade text-left" id="disposeModal{{ $file->id }}" tabindex="-1" role="dialog" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header bg-dark text-white">
+                                                        <h5 class="modal-title"><i class="fas fa-check-circle text-success mr-1"></i> নথি চূড়ান্ত নিষ্পত্তি নিশ্চিতকরণ</h5>
+                                                        <button type="button" class="close text-white" data-dismiss="modal"><span>&times;</span></button>
+                                                    </div>
+                                                    <form action="{{ route('files.dispose', $file->id) }}" method="POST">
+                                                        @csrf
+                                                        <div class="modal-body">
+                                                            <div class="alert alert-warning py-2 mb-3" style="font-size: 13px;">
+                                                                <i class="fas fa-exclamation-circle mr-1"></i> নথি নিষ্পত্তি করা হলে তা সাধারণ তালিকা ও আমার ডেস্ক থেকে সরাতে আর্কাইভে সংরক্ষিত হবে।
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="font-weight-bold">মামলা/নথি নং:</label>
+                                                                <input type="text" class="form-control form-control-sm" value="{{ $file->case_number ?? 'রুজু হয়নি' }} ({{ $file->type }})" readonly>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="font-weight-bold">চূড়ান্ত আদেশ স্বাক্ষরিত হয়েছে কি না? <span class="text-danger">*</span></label>
+                                                                <select name="order_signed" class="form-control form-control-sm" required>
+                                                                    <option value="yes" selected>হ্যাঁ, চূড়ান্ত আদেশ প্রদেয় ও অনুস্বাক্ষরিত</option>
+                                                                    <option value="no">না, আদেশের খসড়া বাকি</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="font-weight-bold">নিষ্পত্তির সংক্ষিপ্ত বিবরণ / আদেশ নোট (ঐচ্ছিক):</label>
+                                                                <textarea name="disposal_note" class="form-control form-control-sm" rows="3" placeholder="যেমন: আদেশে নামজারি মঞ্জুর করা হলো / মামলাটি ডিসমিস করা হলো..."></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer bg-light">
+                                                            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">বাতিল</button>
+                                                            <button type="submit" class="btn btn-success btn-sm font-weight-bold">
+                                                                <i class="fas fa-archive mr-1"></i> চূড়ান্ত নিষ্পত্তি করুন
+                                                            </button>
                                                         </div>
                                                     </form>
                                                 </div>
