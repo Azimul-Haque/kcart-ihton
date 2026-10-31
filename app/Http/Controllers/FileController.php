@@ -201,7 +201,7 @@ class FileController extends Controller
         $files = $query->latest()->paginate(15)->withQueryString();
         $users = User::orderBy('name')->get();
 
-        return view('files.index', compact('files', 'users'))->with('isMyDesk', true);
+        return view('dashboard.files.index', compact('files', 'users'))->with('isMyDesk', true);
     }
 
     /**
@@ -218,7 +218,7 @@ class FileController extends Controller
 
         $users = User::orderBy('name')->get();
 
-        return view('files.index', compact('files', 'users'))->with('isTransit', true);
+        return view('dashboard.files.index', compact('files', 'users'))->with('isTransit', true);
     }
 
     /**
