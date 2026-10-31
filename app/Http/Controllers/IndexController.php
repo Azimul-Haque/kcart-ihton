@@ -41,9 +41,18 @@ class IndexController extends Controller
      */
     public function index()
     {
-        
-
         return view('index.index');
+    }
+
+    public function publicCaseList()
+    {
+        // শুধু 'বিবিধ মোকদ্দমা' এবং রিয়েল-টাইম গতিবিধিসহ ডাটা নিয়ে আসা
+        $files = File::where('type', 'বিবিধ মোকদ্দমা')
+            ->with('currentDesk')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('public.case_list', compact('files'));
     }
 
     public function termsAndConditions()
