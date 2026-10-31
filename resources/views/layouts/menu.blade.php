@@ -55,6 +55,15 @@
                 <p>ট্রানজিটে থাকা নথি</p>
             </a>
         </li>
+        <li class="nav-item">
+            <a href="{{ route('files.archived') }}" class="nav-link {{ request()->routeIs('files.archived') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-archive text-warning"></i>
+                <p>
+                    আর্কাইভকৃত নথি
+                    <span class="badge badge-secondary right">নিষ্পত্তি</span>
+                </p>
+            </a>
+        </li>
         @endif
     </ul>
 </li>
