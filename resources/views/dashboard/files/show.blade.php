@@ -79,7 +79,7 @@
                     </div>
 
                     <!-- বাদি, বিবাদি, বর্তমান অবস্থান ও স্ট্যাটাস -->
-                    <div class="col-lg-6 col-md-5 border-right my-2 my-md-0">
+                    <div class="col-lg-5 col-md-5 border-right my-2 my-md-0">
                         <div class="d-flex justify-content-between mb-1">
                             <div>
                                 <span class="compact-label">বাদি:</span> 
@@ -104,8 +104,8 @@
                         </div>
                     </div>
 
-                    <!-- পরবর্তী ধার্য তারিখ, শুনানি কাউন্ট ও প্রিন্ট বাটন -->
-                    <div class="col-lg-3 col-md-3 d-flex align-items-center justify-content-between pl-md-3">
+                    <!-- পরবর্তী ধার্য তারিখ, শুনানি কাউন্ট ও প্রিন্ট বাটনসমূহ -->
+                    <div class="col-lg-4 col-md-3 d-flex align-items-center justify-content-between pl-md-3">
                         <div>
                             <div class="compact-label">পরবর্তী তারিখ:</div>
                             <strong class="text-danger" style="font-size: 1rem;">
@@ -116,9 +116,14 @@
                             <span class="badge badge-success px-2 py-1 d-block mb-1">
                                 <i class="fas fa-gavel"></i> {{ bangla($file->hearings->count()) }} টি শুনানি
                             </span>
-                            <a href="{{ route('files.receipt', $file->id) }}" target="_blank" class="btn btn-outline-info btn-sm py-0 px-2 font-weight-bold" style="font-size: 11px;">
-                                <i class="fas fa-print"></i> QR স্টিকার
-                            </a>
+                            <div class="btn-group">
+                                <a href="{{ route('files.receipt', $file->id) }}" target="_blank" class="btn btn-outline-info btn-sm py-0 px-2 font-weight-bold" style="font-size: 11px;" title="QR স্টিকার প্রিন্ট করুন">
+                                    <i class="fas fa-qrcode"></i> QR স্টিকার
+                                </a>
+                                <a href="{{ route('files.print_slip', $file->id) }}" target="_blank" class="btn btn-outline-secondary btn-sm py-0 px-2 font-weight-bold" style="font-size: 11px;" title="শুনানি স্লিপ প্রিন্ট করুন">
+                                    <i class="fas fa-print"></i> শুনানি স্লিপ
+                                </a>
+                            </div>
                         </div>
                     </div>
 
@@ -126,7 +131,7 @@
             </div>
         </div>
 
-        <!-- ২. মূল ওয়ার্কস্পেস -->
+        <!-- ২. মূল ওয়ার্কস্পেস -->
         <div class="row">
             
             <!-- বাম দিক: নতুন শুনানি গ্রহণ ও ট্রানজিট ফর্ম -->
@@ -148,7 +153,7 @@
                             </div>
                             <div class="col-6 form-group mb-2">
                                 <label class="small mb-1 font-weight-bold">পরবর্তী ধার্য তারিখ <small class="text-success">(সোম/বুধ)</small></label>
-                                <input type="text" name="next_hearing_date" id="next_hearing_date" class="form-control form-control-sm bg-white" placeholder="তারিখ সিলেক্ট করুন" required >
+                                <input type="text" name="next_hearing_date" id="next_hearing_date" class="form-control form-control-sm bg-white" placeholder="তারিখ সিলেক্ট করুন" required readonly>
                             </div>
                         </div>
 
@@ -202,7 +207,7 @@
                 </div>
             </div>
 
-            <!-- ডান দিক: আদেশের ইতিহাস এবং নথির গতিবিধি (১০০% নিখুঁত বুটস্ট্র্যাপ ট্যাব) -->
+            <!-- ডান দিক: আদেশের ইতিহাস এবং নথির গতিবিধি -->
             <div class="col-md-7">
                 <div class="card shadow-sm card-outline card-info">
                     
@@ -228,13 +233,25 @@
                             <div class="tab-pane fade show active" id="hearings-content" role="tabpanel" aria-labelledby="hearings-tab">
                                 @forelse($file->hearings->sortByDesc('created_at') as $index => $hearing)
                                     <div class="border-left border-primary pl-3 pb-3 mb-3 position-relative" style="border-left-width: 3px !important;">
+                                        
                                         <div class="d-flex justify-content-between align-items-center mb-1">
                                             <span class="font-weight-bold text-dark">
                                                 শুনানি #{{ bangla($file->hearings->count() - $index) }} - {{ bangla(date('d F, Y', strtotime($hearing->hearing_date))) }}
                                             </span>
-                                            <span class="badge badge-light border text-muted small">
-                                                গ্রহণকারী: {{ $hearing->conductor->designation ?? ($hearing->conductor->name ?? 'অজ্ঞাত') }}
-                                            </span>
+                                            
+                                            <div>
+                                                <span class="badge badge-light border text-muted small mr-1">
+                                                    গ্রহণকারী: {{ $hearing->conductor->designation ?? ($hearing->conductor->name ?? 'অজ্ঞাত') }}
+                                                </span>
+                                                <!-- ডিলিট বাটন -->
+                                                <form action="{{ route('hearings.destroy', $hearing->id) }}" method="POST" class="d-inline" onsubmit="return confirm('আপনি কি নিশ্চিত যে এই শুনানির তথ্যটি মুছে ফেলতে চান?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm p-0 px-1" title="শুনানি ডিলিট করুন" style="font-size: 11px;">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </div>
 
                                         <p class="mb-2 text-secondary bg-light p-2 rounded" style="font-size: 0.88rem; white-space: pre-line;">
@@ -325,7 +342,7 @@
             defaultDate: "today"
         });
 
-        // ২. পরবর্তী ধার্য তারিখ (সোম ও বুধবার স্বয়ংস্ক্রিয় হাইলাইট)
+        // ২. পরবর্তী ধার্য তারিখ (সোম ও বুধবার স্বয়ংক্রিয় হাইলাইট)
         flatpickr("#next_hearing_date", {
             dateFormat: "Y-m-d",
             minDate: "today",
