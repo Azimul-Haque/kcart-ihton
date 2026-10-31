@@ -116,6 +116,14 @@ class HearingController extends Controller
         return redirect()->route('files.show', $file->id)->with('success', 'শুনানির আদেশ ও ফাইল স্থানান্তর সফলভাবে সংরক্ষিত হয়েছে।');
     }
 
+    public function destroy(Hearing $hearing)
+    {
+        $fileId = $hearing->file_id;
+        $hearing->delete();
+
+        return redirect()->route('files.show', $fileId)->with('success', 'শুনানির তথ্য সফলভাবে মুছে ফেলা হয়েছে।');
+    }
+
     /**
      * বাদি ও বিবাদিকে পরবর্তী শুনানির তারিখ সংক্রান্ত SMS পাঠানো
      */
