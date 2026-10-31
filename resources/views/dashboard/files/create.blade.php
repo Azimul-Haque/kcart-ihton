@@ -2,6 +2,33 @@
 
 @section('title', 'ড্যাশবোর্ড | নতুন নথি এন্ট্রি')
 
+@section('third_party_stylesheets')
+<!-- Flatpickr Datepicker CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<style>
+    /* ৩. সোম ও বুধবার হাইলাইটক্লিয়ার ক্যালেন্ডার CSS */
+    .flatpickr-day.court-day-highlight {
+        background: #d1e7dd !important;
+        border-color: #0f5132 !important;
+        color: #0f5132 !important;
+        font-weight: bold !important;
+        position: relative;
+    }
+    .flatpickr-day.court-day-highlight::after {
+        content: '';
+        position: absolute;
+        bottom: 2px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background-color: #0f5132;
+    }
+</style>
+@endsection
+
 @section('content')
     @section('page-header') নতুন নথি বা মোকদ্দমা রুজু করুন @endsection
 
