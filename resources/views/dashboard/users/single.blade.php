@@ -1,162 +1,159 @@
 @extends('layouts.app')
 
-@section('title') প্রোফাইল | {{ $user->name }} @endsection
+@section('title', 'ড্যাশবোর্ড | ' . $user->name)
 
 @section('third_party_stylesheets')
-  <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css">
-  <style type="text/css">
-    .profile-card { border-radius: 15px; overflow: hidden; transition: 0.3s; }
-    .info-box { border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important; }
-    .stat-pill { background: #f1f3f9; padding: 5px 12px; border-radius: 50px; font-weight: 600; color: #4e73df; font-size: 14px; display: inline-block; margin-top: 5px; border: 1px solid #d1d9e6; }
-    .table-modern thead th { background-color: #f8f9fa; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; border-bottom: 2px solid #eee; }
-    .table-modern td { vertical-align: middle !important; padding: 12px 15px; }
-    .card-title-icon { width: 35px; height: 35px; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; margin-right: 10px; }
-    .bg-soft-success { background: #e8f5e9; color: #2e7d32; }
-    .bg-soft-primary { background: #e3f2fd; color: #1565c0; }
-    .bg-soft-warning { background: #fffde7; color: #f57f17; }
-    .pulse-green { animation: pulse-green 2s infinite; }
-    @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); } 100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); } }
-  </style>
+<style>
+    .profile-card { background: #fff; border-top: 4px solid #007bff; }
+    .duration-badge { font-size: 0.85rem; font-weight: 600; padding: 5px 10px; border-radius: 20px; }
+    .table thead th { background-color: #f8f9fa; font-size: 12px; color: #555; }
+</style>
 @endsection
 
 @section('content')
-<div class="content-header">
+    @section('page-header') স্টাফ প্রোফাইল ও ডেস্কে থাকা নথি @endsection
+
     <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0 font-weight-bold text-dark"><i class="fas fa-user-circle text-primary"></i> {{ $user->name }}</h1>
+        <div class="row">
+            
+            <!-- Left Column: User Summary Card -->
+            <div class="col-md-4">
+                <div class="card profile-card shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <span class="fa-stack fa-2x">
+                                <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                                <i class="fas fa-user fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </div>
+                        <h4 class="font-weight-bold mb-1">{{ $user->name }}</h4>
+                        <p class="badge badge-primary px-3 py-1 font-weight-normal mb-2">{{ $user->designation ?? 'পদবী নির্ধারিত নয়' }}</p>
+                        
+                        <div class="text-muted small mb-3">
+                            <i class="fas fa-phone-alt mr-1"></i> {{ bangla($user->mobile) }} <br>
+                            <i class="fas fa-shield-alt mr-1"></i> রোল: {{ ucfirst($user->role) }} <br>
+                            <i class="fas fa-calendar-alt mr-1"></i> সিস্টেমে যোগদান: {{ date('d M, Y', strtotime($user->created_at)) }}
+                        </div>
+
+                        <a href="{{ route('dashboard.users') }}" class="btn btn-outline-secondary btn-sm btn-block">
+                            <i class="fas fa-arrow-left"></i> স্টাফ তালিকায় ফিরে যান
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Stats Summary Boxes -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title m-0 text-dark" style="font-size: 1rem;"><i class="fas fa-chart-pie mr-1"></i> কাজের সংক্ষিপ্ত বিবরণ</h5>
+                    </div>
+                    <div class="card-body p-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                            <span class="text-muted"><i class="fas fa-inbox text-warning mr-1"></i> ডেস্কে পেন্ডিং ফাইল:</span>
+                            <span class="font-weight-bold badge badge-warning px-2 py-1">{{ bangla($filesOnDesk->count()) }} টি</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                            <span class="text-muted"><i class="fas fa-exclamation-triangle text-danger mr-1"></i> ৭ দিনের বেশি আটকে আছে:</span>
+                            <span class="font-weight-bold badge badge-danger px-2 py-1">{{ bangla($overdueCount) }} টি</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted"><i class="fas fa-check-circle text-success mr-1"></i> মোট প্রসেসকৃত ফাইল:</span>
+                            <span class="font-weight-bold badge badge-success px-2 py-1">{{ bangla($totalProcessed) }} টি</span>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!-- Right Column: Files Currently on Desk Table -->
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h3 class="card-title text-primary font-weight-bold mb-0">
+                            <i class="fas fa-folder-open mr-1"></i> বর্তমানে ডেস্কে থাকা নথিসমূহ ({{ bangla($filesOnDesk->count()) }})
+                        </h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>নথি / মামলা নং</th>
+                                        <th>ধরন</th>
+                                        <th>বাদি ও বিবাদি</th>
+                                        <th>ডেস্কে আসার তারিখ</th>
+                                        <th>আটকে থাকার সময়</th>
+                                        <th class="text-right">একশন</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($filesOnDesk as $file)
+                                        @php
+                                            $lastMovement = $file->movements->first();
+                                            $receivedAt = $lastMovement ? ($lastMovement->received_at ?? $lastMovement->created_at) : $file->created_at;
+                                            $daysAtDesk = \Carbon\Carbon::parse($receivedAt)->diffInDays(now());
+                                            
+                                            // Color coding logic based on duration
+                                            if ($daysAtDesk <= 3) {
+                                                $badgeClass = 'badge-success';
+                                                $statusText = '১-৩ দিন (স্বাভাবিক)';
+                                            } elseif ($daysAtDesk <= 7) {
+                                                $badgeClass = 'badge-warning';
+                                                $statusText = '৪-৭ দিন (সতর্কতা)';
+                                            } else {
+                                                $badgeClass = 'badge-danger';
+                                                $statusText = '৭+ দিন (বিলম্বে আটক)';
+                                            }
+                                        @endphp
+                                        <tr>
+                                            <td>
+                                                <strong class="text-dark">{{ $file->case_number ? bangla($file->case_number) : 'রুজু হয়নি' }}</strong>
+                                                <div class="small text-muted">আইডি: {{ substr($file->uuid, 0, 8) }}...</div>
+                                            </td>
+
+                                            <td>
+                                                <span class="badge badge-light border">{{ $file->type }}</span>
+                                            </td>
+
+                                            <td>
+                                                <div class="small">
+                                                    <strong>বাদি:</strong> {{ $file->badi_name ?? 'N/A' }} <br>
+                                                    <strong>বিবাদি:</strong> {{ $file->bibadi_name ?? 'N/A' }}
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <span class="small text-dark">
+                                                    {{ date('d M, Y', strtotime($receivedAt)) }} <br>
+                                                    <small class="text-muted">{{ date('h:i A', strtotime($receivedAt)) }}</small>
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                <span class="badge {{ $badgeClass }} duration-badge" title="{{ $statusText }}">
+                                                    <i class="far fa-clock mr-1"></i> {{ bangla($daysAtDesk) }} দিন ধরে
+                                                </span>
+                                            </td>
+
+                                            <td class="text-right">
+                                                <a href="{{ route('files.show', $file->id) }}" class="btn btn-outline-primary btn-sm" title="নথির বিস্তারিত ও টাইমলাইন দেখুন">
+                                                    <i class="fas fa-eye"></i> বিস্তারিত
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="text-center py-4 text-muted">
+                                                <i class="fas fa-check-circle text-success fa-2x mb-2 d-block"></i>
+                                                বর্তমানে এই কর্মকর্তার ডেস্কে কোনো ফাইল পেন্ডিং নেই।
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
-</div>
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card profile-card shadow-sm border-0">
-                <div class="card-body p-0">
-                    <div class="bg-primary p-4 text-center">
-                        {{-- <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=random&color=fff&size=128" class="img-circle elevation-2 mb-3" style="width: 100px; border: 3px solid #fff;"> --}}
-                        <h4 class="text-white font-weight-bold mb-0">{{ $user->name }}</h4>
-                        <span class="badge badge-light badge-pill px-3">{{ ucfirst($user->role) }}</span>
-                    </div>
-                    <div class="p-3">
-                        <ul class="list-group list-group-unbordered">
-                            <li class="list-group-item border-0">
-                                <i class="fas fa-phone-alt text-muted mr-2"></i> <b>মোবাইল:</b> <span class="float-right text-dark">{{ $user->mobile }}</span>
-                            </li>
-                            <li class="list-group-item border-0">
-                                <i class="fas fa-calendar-alt text-muted mr-2"></i> <b>যোগদান:</b> <span class="float-right text-dark">{{ bangla(date('d F, Y', strtotime($user->created_at))) }}</span>
-                            </li>
-                            <li class="list-group-item border-0">
-                                <i class="fas fa-clock text-danger mr-2"></i> <b>মেয়াদ:</b> <span class="float-right text-danger font-weight-bold">{{ bangla(date('d F, Y', strtotime($user->package_expiry_date))) }}</span>
-                            </li>
-                            {{-- <li class="list-group-item border-0">
-                                <i class="fas fa-shopping-cart text-muted mr-2"></i> <b>মোট ক্রয়:</b> <span class="float-right badge badge-primary">{{ bangla($user->payments->count()) }} বার</span>
-                            </li> --}}
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="info-box bg-soft-primary">
-                <span class="info-box-icon"><i class="fas fa-file-signature text-primary"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">পরীক্ষা তথ্য</span>
-                    <span class="info-box-number text-primary h4 mb-0">{{ bangla($user->meritlists->count()) }} টি</span>
-                    <small class="text-muted font-italic">সফলভাবে অংশগ্রহণ করেছেন</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-8">
-            <div class="card shadow-sm border-0 mb-4">
-                <div class="card-header bg-white py-3">
-                    <h5 class="card-title font-weight-bold mb-0">
-                        <span class="card-title-icon bg-soft-primary"><i class="fas fa-list-ul"></i></span> পরীক্ষার ইতিহাস
-                    </h5>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-modern table-hover mb-0">
-                            <thead>
-                                <tr>
-                                    <th>পরীক্ষার নাম ও কোর্স</th>
-                                    <th>সময়</th>
-                                    <th class="text-center">প্রাপ্ত নম্বর</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($user->meritlists as $examdata)
-                                <tr>
-                                    <td>
-                                        <div class="font-weight-bold text-dark">{{ $examdata->exam->name }}</div>
-                                        <small class="text-muted"><i class="fas fa-book-open fa-xs"></i> {{ $examdata->course->name }}</small>
-                                    </td>
-                                    <td>
-                                        <small class="text-muted">{{ date('F d Y h:i a', strtotime($examdata->created_at)) }}</small>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge badge-info px-3 py-2" style="font-size: 14px;">{{ bangla($examdata->marks) }}</span>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="2" class="text-center py-4 text-muted font-italic">এখনো কোনো পরীক্ষায় অংশগ্রহণ করা হয়নি।</td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@endsection
-
-@section('third_party_scripts')
-  <script src="//cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
-  <script>
-    $(document).ready(function() {
-        $('.table-modern').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "pageLength": 5
-        });
-    });
-  </script>
-  <script>
-  function confirmPayout(userId) {
-      // ১. প্রথমে ফর্মটি সিলেক্ট করুন
-      var form = document.getElementById('payoutForm' + userId);
-
-      // ২. ব্রাউজারের নেটিভ ভ্যালিডেশন চেক করুন (required, min, max ইত্যাদি)
-      if (form.checkValidity()) {
-          // ৩. যদি সব ফিল্ড ঠিক থাকে, তবেই Swal দেখাবে
-          Swal.fire({
-              title: "আপনি কি নিশ্চিত?",
-              text: "টাকাটি পাঠানো হয়েছে এবং আপনি এই রেকর্ডটি ডাটাবেসে সেভ করতে চাচ্ছেন?",
-              icon: "warning",
-              showCancelButton: true,
-              confirmButtonColor: "#28a745",
-              cancelButtonColor: "#6c757d",
-              confirmButtonText: "হ্যাঁ, কনফার্ম করুন!",
-              cancelButtonText: "ফিরে যান",
-              reverseButtons: true
-          }).then((result) => {
-              if (result.isConfirmed) {
-                  form.submit(); // সব ঠিক থাকলে সাবমিট হবে
-              }
-          });
-      } else {
-          // ৪. যদি কোনো ফিল্ড বাকি থাকে, তবে ব্রাউজারকে এরর দেখাতে বলুন
-          form.reportValidity();
-      }
-  }
-  </script>
 @endsection
