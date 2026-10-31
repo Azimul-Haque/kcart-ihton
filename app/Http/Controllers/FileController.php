@@ -9,6 +9,8 @@ use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use View;
+
 class FileController extends Controller
 {
     public function __construct()
@@ -22,7 +24,7 @@ class FileController extends Controller
         // $this->middleware(['admin'])->only('getUsers', 'storeUser', 'updateUser', 'deleteUser', 'getUser', 'getMessages', 'updateMessage', 'getNotifications', 'sendSingleNotification', 'sendSingleSMS', 'getExamSolvePDF');
         
     }
-    
+
     /**
      * সকল নথি ও ফিল্টারিং তালিকা
      */
