@@ -178,7 +178,7 @@
                                                 <div class="modal-footer bg-light">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">ফিরে যান</button>
                                                     <form action="{{ route('dashboard.users.delete', $user->id) ?? '#' }}" method="POST">
-                                                        @csrf @method('DELETE')
+                                                        @csrf @method('GET')
                                                         <button type="submit" class="btn btn-danger">হ্যাঁ, ডিলেট করুন</button>
                                                     </form>
                                                 </div>
