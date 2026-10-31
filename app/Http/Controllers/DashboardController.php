@@ -236,7 +236,7 @@ class DashboardController extends Controller
                     ->withUserscount($userscount);
     }
 
-    public function getUser($id)
+    public function getUser(Request $request, $id)
     {
         $user = User::findOrFail($id);
         
