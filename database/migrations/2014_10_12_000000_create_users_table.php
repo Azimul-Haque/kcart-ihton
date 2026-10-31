@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             // $table->string('referral_code', 6)->unique()->index();
             $table->string('name');
             $table->string('role')->default('user');
+            $table->string('designation');
             $table->string('mobile')->unique();
             $table->string('bkash');
             $table->boolean('is_approved')->default(0);
