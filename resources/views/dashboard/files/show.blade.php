@@ -7,33 +7,31 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 <style>
-    /* ১. আল্ট্রা-কম্প্যাক্ট সামারি বার স্টাইল */
-    .summary-card { border-left: 4px solid #007bff; }
-    .summary-card .card-body { padding: 8px 15px !important; }
-    .summary-title { font-size: 1.05rem; font-weight: 700; color: #1a252f; }
-    .compact-label { font-size: 0.8rem; color: #6c757d; font-weight: 600; }
-    .compact-val { font-size: 0.88rem; color: #212529; font-weight: 600; }
-    .mobile-text { font-size: 0.76rem; color: #6c757d; font-weight: normal; }
-
-    /* ২. টাইমলাইন ডিজাইন (ডেস্ক গতিবিধি) */
-    .timeline { position: relative; margin: 0 0 10px 0; padding: 0; list-style: none; }
+    /* কম্প্যাক্ট ইনফো টেবিল ও টেক্সট স্টাইল */
+    .compact-card .card-body { padding: 10px 15px !important; }
+    .info-table td, .info-table th { padding: 4px 8px; vertical-align: middle; border-top: none; font-size: 0.88rem; }
+    .info-label { font-weight: 600; color: #495057; white-space: nowrap; }
+    .mobile-small { font-size: 0.78rem; color: #6c757d; font-weight: normal; margin-left: 3px; }
+    
+    /* টাইমলাইন কাস্টম স্টাইল */
+    .timeline { position: relative; margin: 0 0 15px 0; padding: 0; list-style: none; }
     .timeline::before {
         content: ''; position: absolute; top: 0; bottom: 0; width: 3px;
-        background: #e9ecef; left: 15px; margin: 0; border-radius: 2px;
+        background: #dee2e6; left: 15px; margin: 0; border-radius: 2px;
     }
-    .timeline > div { position: relative; margin-bottom: 10px; }
+    .timeline > div { position: relative; margin-right: 0; margin-bottom: 12px; }
     .timeline > div > .timeline-item {
-        box-shadow: 0 1px 2px rgba(0,0,0,.05); border: 1px solid #e2e8f0;
+        box-shadow: 0 1px 3px rgba(0,0,0,.1); border: 1px solid #e9ecef;
         border-radius: .25rem; background: #fff; color: #495057;
-        margin-left: 36px; padding: 8px 12px; position: relative;
+        margin-left: 38px; margin-right: 0; padding: 8px 12px; position: relative;
     }
     .timeline > div > i {
-        width: 22px; height: 22px; font-size: 10px; line-height: 22px;
+        width: 24px; height: 24px; font-size: 11px; line-height: 24px;
         position: absolute; color: #fff; border-radius: 50%;
-        text-align: center; left: 4px; top: 4px; z-index: 1;
+        text-align: center; left: 3px; top: 4px; z-index: 1;
     }
 
-    /* ৩. সোম ও বুধবার হাইলাইটক্লিয়ার ক্যালেন্ডার CSS */
+    /* ফ্ল্যাটপিকার সোম ও বুধবার হাইলাইট কাস্টম CSS */
     .flatpickr-day.court-day-highlight {
         background: #d1e7dd !important;
         border-color: #0f5132 !important;
@@ -56,77 +54,81 @@
 @endsection
 
 @section('content')
-    @section('page-header') নথির বিবরণী ও রেকর্ড গ্রহণ @endsection
+    @section('page-header') নথির বিস্তারিত ও আদেশ রেকর্ড @endsection
 
     <div class="container-fluid">
         
-        <!-- ১. অতি সংক্ষিপ্ত ও সুন্দর সামারি কার্ড (One-Line Height Sleek View) -->
-        <div class="card shadow-sm mb-3 summary-card">
+        <!-- ১. নথির মূল সারসংক্ষেপ (কম্প্যাক্ট ও স্মার্ট ভিউ) -->
+        <div class="card card-outline card-primary shadow-sm mb-2 compact-card">
             <div class="card-body">
                 <div class="row align-items-center">
                     
-                    <!-- মামলা নং, ধরন ও UUID -->
-                    <div class="col-lg-3 col-md-4 border-right">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <span class="summary-title text-primary">
-                                <i class="fas fa-folder mr-1"></i>{{ $file->case_number ? bangla($file->case_number) : 'রুজু হয়নি' }}
-                            </span>
-                            <span class="badge badge-primary px-2 py-1">{{ $file->type }}</span>
-                        </div>
-                        <div class="text-muted small mt-1">
-                            <code>UUID: {{ substr($file->uuid, 0, 16) }}...</code>
-                        </div>
+                    <!-- তথ্য টেবিল -->
+                    <div class="col-md-10">
+                        <table class="table table-sm info-table mb-0">
+                            <tbody>
+                                <tr>
+                                    <td width="35%">
+                                        <span class="info-label">মামলা নম্বর:</span> 
+                                        <strong class="text-primary font-weight-bold" style="font-size: 1rem;">
+                                            {{ $file->case_number ? bangla($file->case_number) : 'রুজু হয়নি' }}
+                                        </strong>
+                                        <span class="badge badge-primary ml-1">{{ $file->type }}</span>
+                                    </td>
+                                    <td width="35%">
+                                        <span class="info-label">বর্তমান অবস্থান:</span> 
+                                        <span class="badge badge-warning px-2">{{ $file->currentDesk->designation ?? $file->currentDesk->name }}</span>
+                                    </td>
+                                    <td width="30%">
+                                        <span class="info-label">স্ট্যাটাস:</span> 
+                                        <span class="badge badge-info px-2">{{ $file->status }}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="info-label">বাদি:</span> 
+                                        <span class="font-weight-bold text-dark">{{ $file->badi_name ?? '-' }}</span>
+                                        @if($file->badi_mobile) <span class="mobile-small">({{ bangla($file->badi_mobile) }})</span> @endif
+                                    </td>
+                                    <td>
+                                        <span class="info-label">বিবাদি:</span> 
+                                        <span class="font-weight-bold text-dark">{{ $file->bibadi_name ?? '-' }}</span>
+                                        @if($file->bibadi_mobile) <span class="mobile-small">({{ bangla($file->bibadi_mobile) }})</span> @endif
+                                    </td>
+                                    <td>
+                                        <span class="info-label">পরবর্তী তারিখ:</span> 
+                                        <strong class="text-danger">
+                                            {{ $file->next_hearing_date ? bangla(date('d/m/Y', strtotime($file->next_hearing_date))) : 'ধার্য হয়নি' }}
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" class="text-muted small">
+                                        <strong>মন্তব্য:</strong> {{ $file->remarks ?? 'নেই' }} | 
+                                        <code>UUID: {{ substr($file->uuid, 0, 18) }}...</code>
+                                    </td>
+                                    <td class="text-right">
+                                        <span class="badge badge-success px-2 py-1">
+                                            <i class="fas fa-gavel"></i> শুনানি গ্রহণ: <strong>{{ bangla($file->hearings->count()) }}</strong> টি
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
 
-                    <!-- বাদি, বিবাদি, বর্তমান অবস্থান ও স্ট্যাটাস -->
-                    <div class="col-lg-6 col-md-5 border-right my-2 my-md-0">
-                        <div class="d-flex justify-content-between mb-1">
-                            <div>
-                                <span class="compact-label">বাদি:</span> 
-                                <span class="compact-val">{{ $file->badi_name ?? '-' }}</span>
-                                @if($file->badi_mobile) <span class="mobile-text">({{ bangla($file->badi_mobile) }})</span> @endif
-                            </div>
-                            <div>
-                                <span class="compact-label">বিবাদি:</span> 
-                                <span class="compact-val">{{ $file->bibadi_name ?? '-' }}</span>
-                                @if($file->bibadi_mobile) <span class="mobile-text">({{ bangla($file->bibadi_mobile) }})</span> @endif
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="compact-label">অবস্থান:</span> 
-                                <span class="badge badge-warning px-2">{{ $file->currentDesk->designation ?? $file->currentDesk->name }}</span>
-                            </div>
-                            <div>
-                                <span class="compact-label">স্ট্যাটাস:</span> 
-                                <span class="badge badge-info px-2">{{ $file->status }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- পরবর্তী ধার্য তারিখ, শুনানি কাউন্ট ও প্রিন্ট বাটন -->
-                    <div class="col-lg-3 col-md-3 d-flex align-items-center justify-content-between pl-md-3">
-                        <div>
-                            <div class="compact-label">পরবর্তী তারিখ:</div>
-                            <strong class="text-danger" style="font-size: 1rem;">
-                                {{ $file->next_hearing_date ? bangla(date('d/m/Y', strtotime($file->next_hearing_date))) : 'ধার্য হয়নি' }}
-                            </strong>
-                        </div>
-                        <div class="text-right">
-                            <span class="badge badge-success px-2 py-1 d-block mb-1">
-                                <i class="fas fa-gavel"></i> {{ bangla($file->hearings->count()) }} টি শুনানি
-                            </span>
-                            <a href="{{ route('files.receipt', $file->id) }}" target="_blank" class="btn btn-outline-info btn-sm py-0 px-2 font-weight-bold" style="font-size: 11px;">
-                                <i class="fas fa-print"></i> QR স্টিকার
-                            </a>
-                        </div>
+                    <!-- প্রিন্ট বাটন -->
+                    <div class="col-md-2 text-md-right mt-2 mt-md-0 border-left">
+                        <a href="{{ route('files.receipt', $file->id) }}" target="_blank" class="btn btn-outline-info btn-sm btn-block">
+                            <i class="fas fa-print mr-1"></i> QR স্টিকার
+                        </a>
                     </div>
 
                 </div>
             </div>
         </div>
 
-        <!-- ২. মূল ওয়ার্কস্পেস -->
+        <!-- ২. মূল ওয়ার্কস্পেস (বামপাশে শুনানি ও ট্রানজিট ফর্ম, ডানপাশে ইতিহাস) -->
         <div class="row">
             
             <!-- বাম দিক: নতুন শুনানি গ্রহণ ও ট্রানজিট ফর্ম -->
@@ -148,7 +150,7 @@
                             </div>
                             <div class="col-6 form-group mb-2">
                                 <label class="small mb-1 font-weight-bold">পরবর্তী ধার্য তারিখ <small class="text-success">(সোম/বুধ)</small></label>
-                                <input type="text" name="next_hearing_date" id="next_hearing_date" class="form-control form-control-sm bg-white" placeholder="তারিখ সিলেক্ট করুন" readonly>
+                                <input type="text" name="next_hearing_date" id="next_hearing_date" class="form-control form-control-sm bg-white" placeholder="তারিখ বেছে নিন" readonly>
                             </div>
                         </div>
 
@@ -202,19 +204,19 @@
                 </div>
             </div>
 
-            <!-- ডান দিক: আদেশের ইতিহাস এবং নথির গতিবিধি (১০০% নিখুঁত বুটস্ট্র্যাপ ট্যাব) -->
+            <!-- ডান দিক: আদেশের ইতিহাস এবং নথির গতিবিধি (ট্যাব সিস্টেমে) -->
             <div class="col-md-7">
                 <div class="card shadow-sm card-outline card-info">
                     
-                    <div class="card-header p-2 bg-white border-bottom">
-                        <ul class="nav nav-pills" id="fileDetailTabs" role="tablist">
+                    <div class="card-header p-2 bg-white border-bottom-0">
+                        <ul class="nav nav-pills" id="historyTab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active py-1 px-3 font-weight-bold" id="hearings-tab" data-toggle="pill" href="#hearings-content" role="tab" aria-controls="hearings-content" aria-selected="true">
+                                <a class="nav-link active py-1 px-3 font-weight-bold" id="hearings-tab" data-toggle="pill" href="#hearings" role="tab" aria-controls="hearings" aria-selected="true">
                                     <i class="fas fa-gavel mr-1"></i> আদেশের ইতিহাস ({{ bangla($file->hearings->count()) }})
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link py-1 px-3 font-weight-bold" id="movements-tab" data-toggle="pill" href="#movements-content" role="tab" aria-controls="movements-content" aria-selected="false">
+                                <a class="nav-link py-1 px-3 font-weight-bold" id="movements-tab" data-toggle="pill" href="#movements" role="tab" aria-controls="movements" aria-selected="false">
                                     <i class="fas fa-route mr-1"></i> ডেস্ক গতিবিধি ({{ bangla($file->movements->count()) }})
                                 </a>
                             </li>
@@ -222,10 +224,10 @@
                     </div>
 
                     <div class="card-body p-3">
-                        <div class="tab-content" id="fileDetailTabsContent">
+                        <div class="tab-content" id="historyTabContent">
                             
                             <!-- ট্যাব ১: গৃহীত আদেশের ইতিহাস -->
-                            <div class="tab-pane fade show active" id="hearings-content" role="tabpanel" aria-labelledby="hearings-tab">
+                            <div class="tab-pane fade show active" id="hearings" role="tabpanel" aria-labelledby="hearings-tab">
                                 @forelse($file->hearings->sortByDesc('created_at') as $index => $hearing)
                                     <div class="border-left border-primary pl-3 pb-3 mb-3 position-relative" style="border-left-width: 3px !important;">
                                         <div class="d-flex justify-content-between align-items-center mb-1">
@@ -262,7 +264,7 @@
                             </div>
 
                             <!-- ট্যাব ২: নথির ডেস্ক স্থানান্তর গতিবিধি (Timeline) -->
-                            <div class="tab-pane fade" id="movements-content" role="tabpanel" aria-labelledby="movements-tab">
+                            <div class="tab-pane fade" id="movements" role="tabpanel" aria-labelledby="movements-tab">
                                 <div class="timeline">
                                     @forelse($file->movements->sortByDesc('created_at') as $movement)
                                     <div>
@@ -319,19 +321,20 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         
-        // ১. শুনানির তারিখ ডেটপিকার
+        // ১. শুনানির তারিখ (সাধারন ডেটপিকার)
         flatpickr("#hearing_date", {
             dateFormat: "Y-m-d",
             defaultDate: "today"
         });
 
-        // ২. পরবর্তী ধার্য তারিখ (সোম ও বুধবার স্বয়ংস্ক্রিয় হাইলাইট)
+        // ২. পরবর্তী ধার্য তারিখ (সোম ও বুধবার স্বয়ংক্রিয়ভাবে হাইলাইট)
         flatpickr("#next_hearing_date", {
             dateFormat: "Y-m-d",
             minDate: "today",
             onDayCreate: function(dObj, dStr, fp, dayElem) {
+                // dayElem.dateObj.getDay() -> 1 = Monday (সোমবার), 3 = Wednesday (বুধবার)
                 var day = dayElem.dateObj.getDay();
-                if (day === 1 || day === 3) { // ১ = সোমবার, ৩ = বুধবার
+                if (day === 1 || day === 3) {
                     dayElem.classList.add("court-day-highlight");
                     dayElem.title = "ধার্য দিন (সোম/বুধবার)";
                 }
