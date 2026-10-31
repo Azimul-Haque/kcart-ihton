@@ -24,6 +24,8 @@ Route::get('/privacy-policy', [IndexController::class, 'privacyPolicy'])->name('
 Route::get('/refund-policy', [IndexController::class, 'refundPolicy'])->name('index.refund-policy');
 Route::get('/faq', [IndexController::class, 'getFaq'])->name('index.faq');
 
+Route::get('/case-list', [App\Http\Controllers\FileController::class, 'publicCaseList'])->name('public.case_list');
+
 // Utility Routes
 Route::get('/sessionsclear', [IndexController::class, 'deleteSessionFiles'])->name('sessionsclear');
 Route::get('/clear', [IndexController::class, 'clear'])->name('clear');
@@ -57,7 +59,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/hearings/today', [HearingController::class, 'todayHearings'])->name('hearings.today');
     Route::delete('/hearings/{hearing}', [HearingController::class, 'destroy'])->name('hearings.destroy');
     Route::post('/dashboard/files/{file}/hearings', [HearingController::class, 'store'])->name('hearings.store');
-    
+
 
     // 4. Staff & User Management Routes
     Route::get('/dashboard/users', [DashboardController::class, 'getUsers'])->name('dashboard.users');
