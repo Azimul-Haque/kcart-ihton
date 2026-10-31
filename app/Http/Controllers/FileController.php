@@ -222,10 +222,10 @@ class FileController extends Controller
     }
 
     /**
-     * ৫০৮মিমি স্লিপ প্রিন্ট
+     * ৫৮মিমি স্লিপ প্রিন্ট
      */
     public function receipt(File $file)
     {
-        return view('files.receipt', compact('file'));
+        return view('dashboard.files.receipt', compact('file'));
     }
 }
