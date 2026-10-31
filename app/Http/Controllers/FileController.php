@@ -116,6 +116,29 @@ class FileController extends Controller
         return view('dashboard.files.index', compact('files', 'users'))->with('isTransit', true);
     }
 
+    public function create()
+    {
+        return view('files.create');
+    }
+
+    /**
+     * নির্দিষ্ট নথির বিস্তারিত ও টাইমলাইন প্রদর্শন
+     */
+    public function show(File $file)
+    {
+        // Eager loading for timeline and user details
+        $file->load([
+            'currentDesk', 
+            'movements.fromUser', 
+            'movements.toUser', 
+            'hearings.conductor'
+        ]);
+
+        $users = User::orderBy('name')->get();
+
+        return view('files.show', compact('file', 'users'));
+    }
+
     /**
      * নতুন নথি এন্ট্রি সেভ করা
      */
