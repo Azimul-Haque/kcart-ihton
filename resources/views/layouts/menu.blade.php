@@ -20,19 +20,19 @@
 <li class="nav-item">
     <a href="{{ route('files.index') }}" class="nav-link {{ Request::is('dashboard/files') ? 'active' : '' }} {{ Request::is('dashboard/files/*') ? 'active' : '' }}">
         <i class="nav-icon fas fa-layer-group"></i>
-        <p>কোর্সসমূহ</p>
+        <p>ফাইলসমূহ</p>
     </a>
 </li>
 @endif
 
-@if(Auth::user()->role == 'admin' || Auth::user()->role == 'manager')
+{{-- @if(Auth::user()->role == 'admin' || Auth::user()->role == 'manager')
 <li class="nav-item">
     <a href="{{ route('dashboard.exams.landing') }}" class="nav-link {{ Request::is('dashboard/landing/exams') ? 'active' : '' }} {{ Request::is('dashboard/exams') ? 'active' : '' }} {{ Request::is('dashboard/exams/*') ? 'active' : '' }}">
         <i class="nav-icon fas fa-tasks"></i>
         <p>পরীক্ষাসমূহ</p>
     </a>
 </li>
-@endif
+@endif --}}
 
 
 @if(Auth::user()->role == 'admin')
