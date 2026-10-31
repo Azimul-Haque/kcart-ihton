@@ -327,6 +327,7 @@
 
         // ২. পরবর্তী ধার্য তারিখ (সোম ও বুধবার স্বয়ংস্ক্রিয় হাইলাইট)
         flatpickr("#next_hearing_date", {
+            required: true,
             dateFormat: "Y-m-d",
             minDate: "today",
             onDayCreate: function(dObj, dStr, fp, dayElem) {
