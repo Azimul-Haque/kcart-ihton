@@ -232,6 +232,6 @@ class FileController extends Controller
 
     public function printSlip(File $file)
     {
-        return view('files.print_slip', compact('file'));
+        return view('dashboard.files.print_slip', compact('file'));
     }
 }
