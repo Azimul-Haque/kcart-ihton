@@ -33,12 +33,10 @@
         <div class="card shadow-sm mb-3">
             <div class="card-body p-3">
                 <form method="GET" action="{{ url()->current() }}" class="row g-2 align-items-center">
-                    <!-- সার্চ বক্স -->
                     <div class="col-md-3 col-sm-6 mb-2">
                         <input type="text" name="search" class="form-control form-control-sm" placeholder="মামলা নং, বাদি, বিবাদি বা মোবাইল..." value="{{ request('search') }}">
                     </div>
 
-                    <!-- টাইপ ফিল্টার -->
                     <div class="col-md-2 col-sm-6 mb-2">
                         <select name="type" class="form-control form-control-sm">
                             <option value="">সকল টাইপ</option>
@@ -51,20 +49,18 @@
                         </select>
                     </div>
 
-                    <!-- স্ট্যাটাস ফিল্টার -->
                     <div class="col-md-2 col-sm-6 mb-2">
                         <select name="status" class="form-control form-control-sm">
                             <option value="">সকল স্ট্যাটাস</option>
-                            <option value="রুজু হয়েছে" {{ request('status') == 'রুজু হয়েছে' ? 'selected' : '' }}>রুজু হয়েছে</option>
+                            <option value="রুজু হয়েছে" {{ request('status') == 'রুজু হয়েছে' ? 'selected' : '' }}>রুজু হয়েছে</option>
                             <option value="তদন্তাধীন" {{ request('status') == 'তদন্তাধীন' ? 'selected' : '' }}>তদন্তাধীন</option>
                             <option value="শুনানির জন্য" {{ request('status') == 'শুনানির জন্য' ? 'selected' : '' }}>শুনানির জন্য</option>
                             <option value="আদেশের জন্য" {{ request('status') == 'আদেশের জন্য' ? 'selected' : '' }}>আদেশের জন্য</option>
-                            <option value="চূড়ান্ত শুনানি" {{ request('status') == 'চূড়ান্ত শুনানি' ? 'selected' : '' }}>চূড়ান্ত শুনানি</option>
+                            <option value="চূড়ান্ত শুনানি" {{ request('status') == 'চূড়ান্ত শুনানি' ? 'selected' : '' }}>চূড়ান্ত শুনানি</option>
                             <option value="নিষ্পত্তি" {{ request('status') == 'নিষ্পত্তি' ? 'selected' : '' }}>নিষ্পত্তি</option>
                         </select>
                     </div>
 
-                    <!-- ডেস্ক ফিল্টার -->
                     @if(!isset($isMyDesk))
                     <div class="col-md-3 col-sm-6 mb-2">
                         <select name="desk_id" class="form-control form-control-sm">
@@ -78,7 +74,6 @@
                     </div>
                     @endif
 
-                    <!-- বাটনসমূহ -->
                     <div class="col-md-2 col-sm-12 mb-2 d-flex gap-1">
                         <button type="submit" class="btn btn-primary btn-sm flex-fill mr-1">
                             <i class="fas fa-filter"></i> ফিল্টার
@@ -91,7 +86,7 @@
             </div>
         </div>
 
-        <!-- মূল টেবিল కార్ড -->
+        <!-- মূল টেবিল কার্ড -->
         <div class="card shadow-sm">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
                 <h3 class="card-title text-dark font-weight-bold mb-0">
@@ -114,7 +109,7 @@
                                 <th>বাদি ও বিবাদি</th>
                                 <th>বর্তমান ডেস্ক / অবস্থান</th>
                                 <th>অবস্থা (Status)</th>
-                                <th>আটকে থাকার সময়</th>
+                                <th>আটকে থাকার সময়</th>
                                 <th class="text-right">অ্যাকশন</th>
                             </tr>
                         </thead>
@@ -125,7 +120,6 @@
                                     $receivedAt = $lastMovement ? ($lastMovement->received_at ?? $lastMovement->created_at) : $file->created_at;
                                     $daysAtDesk = \Carbon\Carbon::parse($receivedAt)->diffInDays(now());
                                     
-                                    // Aging Badge Color
                                     if ($daysAtDesk <= 3) {
                                         $agingClass = 'bg-success text-white';
                                     } elseif ($daysAtDesk <= 7) {
@@ -137,7 +131,7 @@
                                 <tr>
                                     <td>
                                         <strong class="text-primary font-weight-bold">
-                                            {{ $file->case_number ? bangla($file->case_number) : 'রুজু হয়নি' }}
+                                            {{ $file->case_number ? bangla($file->case_number) : 'রুজু হয়নি' }}
                                         </strong>
                                         <div class="small text-muted">
                                             আইডি: <code>{{ substr($file->uuid, 0, 8) }}</code>
@@ -172,19 +166,29 @@
                                         <span class="badge badge-info badge-status">
                                             {{ $file->status }}
                                         </span>
+                                        @if($file->next_hearing_date)
+                                            <div class="small text-danger mt-1">
+                                                <i class="far fa-calendar-alt"></i> {{ bangla(date('d/m/Y', strtotime($file->next_hearing_date))) }}
+                                            </div>
+                                        @endif
                                     </td>
 
                                     <td>
-                                        <span class="badge {{ $agingClass }} aging-badge" title="ডেস্কে আসার পর থেকে সময়">
+                                        <span class="badge {{ $agingClass }} aging-badge" title="ডেস্কে আসার পর থেকে সময়">
                                             <i class="far fa-clock"></i> {{ bangla($daysAtDesk) }} দিন ধরে
                                         </span>
                                     </td>
 
                                     <td class="text-right">
                                         <div class="btn-group">
-                                            <!-- বিস্তারিত ও টাইমলাইন -->
-                                            <a href="{{ route('files.show', $file->id) }}" class="btn btn-outline-primary btn-sm" title="টাইমলাইন ও বিবরণ দেখুন">
-                                                <i class="fas fa-eye"></i>
+                                            <!-- সরাসরি শুনানি গ্রহণ বাটন -->
+                                            <a href="{{ route('files.show', $file->id) }}" class="btn btn-success btn-sm" title="শুনানি গ্রহন ও আদেশ লিখুন">
+                                                <i class="fas fa-gavel"></i> শুনানি
+                                            </a>
+
+                                            <!-- নথির তথ্য এডিট বাটন -->
+                                            <a href="{{ route('files.edit', $file->id) }}" class="btn btn-outline-primary btn-sm" title="তথ্য সংশোধন করুন">
+                                                <i class="fas fa-edit"></i>
                                             </a>
 
                                             <!-- QR / Receipt Print -->
@@ -192,7 +196,7 @@
                                                 <i class="fas fa-print"></i>
                                             </a>
 
-                                            <!-- ট্রান্সফার বাটন -->
+                                            <!-- ফাইল ট্রান্সফার বাটন -->
                                             @if($file->current_desk_id == Auth::id() || Auth::user()->role == 'admin')
                                             <button type="button" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#transferModal{{ $file->id }}" title="অন্য ডেস্কে পাঠান">
                                                 <i class="fas fa-paper-plane"></i>
@@ -213,7 +217,7 @@
                                                         <div class="modal-body">
                                                             <div class="form-group">
                                                                 <label>মামলা নং:</label>
-                                                                <input type="text" class="form-control" value="{{ $file->case_number ?? 'রুজু হয়নি' }} ({{ $file->type }})" readonly>
+                                                                <input type="text" class="form-control" value="{{ $file->case_number ?? 'রুজু হয়নি' }} ({{ $file->type }})" readonly>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>প্রাপক কর্মকর্তা/ডেস্ক চিহ্নিত করুন:</label>
@@ -233,7 +237,7 @@
                                                         </div>
                                                         <div class="modal-footer bg-light">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">বাতিল</button>
-                                                            <button type="submit" class="btn btn-warning font-weight-bold">পাঠিয়ে দিন</button>
+                                                            <button type="submit" class="btn btn-warning font-weight-bold">পাঠিয়ে দিন</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -246,7 +250,7 @@
                                 <tr>
                                     <td colspan="7" class="text-center py-4 text-muted">
                                         <i class="fas fa-folder-open fa-2x mb-2 d-block"></i>
-                                        কোনো নথি বা মোকদ্দমা পাওয়া যায়নি।
+                                        কোনো নথি বা মোকদ্দমা পাওয়া যায়নি।
                                     </td>
                                 </tr>
                             @endforelse
@@ -255,7 +259,6 @@
                 </div>
             </div>
 
-            <!-- পেজিনেশন -->
             @if($files->hasPages())
             <div class="card-footer bg-white d-flex justify-content-center">
                 {{ $files->links() }}
