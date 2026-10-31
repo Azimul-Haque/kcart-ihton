@@ -10,7 +10,7 @@
         
         .pos-slip {
             width: 72mm;
-            padding: 2mm;
+            padding: 1.5mm 1mm;
             color: #000;
         }
 
