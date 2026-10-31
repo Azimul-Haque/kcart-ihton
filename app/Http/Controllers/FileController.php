@@ -176,8 +176,36 @@ class FileController extends Controller
         return redirect()->route('files.receipt', $file->id)->with('success', 'নতুন ফাইল এন্ট্রি সফল হয়েছে। QR স্টিকার প্রিন্ট করুন।');
     }
 
+    public function edit(File $file)
+    {
+        $users = User::orderBy('name')->get();
+        return view('files.edit', compact('file', 'users'));
+    }
+
     /**
-     * ড্যাশবোর্ড থেকে ফাইল হস্তান্তরের অনুরোধ (Direct Transfer)
+     * নথির তথ্য আপডেট করা
+     */
+    public function update(Request $request, File $file)
+    {
+        $validated = $request->validate([
+            'type'              => 'required|string',
+            'case_number'       => 'nullable|string',
+            'badi_name'         => 'nullable|string',
+            'badi_mobile'       => 'nullable|string',
+            'bibadi_name'       => 'nullable|string',
+            'bibadi_mobile'     => 'nullable|string',
+            'status'            => 'required|string',
+            'next_hearing_date' => 'nullable|date',
+            'remarks'           => 'nullable|string',
+        ]);
+
+        $file->update($validated);
+
+        return redirect()->route('files.index')->with('success', 'নথির তথ্য সফলভাবে হালনাগাদ করা হয়েছে।');
+    }
+
+    /**
+     * ফাইল অন্য ডেস্কে পাঠানো
      */
     public function transfer(Request $request, File $file)
     {
@@ -194,18 +222,56 @@ class FileController extends Controller
             'remarks'      => $request->remarks,
         ]);
 
-        $file->update([
-            'current_desk_id' => $request->to_user_id,
-        ]);
+        $file->update(['current_desk_id' => $request->to_user_id]);
 
-        return back()->with('success', 'নথিটি সফলভাবে ফরোয়ার্ড করা হয়েছে। প্রাপকের স্ক্যান করার অপেক্ষায় আছে।');
+        return back()->with('success', 'নথিটি সফলভাবে ফরোয়ার্ড করা হয়েছে।');
     }
 
     /**
-     * ৫৮মিমি থার্মাল স্টিকার প্রিন্ট ভিউ
+     * আমার ডেস্কের ফাইলসমূহ
+     */
+    public function myDesk(Request $request)
+    {
+        $query = File::where('current_desk_id', Auth::id())
+            ->with(['currentDesk', 'movements' => function ($q) { $q->latest(); }]);
+
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function ($q) use ($search) {
+                $q->where('case_number', 'LIKE', "%{$search}%")
+                  ->orWhere('badi_name', 'LIKE', "%{$search}%")
+                  ->orWhere('bibadi_name', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $files = $query->latest()->paginate(15)->withQueryString();
+        $users = User::orderBy('name')->get();
+
+        return view('files.index', compact('files', 'users'))->with('isMyDesk', true);
+    }
+
+    /**
+     * ট্রানজিটে থাকা ফাইলসমূহ
+     */
+    public function transit(Request $request)
+    {
+        $unreceivedFileIds = FileMovement::where('is_received', false)->pluck('file_id')->unique();
+
+        $files = File::whereIn('id', $unreceivedFileIds)
+            ->with(['currentDesk', 'movements' => function ($q) { $q->latest(); }])
+            ->latest()
+            ->paginate(15);
+
+        $users = User::orderBy('name')->get();
+
+        return view('files.index', compact('files', 'users'))->with('isTransit', true);
+    }
+
+    /**
+     * ৫০৮মিমি স্লিপ প্রিন্ট
      */
     public function receipt(File $file)
     {
-        return view('dashboard.files.receipt', compact('file'));
+        return view('files.receipt', compact('file'));
     }
 }
