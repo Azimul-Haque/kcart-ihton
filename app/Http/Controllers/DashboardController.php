@@ -283,51 +283,6 @@ class DashboardController extends Controller
         return view('dashboard.users.single', compact('user', 'filesOnDesk', 'pendingCount', 'overdueCount', 'totalProcessed'));
     }
 
-    public function showStaffProfile(Request $request, User $user)
-    {
-        // ডেস্কে থাকা নথির বেস ক্যোয়ারি
-        $query = File::where('current_desk_id', $user->id)
-            ->with(['movements' => function ($q) {
-                $q->latest();
-            }]);
-
-        // ১. টেক্সট সার্চ ফিল্টার (মামলা নম্বর, বাদি, বিবাদি, মোবাইল, ইউইউআইডি)
-        if ($request->filled('search')) {
-            $search = trim($request->search);
-            $query->where(function ($q) use ($search) {
-                $q->where('case_number', 'LIKE', "%{$search}%")
-                  ->orWhere('badi_name', 'LIKE', "%{$search}%")
-                  ->orWhere('bibadi_name', 'LIKE', "%{$search}%")
-                  ->orWhere('badi_mobile', 'LIKE', "%{$search}%")
-                  ->orWhere('bibadi_mobile', 'LIKE', "%{$search}%")
-                  ->orWhere('uuid', 'LIKE', "%{$search}%");
-            });
-        }
-
-        // ২. নথির ধরন ফিল্টার
-        if ($request->filled('type')) {
-            $query->where('type', $request->type);
-        }
-
-        $filesOnDesk = $query->latest()->get();
-
-        // বাম পাশের সমারি মেট্রিকে সার্বিক হিসাব রাখার জন্য মূল পেন্ডিং কাউন্ট
-        $pendingCount = File::where('current_desk_id', $user->id)->count();
-
-        // ৭ দিনের বেশি আটকে থাকা ফাইলের সংখ্যা
-        $allDeskFiles = File::where('current_desk_id', $user->id)->with('movements')->get();
-        $overdueCount = $allDeskFiles->filter(function ($file) {
-            $lastMovement = $file->movements->first();
-            $receivedAt = $lastMovement ? ($lastMovement->received_at ?? $lastMovement->created_at) : $file->created_at;
-            return \Carbon\Carbon::parse($receivedAt)->diffInDays(now()) > 7;
-        })->count();
-
-        // মোট প্রসেসকৃত ফাইল
-        $totalProcessed = FileMovement::where('from_user_id', $user->id)->pluck('file_id')->unique()->count();
-
-        return view('dashboard.user_profile', compact('user', 'filesOnDesk', 'pendingCount', 'overdueCount', 'totalProcessed'));
-    }
-
     public function storeUser(Request $request)
     {
         $request->validate([
