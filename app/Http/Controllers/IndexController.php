@@ -51,7 +51,7 @@ class IndexController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('public.case_list', compact('files'));
+        return view('index.case_list', compact('files'));
     }
 
     public function termsAndConditions()
