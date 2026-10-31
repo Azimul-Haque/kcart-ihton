@@ -14,6 +14,20 @@
     }
     .aging-badge { font-size: 0.78rem; font-weight: 600; padding: 4px 8px; border-radius: 12px; }
     .badge-status { font-size: 0.8rem; padding: 5px 10px; }
+    
+    /* ১৪+ দিনের ক্রুশিয়াল ওয়ার্নিং অ্যানিমেশন ও স্টাইল */
+    .aging-critical {
+        background-color: #dc3545 !important;
+        color: #ffffff !important;
+        font-weight: 700;
+        box-shadow: 0 0 6px rgba(220, 53, 69, 0.6);
+        animation: pulse-danger 2s infinite;
+    }
+    @keyframes pulse-danger {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.03); }
+        100% { transform: scale(1); }
+    }
 </style>
 @endsection
 
@@ -52,6 +66,7 @@
                     <div class="col-md-2 col-sm-6 mb-2">
                         <select name="status" class="form-control form-control-sm">
                             <option value="">সকল স্ট্যাটাস</option>
+                            <option value="overdue_14" {{ request('status') == 'overdue_14' ? 'selected' : '' }} class="text-danger font-weight-bold">⚠️ ১৪+ দিন ঝুলন্ত নথি</option>
                             <option value="রুজু হয়েছে" {{ request('status') == 'রুজু হয়েছে' ? 'selected' : '' }}>রুজু হয়েছে</option>
                             <option value="তদন্তাধীন" {{ request('status') == 'তদন্তাধীন' ? 'selected' : '' }}>তদন্তাধীন</option>
                             <option value="শুনানির জন্য" {{ request('status') == 'শুনানির জন্য' ? 'selected' : '' }}>শুনানির জন্য</option>
@@ -120,21 +135,22 @@
                                     $receivedAt = $lastMovement ? ($lastMovement->received_at ?? $lastMovement->created_at) : $file->created_at;
                                     $daysAtDesk = \Carbon\Carbon::parse($receivedAt)->diffInDays(now());
                                     
-                                    if ($daysAtDesk <= 3) {
-                                        $agingClass = 'bg-success text-white';
-                                    } elseif ($daysAtDesk <= 7) {
+                                    if ($daysAtDesk >= 14) {
+                                        $agingClass = 'aging-critical';
+                                    } elseif ($daysAtDesk > 7) {
+                                        $agingClass = 'bg-danger text-white';
+                                    } elseif ($daysAtDesk > 3) {
                                         $agingClass = 'bg-warning text-dark';
                                     } else {
-                                        $agingClass = 'bg-danger text-white';
+                                        $agingClass = 'bg-success text-white';
                                     }
                                 @endphp
-                                <tr>
+                                <tr class="{{ $daysAtDesk >= 14 ? 'table-danger' : '' }}">
                                     <td>
                                         <strong class="text-primary font-weight-bold">
                                             <a href="{{ route('files.show', $file->id) }}" title="শুনানি গ্রহন ও আদেশ লিখুন">
                                                 {{ $file->case_number ? bangla($file->case_number) : 'রুজু হয়নি' }}
                                             </a>
-                                            
                                         </strong>
                                         <div class="small text-muted">
                                             আইডি: <code>{{ substr($file->uuid, 0, 8) }}</code>
@@ -178,7 +194,11 @@
 
                                     <td>
                                         <span class="badge {{ $agingClass }} aging-badge" title="ডেস্কে আসার পর থেকে সময়">
-                                            <i class="far fa-clock"></i> {{ bangla($daysAtDesk) }} দিন ধরে
+                                            @if($daysAtDesk >= 14)
+                                                <i class="fas fa-exclamation-triangle"></i> {{ bangla($daysAtDesk) }} দিন (ঝুলন্ত)
+                                            @else
+                                                <i class="far fa-clock"></i> {{ bangla($daysAtDesk) }} দিন ধরে
+                                            @endif
                                         </span>
                                     </td>
 
@@ -256,6 +276,7 @@
                                         কোনো নথি বা মোকদ্দমা পাওয়া যায়নি।
                                     </td>
                                 </tr>
+                            @empty
                             @endforelse
                         </tbody>
                     </table>
