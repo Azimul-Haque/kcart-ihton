@@ -265,13 +265,6 @@ class DashboardController extends Controller
                     ->withUser($user);
     }
 
-    public function singleUser(User $user)
-    {
-        
-
-        return view('users.single', compact('user', 'filesOnDesk', 'totalProcessed', 'overdueCount'));
-    }
-
     public function storeUser(Request $request)
     {
         $request->validate([
