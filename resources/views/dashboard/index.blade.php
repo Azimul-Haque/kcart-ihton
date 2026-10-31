@@ -1,261 +1,191 @@
 @extends('layouts.app')
-@section('title') ড্যাশবোর্ড @endsection
+
+@section('title', 'ড্যাশবোর্ড - নথি ট্র্যাকিং সিস্টেম')
 
 @section('third_party_stylesheets')
-
+  <!-- চাইলে কাস্টম CSS এখানে দিতে পারেন -->
+  <style>
+      .info-box-text { font-weight: bold; font-size: 1.1rem; }
+      .small-box h4 { font-weight: 700; }
+      .desk-badge { font-size: 0.9rem; padding: 5px 10px; }
+  </style>
 @endsection
 
 @section('content')
-	@section('page-header') ড্যাশবোর্ড @endsection
+    @section('page-header') ড্যাশবোর্ড ও পরিসংখ্যান @endsection
+    
     <div class="container-fluid">
+        <!-- 1st Row: Summary Cards -->
         <div class="row">
+          <!-- Total Files -->
           <div class="col-lg-3 col-6">
-            <!-- small box -->
             <div class="small-box bg-info">
               <div class="inner">
-                <h4>{{ ceil($totalpayment) }}<sup style="font-size: 20px">৳</sup></h4>
-
-                <p>মোট আয়</p>
+                <h4>{{ $totalFiles ?? 0 }} টি</h4>
+                <p>মোট নথি/মোকদ্দমা (সর্বমোট)</p>
               </div>
               <div class="icon">
-                <i class="ion ion-bag"></i>
+                <i class="fas fa-folder-open"></i>
               </div>
-              <a href="{{ route('dashboard.payments') }}" class="small-box-footer">আয় পাতা <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="{{ route('files.index') }}" class="small-box-footer">নথির তালিকা দেখুন <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           
+          <!-- Today's Hearings -->
           <div class="col-lg-3 col-6">
-            <!-- small box -->
             <div class="small-box bg-success">
               <div class="inner">
-                <h4>{{ $totalmonthlypayment->totalamount ? ceil($totalmonthlypayment->totalamount) : 0 }}<sup style="font-size: 20px">৳</sup></h4>
-
-                <p>মাসিক আয় ({{ date('F Y') }})</p>
+                <h4>{{ $todaysHearings ?? 0 }} টি</h4>
+                <p>আজকের শুনানি ({{ date('d F, Y') }})</p>
               </div>
               <div class="icon">
-                <i class="ion ion-stats-bars"></i>
+                <i class="fas fa-gavel"></i>
               </div>
-              <a href="{{ route('dashboard.payments') }}" class="small-box-footer">মাসিক আয় পাতা <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="{{ route('hearings.today') }}" class="small-box-footer">শুনানির তালিকা <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
-          <!-- ./col -->
+
+          <!-- Pending on My Desk -->
           <div class="col-lg-3 col-6">
-            <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
-                <h4>{{ $totalexamsattendedtoday }} বার</h4>
-
-                <p>আজ মোট পরীক্ষায়  অংশগ্রহণ ({{ date("F d, Y") }})</p>
+                <h4>{{ $myPendingFiles ?? 0 }} টি</h4>
+                <p>আপনার ডেস্কে অপেক্ষমান</p>
               </div>
               <div class="icon">
-                <i class="ion ion-person-add"></i>
+                <i class="fas fa-inbox"></i>
               </div>
-              <a href="{{ route('dashboard.examstoday') }}" class="small-box-footer">পরীক্ষার্থী তালিকা <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="{{ route('files.my_desk') }}" class="small-box-footer">আপনার ডেস্ক খুলুন <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
-          <!-- ./col -->
+
+          <!-- Unreceived/Lost Files Alert -->
           <div class="col-lg-3 col-6">
-            <!-- small box -->
             <div class="small-box bg-danger">
               <div class="inner">
-                <h4>{{ $totalusers }}</h4>
-
-                <p>মোট ব্যবহারকারী</p>
+                <h4>{{ $unreceivedFiles ?? 0 }} টি</h4>
+                <p>ট্রানজিটে আছে (রিসিভ হয়নি)</p>
               </div>
               <div class="icon">
-                <i class="ion ion-pie-graph"></i>
+                <i class="fas fa-exclamation-triangle"></i>
               </div>
-              <a href="{{ route('dashboard.users') }}" class="small-box-footer">ব্যবহারকারীগণ <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="{{ route('files.transit') }}" class="small-box-footer">বিস্তারিত দেখুন <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
         </div>
-        <div class="row">
-          {{-- <div class="col-md-6">
-            <a href="{{ route('dashboard.deposit.getlist', [date('Y-m-d'), 'All']) }}" class="info-box mb-3">
-              <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-coins"></i></span>
 
+        <!-- 2nd Row: Important Info Boxes & Actions -->
+        <div class="row">
+          <div class="col-md-6">
+            <a href="{{ route('files.create') }}" class="info-box mb-3 bg-primary">
+              <span class="info-box-icon"><i class="fas fa-plus-circle"></i></span>
               <div class="info-box-content">
-                <span class="info-box-text">দৈনিক জমা</span>
-                <span class="info-box-number">৳ {{ 0 }}</span>
+                <span class="info-box-text">নতুন নথি/মামলা এন্ট্রি করুন</span>
+                <span class="info-box-number">QR কোড প্রিন্টসহ</span>
               </div>
             </a>
           </div>
           <div class="col-md-6">
-            <a href="{{ route('dashboard.expenses.getlist', [date('Y-m-d'), 'All']) }}" class="info-box mb-3">
-              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-hand-holding-usd"></i></span>
-
+            <div class="info-box mb-3 bg-secondary">
+              <span class="info-box-icon"><i class="fas fa-qrcode"></i></span>
               <div class="info-box-content">
-                <span class="info-box-text">দৈনিক খরচ</span>
-                <span class="info-box-number">৳ {{ 0 }}</span>
+                <span class="info-box-text">QR স্ক্যানার (মোবাইল অ্যাপ)</span>
+                <span class="info-box-number">অফিস স্টাফদের ব্যবহারের জন্য</span>
               </div>
-            </a>
-          </div> --}}
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <button class="btn btn-warning" data-toggle="modal" data-target="#clearQueryCacheModal">
-              <i class="fas fa-tools"></i> সকল কোয়েরি ক্যাশ (API) ক্লিয়ার করুন
-            </button>
-            {{-- Modal Code --}}
-            {{-- Modal Code --}}
-            <!-- Modal -->
-            <div class="modal fade" id="clearQueryCacheModal" tabindex="-1" role="dialog" aria-labelledby="clearQueryCacheModalLabel" aria-hidden="true" data-backdrop="static">
-                <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header bg-warning">
-                    <h5 class="modal-title" id="clearQueryCacheModalLabel">কোয়েরি ক্যাশ ক্লিয়ার</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    </div>
-                    <div class="modal-body">
-                      আপনি কি নিশ্চিতভাবে সকল কোয়েরি ক্যাশ ক্লিয়ার করতে চান?<br/>
-                    </div>
-                    <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ফিরে যান</button>
-                    <a href="{{ route('dashboard.clearquerycache') }}" class="btn btn-warning">ক্যাশ ক্লিয়ার করুন</a>
-                    </div>
-                </div>
-                </div>
             </div>
-            {{-- Modal Code --}}
-            {{-- Modal Code --}}
-
-            <button class="btn btn-success" data-toggle="modal" data-target="#loadTopicCacheModal">
-              <i class="fas fa-spinner"></i> টপিক ক্যাশ লোড করুন
-            </button>
-            {{-- Modal Code --}}
-            {{-- Modal Code --}}
-            <!-- Modal -->
-            <div class="modal fade" id="loadTopicCacheModal" tabindex="-1" role="dialog" aria-labelledby="clearQueryCacheModalLabel" aria-hidden="true" data-backdrop="static">
-                <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header bg-success">
-                    <h5 class="modal-title" id="clearQueryCacheModalLabel">টপিক ক্যাশ লোড</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    </div>
-                    <div class="modal-body">
-                      আপনি কি নিশ্চিতভাবে সকল টপিক ক্যাশ লোড করতে চান?<br/>
-                    </div>
-                    <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ফিরে যান</button>
-                    <a href="{{ route('dashboard.topics.requild.cache', env('TOPIC_PATH_SECRET')) }}" class="btn btn-success">টপিক ক্যাশ লোড করুন</a>
-                    </div>
-                </div>
-                </div>
-            </div>
-            {{-- Modal Code --}}
-            {{-- Modal Code --}}
-            <br/>
-            <br/>
           </div>
         </div>
+
+        <!-- 3rd Row: Charts & Analytics -->
         <div class="row">
+          <!-- Pending Files by Desk (Bar Chart) -->
+          <div class="col-md-6">
+            <div class="card card-warning">
+              <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-chart-bar"></i> ডেস্ক অনুযায়ী আটকে থাকা নথি</h3>
+              </div>
+              <div class="card-body">
+                <div class="chart">
+                  <canvas id="deskPendingChart" style="min-height: 250px; height: 300px; max-height: 400px; max-width: 100%;"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- File Registration Trend (Line Chart) -->
           <div class="col-md-6">
             <div class="card card-success">
               <div class="card-header">
-                <h3 class="card-title">ব্যবহারকারী যোগদানের হার</h3>
+                <h3 class="card-title"><i class="fas fa-chart-line"></i> নথির রুজু হওয়ার হার</h3>
                 <div class="card-tools">
-                  <small>সর্বশেষ দুই সপ্তাহ</small>
+                  <small>সর্বশেষ ১৪ দিন</small>
                 </div>
               </div>
               <div class="card-body">
-              <div class="chart">
-                <canvas id="lineChart" style="min-height: 250px; height: 300px; max-height: 400px; max-width: 100%;"></canvas>
-              </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="card card-primary">
-              <div class="card-header">
-                <h3 class="card-title">ক্রমবর্ধমান ব্যবহারকারী সংখ্যা</h3>
-                <div class="card-tools">
-                  <small>সর্বশেষ দুই সপ্তাহ</small>
+                <div class="chart">
+                  <canvas id="fileTrendChart" style="min-height: 250px; height: 300px; max-height: 400px; max-width: 100%;"></canvas>
                 </div>
-              </div>
-              <div class="card-body">
-              <div class="chart">
-                <canvas id="lineChart2" style="min-height: 250px; height: 300px; max-height: 400px; max-width: 100%;"></canvas>
-              </div>
               </div>
             </div>
           </div>
         </div>
+
     </div>
 @endsection
 
 @section('third_party_scripts')
-  <script src=" https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js "></script>
+  <!-- ChartJS -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  
   <script type="text/javascript">
-    var ctx = document.getElementById('lineChart').getContext('2d');
-    var lineChart = new Chart(ctx, {
-        type: 'line',
+    // 1. Desk Pending Bar Chart
+    var ctxDesk = document.getElementById('deskPendingChart').getContext('2d');
+    var deskChart = new Chart(ctxDesk, {
+        type: 'bar',
         data: {
-            labels: {!! $daysforchartc !!},
+            labels: {!! $deskNames ?? "['সার্ভেয়ার', 'নাজির', 'কানুনগো', 'পেশকার']" !!}, // Controller থেকে আসবে
             datasets: [{
-                label: 'ব্যবহারকারী সংখ্যা',
-                borderColor: "#3e95cd",
-                fill: true,
-                data: {!! $totalusersforchartc !!},
-                borderWidth: 2,
-                borderColor: "rgba(0,165,91,1)",
-                borderCapStyle: 'butt',
-                pointBorderColor: "rgba(0,165,91,1)",
-                pointBackgroundColor: "#fff",
-                pointBorderWidth: 1,
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: "rgba(0,165,91,1)",
-                pointHoverBorderColor: "rgba(0,165,91,1)",
-                pointHoverBorderWidth: 2,
-                pointRadius: 5,
-                pointHitRadius: 10,
+                label: 'পেন্ডিং নথির সংখ্যা',
+                backgroundColor: 'rgba(255, 193, 7, 0.8)', // Warning Yellow
+                borderColor: 'rgba(255, 193, 7, 1)',
+                borderWidth: 1,
+                data: {!! $deskPendingCounts ?? "[12, 5, 8, 20]" !!} // Controller থেকে আসবে
             }]
         },
         options: {
+            responsive: true,
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    ticks: { stepSize: 5 }
                 }
-            },
-            
+            }
         }
     });
 
-
-    var ctx = document.getElementById('lineChart2').getContext('2d');
-    var lineChart = new Chart(ctx, {
+    // 2. File Initiation Trend Line Chart
+    var ctxTrend = document.getElementById('fileTrendChart').getContext('2d');
+    var trendChart = new Chart(ctxTrend, {
         type: 'line',
         data: {
-            labels: {!! $daysforchartc !!},
+            labels: {!! $trendDates ?? "['1 Oct', '2 Oct', '3 Oct', '4 Oct']" !!}, // Controller থেকে আসবে
             datasets: [{
-                label: 'ক্রমবর্ধমান ব্যবহারকারী সংখ্যা',
-                borderColor: "#112E8A",
+                label: 'নতুন রুজুকৃত নথি',
+                borderColor: "#00a65a", // Success Green
+                backgroundColor: "rgba(0,166,90,0.1)",
                 fill: true,
-                data: {!! $totaluserscumulitiveforchartc !!},
                 borderWidth: 2,
-                borderColor: "rgba(17,46,138,1)",
-                borderCapStyle: 'butt',
-                pointBorderColor: "rgba(17,46,138,1)",
-                pointBackgroundColor: "#fff",
-                pointBorderWidth: 1,
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: "rgba(17,46,138,1)",
-                pointHoverBorderColor: "rgba(17,46,138,1)",
-                pointHoverBorderWidth: 2,
-                pointRadius: 5,
-                pointHitRadius: 10,
+                pointBackgroundColor: "#00a65a",
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                data: {!! $trendCounts ?? "[5, 8, 3, 10]" !!} // Controller থেকে আসবে
             }]
         },
         options: {
+            responsive: true,
             scales: {
-                y: {
-                    beginAtZero: true
-                }
-            },
-            
+                y: { beginAtZero: true }
+            }
         }
     });
   </script>
