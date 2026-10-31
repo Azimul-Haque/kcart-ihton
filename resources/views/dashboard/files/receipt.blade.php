@@ -16,8 +16,8 @@
             color: #000;
         }
 
-        .header h3 { font-size: 13px; font-weight: bold; margin-bottom: 2px; }
-        .header p { font-size: 10px; border-bottom: 1px dashed #000; padding-bottom: 3px; margin-bottom: 5px; }
+        .header h3 { font-size: 11px; font-weight: bold; margin-bottom: 2px; }
+        .header p { font-size: 8px; border-bottom: 1px dashed #000; padding-bottom: 3px; margin-bottom: 5px; }
 
         .details { font-size: 11px; text-align: left; line-height: 1.3; margin-bottom: 5px; }
         .details div { margin-bottom: 2px; }
