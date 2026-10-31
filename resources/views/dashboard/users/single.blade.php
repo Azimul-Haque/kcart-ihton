@@ -27,16 +27,15 @@
                             </span>
                         </div>
                         <h4 class="font-weight-bold mb-1">{{ $user->name }}</h4>
-                        <p class="badge badge-primary px-3 py-1 font-weight-normal mb-2">{{ $user->designation ?? 'পদবী নির্ধারিত নয়' }}</p>
+                        <p class="badge badge-primary px-3 py-1 font-weight-normal mb-2">{{ $user->designation ?? 'পদবী নির্ধারিত নয়' }}</p>
                         
                         <div class="text-muted small mb-3">
                             <i class="fas fa-phone-alt mr-1"></i> {{ bangla($user->mobile) }} <br>
-                            {{-- <i class="fas fa-shield-alt mr-1"></i> রোল: {{ ucfirst($user->role) }} <br> --}}
                             <i class="fas fa-calendar-alt mr-1"></i> সিস্টেমে যোগদান: {{ date('d M, Y', strtotime($user->created_at)) }}
                         </div>
 
                         <a href="{{ route('dashboard.users') }}" class="btn btn-outline-secondary btn-sm btn-block">
-                            <i class="fas fa-arrow-left"></i> স্টাফ তালিকায় ফিরে যান
+                            <i class="fas fa-arrow-left"></i> স্টাফ তালিকায় ফিরে যান
                         </a>
                     </div>
                 </div>
@@ -49,7 +48,7 @@
                     <div class="card-body p-3">
                         <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
                             <span class="text-muted"><i class="fas fa-inbox text-warning mr-1"></i> ডেস্কে পেন্ডিং ফাইল:</span>
-                            <span class="font-weight-bold badge badge-warning px-2 py-1">{{ bangla($filesOnDesk->count()) }} টি</span>
+                            <span class="font-weight-bold badge badge-warning px-2 py-1">{{ bangla($pendingCount ?? $filesOnDesk->count()) }} টি</span>
                         </div>
                         <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
                             <span class="text-muted"><i class="fas fa-exclamation-triangle text-danger mr-1"></i> ৭ দিনের বেশি আটকে আছে:</span>
@@ -63,7 +62,7 @@
                 </div>
             </div>
 
-            <!-- Right Column: Files Currently on Desk Table -->
+            <!-- Right Column: Files Currently on Desk Table & Filter -->
             <div class="col-md-8">
                 <div class="card shadow-sm">
                     <div class="card-header bg-white d-flex justify-content-between align-items-center">
@@ -71,6 +70,38 @@
                             <i class="fas fa-folder-open mr-1"></i> বর্তমানে ডেস্কে থাকা নথিসমূহ ({{ bangla($filesOnDesk->count()) }})
                         </h3>
                     </div>
+
+                    <!-- ফিল্টার ও সার্চ বক্স -->
+                    <div class="card-body bg-light border-bottom p-2">
+                        <form method="GET" action="{{ url()->current() }}" class="row g-2 align-items-center">
+                            <div class="col-md-6 mb-2 mb-md-0">
+                                <input type="text" name="search" class="form-control form-control-sm" placeholder="মামলা নং, বাদি, বিবাদি, মোবাইল বা আইডি..." value="{{ request('search') }}">
+                            </div>
+
+                            <div class="col-md-4 mb-2 mb-md-0">
+                                <select name="type" class="form-control form-control-sm">
+                                    <option value="">সকল ধরন</option>
+                                    <option value="বিবিধ মোকদ্দমা" {{ request('type') == 'বিবিধ মোকদ্দমা' ? 'selected' : '' }}>বিবিধ মোকদ্দমা</option>
+                                    <option value="দেওয়ানী মোকদ্দমা" {{ request('type') == 'দেওয়ানী মোকদ্দমা' ? 'selected' : '' }}>দেওয়ানী মোকদ্দমা</option>
+                                    <option value="১৪৪/১৪৫ মামলা" {{ request('type') == '১৪৪/১৪৫ মামলা' ? 'selected' : '' }}>১৪৪/১৪৫ মামলা</option>
+                                    <option value="CR Case" {{ request('type') == 'CR Case' ? 'selected' : '' }}>CR Case</option>
+                                    <option value="SF (স্টেটমেন্ট অফ ফ্যাক্টস)" {{ request('type') == 'SF (স্টেটমেন্ট অফ ফ্যাক্টস)' ? 'selected' : '' }}>SF Case</option>
+                                    <option value="অভিযোগ / আবেদন" {{ request('type') == 'অভিযোগ / আবেদন' ? 'selected' : '' }}>অভিযোগ / আবেদন</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-2 d-flex">
+                                <button type="submit" class="btn btn-primary btn-sm flex-fill mr-1" title="ফিল্টার প্রয়োগ করুন">
+                                    <i class="fas fa-filter"></i>
+                                </button>
+                                <a href="{{ url()->current() }}" class="btn btn-outline-secondary btn-sm" title="ফিল্টার রিসেট করুন">
+                                    <i class="fas fa-undo"></i>
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- টেবিল অংশ -->
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table table-hover align-middle mb-0">
@@ -80,7 +111,7 @@
                                         <th>ধরন</th>
                                         <th>বাদি ও বিবাদি</th>
                                         <th>ডেস্কে আসার তারিখ</th>
-                                        <th>আটকে থাকার সময়</th>
+                                        <th>আটকে থাকার সময়</th>
                                         <th class="text-right">একশন</th>
                                     </tr>
                                 </thead>
@@ -91,7 +122,6 @@
                                             $receivedAt = $lastMovement ? ($lastMovement->received_at ?? $lastMovement->created_at) : $file->created_at;
                                             $daysAtDesk = \Carbon\Carbon::parse($receivedAt)->diffInDays(now());
                                             
-                                            // Color coding logic based on duration
                                             if ($daysAtDesk <= 3) {
                                                 $badgeClass = 'badge-success';
                                                 $statusText = '১-৩ দিন (স্বাভাবিক)';
@@ -105,7 +135,7 @@
                                         @endphp
                                         <tr>
                                             <td>
-                                                <strong class="text-dark">{{ $file->case_number ? bangla($file->case_number) : 'রুজু হয়নি' }}</strong>
+                                                <strong class="text-dark">{{ $file->case_number ? bangla($file->case_number) : 'রুজু হয়নি' }}</strong>
                                                 <div class="small text-muted">আইডি: {{ substr($file->uuid, 0, 8) }}...</div>
                                             </td>
 
@@ -142,8 +172,12 @@
                                     @empty
                                         <tr>
                                             <td colspan="6" class="text-center py-4 text-muted">
-                                                <i class="fas fa-check-circle text-success fa-2x mb-2 d-block"></i>
-                                                বর্তমানে এই কর্মকর্তার ডেস্কে কোনো ফাইল পেন্ডিং নেই।
+                                                <i class="fas fa-folder-open text-secondary fa-2x mb-2 d-block"></i>
+                                                @if(request('search') || request('type'))
+                                                    ফিল্টারের সাথে মেলে এমন কোনো নথি পাওয়া যায়নি।
+                                                @else
+                                                    বর্তমানে এই কর্মকর্তার ডেস্কে কোনো ফাইল পেন্ডিং নেই।
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforelse
@@ -151,6 +185,7 @@
                             </table>
                         </div>
                     </div>
+
                 </div>
             </div>
 
