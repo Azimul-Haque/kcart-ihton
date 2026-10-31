@@ -15,7 +15,15 @@ class CreateFileMovementsTable extends Migration
     {
         Schema::create('file_movements', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->foreignId('file_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('from_user_id')->constrained('users');
+            $table->foreignId('to_user_id')->constrained('users');
+            
+            $table->boolean('is_received')->default(false); // স্ক্যান করে রিসিভ করেছে কিনা
+            $table->timestamp('received_at')->nullable(); // কখন স্ক্যান করলো
+            
+            $table->text('remarks')->nullable(); // পাঠানোর সময় কোনো নোট (যেমন: প্রতিবেদন দিন)
+            $table->timestamps(); // transferred_at হিসেবে কাজ করবে
         });
     }
 
