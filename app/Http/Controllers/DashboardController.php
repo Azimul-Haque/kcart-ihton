@@ -259,9 +259,8 @@ class DashboardController extends Controller
         $user->name = $request->name;
         $user->mobile = $request->mobile;
         $user->role = $request->role;
-        // if(!empty($request->sitecheck)) {
-        //     $user->sites = implode(',', $request->sitecheck);
-        // }
+        $user->designation = $request->designation;
+        
         $user->password = Hash::make($request->password);
         $user->save();
 
