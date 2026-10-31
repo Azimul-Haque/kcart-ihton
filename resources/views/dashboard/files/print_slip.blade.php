@@ -13,10 +13,6 @@
             width: 58mm;
             padding: 1.5mm 1mm;
             border: 1px solid #ccc;
-            color: #000;
-            align-items: center;
-            justify-content: space-between;
-            gap: 2px;
         }
 
         .header { text-align: center; border-bottom: 1px solid #000; padding-bottom: 3px; margin-bottom: 4px; }
