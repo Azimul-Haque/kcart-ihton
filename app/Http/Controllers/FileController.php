@@ -95,7 +95,7 @@ class FileController extends Controller
             'badi_mobile'       => 'nullable|string',
             'bibadi_name'       => 'nullable|string',
             'bibadi_mobile'     => 'nullable|string',
-            'next_hearing_date' => 'nullable|date',
+            'next_hearing_date' => 'required|date',
             'to_user_id'        => 'nullable|exists:users,id',
             'remarks'           => 'nullable|string',
         ]);
