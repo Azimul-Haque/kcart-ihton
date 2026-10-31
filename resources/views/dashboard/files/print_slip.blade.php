@@ -6,7 +6,7 @@
     <title>শুনানি স্লিপ - {{ $file->case_number ?? 'রুজু হয়নি' }}</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'SolaimanLipi', 'Nikosh', 'Kalpurush', sans-serif; }
-        body { background: #fff; display: flex; flex-direction: column; align-items: center; padding: 0; }
+        body { background: #f1f5f9; display: flex; flex-direction: column; align-items: center; padding: 0; }
         
         .pos-slip {
         	background: #fff;
