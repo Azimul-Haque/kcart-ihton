@@ -32,59 +32,13 @@ class FileController extends Controller
      */
     public function index(Request $request)
     {
+        // শুধু চলমান নথি ফিল্টার (নিষ্পত্তিকৃত ফাইল বাদ দেওয়া হলো)
         $query = File::where('status', '!=', 'নিষ্পত্তি')
-        ->with(['currentDesk', 'movements' => function ($q) { 
-            $q->latest(); 
-        }]);
+            ->with(['currentDesk', 'movements' => function ($q) { 
+                $q->latest(); 
+            }]);
 
-        if ($request->filled('search')) {
-            $search = trim($request->search);
-            $query->where(function ($q) use ($search) {
-                $q->where('case_number', 'LIKE', "%{$search}%")
-                  ->orWhere('badi_name', 'LIKE', "%{$search}%")
-                  ->orWhere('bibadi_name', 'LIKE', "%{$search}%")
-                  ->orWhere('badi_mobile', 'LIKE', "%{$search}%")
-                  ->orWhere('bibadi_mobile', 'LIKE', "%{$search}%")
-                  ->orWhere('uuid', 'LIKE', "%{$search}%");
-            });
-        }
-
-        if ($request->filled('type')) {
-            $query->where('type', $request->type);
-        }
-
-        // if ($request->filled('status')) {
-        //     $query->where('status', $request->status);
-        // }
-        if ($request->has('status') && $request->status == 'overdue_14') {
-            // ১৪+ দিন ধরে ডেস্কে আটকে থাকা নথি ফিল্টার (Subquery/WhereHas লজিক)
-            $query->where(function ($q) {
-                $fourteenDaysAgo = now()->subDays(14);
-
-                // ১. যেসব ফাইলের মুভমেন্ট আছে, সেগুলোর সর্বশেষ মুভমেন্টের তারিখ ১৪ দিনের পুরনো কিনা
-                $q->whereHas('movements', function ($mq) use ($fourteenDaysAgo) {
-                    $mq->whereRaw('id = (select max(id) from file_movements where file_id = files.id)')
-                       ->where(function ($sq) use ($fourteenDaysAgo) {
-                           $sq->where('received_at', '<=', $fourteenDaysAgo)
-                              ->orWhere(function ($ssq) use ($fourteenDaysAgo) {
-                                  $ssq->whereNull('received_at')
-                                      ->where('created_at', '<=', $fourteenDaysAgo);
-                              });
-                       });
-                })
-                // ২. অথবা যেসব ফাইলের এখনো কোনো মুভমেন্ট হয়নি, সেটির মূল এন্ট্রি তারিখ (created_at) ১৪ দিনের পুরনো কিনা
-                ->orWhere(function ($fq) use ($fourteenDaysAgo) {
-                    $fq->doesntHave('movements')
-                       ->where('created_at', '<=', $fourteenDaysAgo);
-                });
-            });
-        } elseif ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-
-        if ($request->filled('desk_id')) {
-            $query->where('current_desk_id', $request->desk_id);
-        }
+        $this->applyFilters($query, $request);
 
         $files = $query->latest()->paginate(15)->withQueryString();
         $users = User::orderBy('name')->get();
