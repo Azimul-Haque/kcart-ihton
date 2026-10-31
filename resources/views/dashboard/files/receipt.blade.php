@@ -19,7 +19,7 @@
         .header h3 { font-size: 11px; font-weight: bold; margin-bottom: 2px; }
         .header p { font-size: 8px; border-bottom: 1px dashed #000; padding-bottom: 3px; margin-bottom: 5px; }
 
-        .details { font-size: 10px; text-align: left; line-height: 1.3; margin-bottom: 5px; }
+        .details { font-size: 10px; text-align: left; line-height: 1.2; margin-bottom: 5px; }
         .details div { margin-bottom: 2px; }
 
         .qr-container { margin: 6px 0; display: flex; justify-content: center; }
