@@ -67,7 +67,7 @@
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     <label>পরবর্তী শুনানির তারিখ (ঐচ্ছিক)</label>
-                                    {{ $file->next_hearing_date ? bangla(date('d/m/Y', strtotime($file->next_hearing_date))) : 'ধার্য হয়নি' }}
+                                    {{ $file->next_hearing_date ? bangla(date('d/m/Y')) : 'ধার্য হয়নি' }}
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label>প্রাথমিকভাবে নথির অবস্থান / ডেস্কে প্রেরন (ঐচ্ছিক)</label>
