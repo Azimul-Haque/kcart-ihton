@@ -64,7 +64,7 @@ class HearingController extends Controller
     {
         $request->validate([
             'hearing_date'      => 'required|date',
-            'next_hearing_date' => 'nullable|date',
+            'next_hearing_date' => 'required|date',
             'order_details'     => 'nullable|string',
             'status'            => 'required|string',
             'to_user_id'        => 'nullable|exists:users,id', // অন্য ডেস্কে ফরোয়ার্ড করার জন্য
