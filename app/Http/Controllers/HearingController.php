@@ -84,17 +84,6 @@ class HearingController extends Controller
             'order_details'     => $request->order_details,
         ]);
 
-        $request->validate([
-            'hearing_date'      => 'required|date',
-            'next_hearing_date' => 'required|date', // খালি থাকলে ব্যাকএন্ড সরাসরি আটকে দেবে
-            'status'            => 'required|string',
-            'order_details'     => 'nullable|string',
-        ], [
-            // কাস্টম এরর মেসেজ (বাংলায়)
-            'next_hearing_date.required' => 'পরবর্তী ধার্য তারিখ নির্বাচন করা বাধ্যতামূলক!',
-            'next_hearing_date.date'     => 'পরবর্তী ধার্য তারিখটি সঠিক তারিখ হতে হবে!',
-        ]);
-
         // ২. ট্রানজিট / ফাইল ফরোয়ার্ড লজিক
         $targetDesk = Auth::id(); // ডিফল্ট নিজের ডেস্কে থাকবে
 
