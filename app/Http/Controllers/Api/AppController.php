@@ -35,7 +35,7 @@ class AppController extends Controller
         ]);
     }
 
-    // ২. ড্যাশবোর্ড সামারি (নিষ্পত্তিকৃত ফাইল বাদ ও ১৪+ দিন ঝুলন্ত সংখ্যাসহ)
+    // ২. ড্যাশবোর্ড সামারি (নিষ্পত্তিকৃত ফাইল ট্রানজিট ও মূল হিসাব থেকে পুরোপুরি মুক্ত)
     public function dashboard(Request $request)
     {
         $userId = Auth::id();
@@ -45,11 +45,15 @@ class AppController extends Controller
             ->where('status', '!=', 'নিষ্পত্তি')
             ->count();
         
-        // অপেক্ষমান (রিসিভ করা হয়নি) নথি
+        // অপেক্ষমান (রিসিভ করা হয়নি) ট্রানজিট নথি (নিষ্পত্তিকৃত ফাইল বাদ)
         $unreceivedCount = FileMovement::where('to_user_id', $userId)
-                                       ->where('is_received', false)->count();
+            ->where('is_received', false)
+            ->whereHas('file', function ($q) {
+                $q->where('status', '!=', 'নিষ্পত্তি');
+            })
+            ->count();
 
-        // ডেস্কে ১৪+ দিন ঝুলন্ত ফাইলের সংখ্যা
+        // ডেস্কে ১৪+ দিন ঝুলন্ত ফাইলের সংখ্যা (রিয়েল-টাইম এজিং ক্যালকুলেশন)
         $fourteenDaysAgo = now()->subDays(14);
         $overdueCount = File::where('current_desk_id', $userId)
             ->where('status', '!=', 'নিষ্পত্তি')
@@ -74,18 +78,21 @@ class AppController extends Controller
         return response()->json([
             'pending_count' => $pendingFilesCount,
             'unreceived_count' => $unreceivedCount,
-            'overdue_count' => $overdueCount, // অ্যাপ চাইলে সরাসরি অ্যালার্ট দেখাতে পারবে
+            'overdue_count' => $overdueCount,
         ]);
     }
 
-    // ৩. আমার ডেস্ক (যে ফাইলগুলো আমার কাছে আছে বা পাঠানো হয়েছে)
+    // ৩. আমার ডেস্ক (চলমান ইনকামিং ট্রানজিট ও অন-ডেস্ক ফাইলসমূহ)
     public function myDesk(Request $request)
     {
         $userId = Auth::id();
         
-        // ১. অপেক্ষমান (Incoming) ফাইলসমূহ
+        // ১. অপেক্ষমান (Incoming) ফাইলসমূহ (নিষ্পত্তিকৃত ফাইল বাদ)
         $incoming = FileMovement::where('to_user_id', $userId)
             ->where('is_received', false)
+            ->whereHas('file', function ($q) {
+                $q->where('status', '!=', 'নিষ্পত্তি');
+            })
             ->with(['file', 'fromUser:id,name,designation']) 
             ->latest()
             ->get();
@@ -110,7 +117,9 @@ class AppController extends Controller
     public function fileDetails($uuid)
     {
         $file = File::where('uuid', $uuid)->with('currentDesk')->first();
-        if(!$file) return response()->json(['message' => 'ফাইলটি সিস্টেমে পাওয়া যায়নি'], 404);
+        if (!$file) {
+            return response()->json(['message' => 'ফাইলটি সিস্টেমে পাওয়া যায়নি'], 404);
+        }
         
         return response()->json(['file' => $file]);
     }
@@ -118,6 +127,11 @@ class AppController extends Controller
     // ৫. নথি রিসিভ করা (QR স্ক্যান করে বা ম্যানুয়ালি)
     public function receiveFile(Request $request, $file_id)
     {
+        $file = File::find($file_id);
+        if ($file && $file->status == 'নিষ্পত্তি') {
+            return response()->json(['message' => 'এই নথিটি ইতোমধ্যে নিষ্পত্তি ও আর্কাইভ করা হয়েছে।'], 400);
+        }
+
         $movement = FileMovement::where('file_id', $file_id)
             ->where('to_user_id', Auth::id())
             ->where('is_received', false)
@@ -129,11 +143,12 @@ class AppController extends Controller
                 'received_at' => now(),
             ]);
 
-            // নথির বর্তমান ডেস্ক নিশ্চিত করা
+            // নথির বর্তমান ডেস্ক আপডেট নিশ্চিত করা
             File::where('id', $file_id)->update(['current_desk_id' => Auth::id()]);
 
             return response()->json(['message' => 'নথিটি সফলভাবে রিসিভ করা হয়েছে।']);
         }
+
         return response()->json(['message' => 'এই নথিটি আপনার ডেস্কে অপেক্ষমান নেই।'], 400);
     }
 
@@ -145,10 +160,10 @@ class AppController extends Controller
         $file = File::findOrFail($file_id);
 
         if ($file->status == 'নিষ্পত্তি') {
-            return response()->json(['message' => 'নিষ্পত্তিকৃত নথি ফরোয়ার্ড করা সম্ভব নয়।'], 400);
+            return response()->json(['message' => 'নিষ্পত্তিকৃত নথি ফরোয়ার্ড করা সম্ভব নয়।'], 400);
         }
 
-        // নিরাপত্তা চেক: ফাইলটি বর্তমানে তার ডেস্কে আছে কিনা
+        // নিরাপত্তা চেক: ফাইলটি বর্তমানে ইউজারের ডেস্কে আছে কিনা (অথবা এডমিন)
         if ($file->current_desk_id != Auth::id() && Auth::user()->role != 'admin') {
             return response()->json(['message' => 'এই নথিটি আপনার ডেস্কে নেই, ফরোয়ার্ড করা যাবে না।'], 403);
         }
@@ -166,6 +181,7 @@ class AppController extends Controller
         return response()->json(['message' => 'নথিটি ফরোয়ার্ড করা হয়েছে।']);
     }
 
+    // ৭. লগআউট
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
