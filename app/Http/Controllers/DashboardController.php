@@ -246,62 +246,53 @@ class DashboardController extends Controller
 
     public function storeUser(Request $request)
     {
-        // dd(serialize($request->sitecheck));
-        $this->validate($request,array(
-            'name'          => 'required|string|max:191',
-            'mobile'        => 'required|string|max:191|unique:users,mobile',
-            'role'          => 'required',
-            'designation'   => 'required',
-            'password'      => 'required|string|min:8|max:191',
-        ));
+        $request->validate([
+            'name'        => 'required|string|max:191',
+            'mobile'      => 'required|string|max:191|unique:users,mobile',
+            'designation' => 'required|string|max:191',
+            'role'        => 'required|string|in:admin,staff',
+            'password'    => 'required|string|min:6|max:191',
+        ]);
 
-        $user = new User;
-        $user->name = $request->name;
-        $user->mobile = $request->mobile;
-        $user->role = $request->role;
-        $user->designation = $request->designation;
-        
-        $user->password = Hash::make($request->password);
-        $user->save();
+        User::create([
+            'name'        => $request->name,
+            'mobile'      => $request->mobile,
+            'designation' => $request->designation,
+            'role'        => $request->role,
+            'password'    => Hash::make($request->password),
+        ]);
 
-        Cache::forget('user_approval_status_' . $user->id);
-
-        Session::flash('success', 'User created successfully!');
+        Session::flash('success', 'নতুন স্টাফ সফলভাবে তৈরি করা হয়েছে!');
         return redirect()->route('dashboard.users');
     }
 
     public function updateUser(Request $request, $id)
     {
-        $this->validate($request,array(
+        $request->validate([
             'name'        => 'required|string|max:191',
-            'mobile'      => 'required|string|max:191|unique:users,mobile,'.$id,
-            'role'        => 'required',
-            'packageexpirydate'        => 'required',
-            'uid'        => 'sometimes',
-            'onesignal_id'        => 'sometimes',
-            // 'sitecheck'   => 'sometimes',
-            'password'    => 'nullable|string|min:8|max:191',
-        ));
+            'mobile'      => 'required|string|max:191|unique:users,mobile,' . $id,
+            'designation' => 'required|string|max:191',
+            'role'        => 'required|string|in:admin,staff',
+            'password'    => 'nullable|string|min:6|max:191',
+        ]);
 
-        $user = User::find($id);
-        $user->name = $request->name;
-        $user->mobile = $request->mobile;
-        $user->role = $request->role;
-        
-        $user->package_expiry_date = date('Y-m-d', strtotime($request->packageexpirydate)) . ' 23:59:59';
-        // if(!empty($request->sitecheck)) {
-        //     $user->sites = implode(',', $request->sitecheck);
-        // }
-        $user->uid = $request->uid;
-        $user->onesignal_id = $request->onesignal_id;
-        if(!empty($request->password)) {
-            $user->password = Hash::make($request->password);
+        $user = User::findOrFail($id);
+
+        $userData = [
+            'name'        => $request->name,
+            'mobile'      => $request->mobile,
+            'designation' => $request->designation,
+            'role'        => $request->role,
+        ];
+
+        // পাসওয়ার্ড ঘর ফাঁকা না থাকলে তবেই পাসওয়ার্ড আপডেট হবে
+        if ($request->filled('password')) {
+            $userData['password'] = Hash::make($request->password);
         }
-        $user->save();
 
-        Cache::forget('user_approval_status_' . $user->id);
+        $user->update($userData);
 
-        Session::flash('success', 'User updated successfully!');
+        Session::flash('success', 'স্টাফ তথ্য সফলভাবে হালনাগাদ করা হয়েছে!');
         return redirect()->route('dashboard.users');
     }
 
