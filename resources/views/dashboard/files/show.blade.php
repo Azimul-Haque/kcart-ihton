@@ -172,10 +172,10 @@
                             </label>
                             <select name="to_user_id" class="form-control form-control-sm">
                                 <option value="">নিজের ডেস্কেই রাখুন (No Transfer)</option>
-                                @foreach($users as$user)
+                                @foreach($users as $user)
                                     @if($user->id != Auth::id())
                                         <option value="{{ $user->id }}">
-                                            {{ $user->designation ?? $user->name }} ({{$user->name }})
+                                            {{ $user->designation ?? $user->name }} ({{ $user->name }})
                                         </option>
                                     @endif
                                 @endforeach
@@ -228,7 +228,7 @@
                             
                             <!-- ট্যাব ১: গৃহীত আদেশের ইতিহাস -->
                             <div class="tab-pane fade show active" id="hearings" role="tabpanel" aria-labelledby="hearings-tab">
-                                @forelse($file->hearings->sortByDesc('created_at') as $index =>$hearing)
+                                @forelse($file->hearings->sortByDesc('created_at') as $index => $hearing)
                                     <div class="border-left border-primary pl-3 pb-3 mb-3 position-relative" style="border-left-width: 3px !important;">
                                         <div class="d-flex justify-content-between align-items-center mb-1">
                                             <span class="font-weight-bold text-dark">
@@ -257,4 +257,90 @@
                                     </div>
                                 @empty
                                     <div class="text-center py-4 text-muted">
-                                        <i class="fas fa-gavel fa-2x mb-2 d-block opacity-
+                                        <i class="fas fa-gavel fa-2x mb-2 d-block opacity-50"></i>
+                                        এখনো কোনো আদেশ রেকর্ড করা হয়নি।
+                                    </div>
+                                @endforelse
+                            </div>
+
+                            <!-- ট্যাব ২: নথির ডেস্ক স্থানান্তর গতিবিধি (Timeline) -->
+                            <div class="tab-pane fade" id="movements" role="tabpanel" aria-labelledby="movements-tab">
+                                <div class="timeline">
+                                    @forelse($file->movements->sortByDesc('created_at') as $movement)
+                                    <div>
+                                        <i class="fas {{ $movement->is_received ? 'fa-check bg-success' : 'fa-shipping-fast bg-warning' }}"></i>
+                                        <div class="timeline-item">
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <h6 class="font-weight-bold m-0 text-dark" style="font-size: 0.88rem;">
+                                                    {{ $movement->fromUser->designation ?? ($movement->fromUser->name ?? 'অজ্ঞাত') }} 
+                                                    <i class="fas fa-arrow-right text-muted mx-1" style="font-size: 10px;"></i>
+                                                    {{ $movement->toUser->designation ?? ($movement->toUser->name ?? 'অজ্ঞাত') }}
+                                                </h6>
+                                                <span class="text-muted small">
+                                                    <i class="far fa-clock mr-1"></i>{{ bangla(date('d M, Y - h:i A', strtotime($movement->created_at))) }}
+                                                </span>
+                                            </div>
+                                            <div class="small">
+                                                @if($movement->is_received)
+                                                    <span class="text-success font-weight-bold"><i class="fas fa-qrcode mr-1"></i> গ্রহণ করা হয়েছে</span>
+                                                    @if($movement->received_at)
+                                                        <small class="text-muted">({{ bangla(date('h:i A', strtotime($movement->received_at))) }})</small>
+                                                    @endif
+                                                @else
+                                                    <span class="text-danger font-weight-bold"><i class="fas fa-hourglass-half mr-1"></i> ট্রানজিটে আছে (রিসিভ করা হয়নি)</span>
+                                                @endif
+                                                @if($movement->remarks)
+                                                    <div class="mt-1 text-secondary bg-light p-1 rounded">নোট: {{ $movement->remarks }}</div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @empty
+                                    <div class="text-center py-4 text-muted">
+                                        <i class="fas fa-route fa-2x mb-2 d-block opacity-50"></i>
+                                        কোনো ডেস্ক ট্রান্সফার পাওয়া যায়নি।
+                                    </div>
+                                    @endforelse
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+@endsection
+
+@section('third_party_scripts')
+<!-- Flatpickr Datepicker JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        
+        // ১. শুনানির তারিখ (সাধারন ডেটপিকার)
+        flatpickr("#hearing_date", {
+            dateFormat: "Y-m-d",
+            defaultDate: "today"
+        });
+
+        // ২. পরবর্তী ধার্য তারিখ (সোম ও বুধবার স্বয়ংক্রিয়ভাবে হাইলাইট)
+        flatpickr("#next_hearing_date", {
+            dateFormat: "Y-m-d",
+            minDate: "today",
+            onDayCreate: function(dObj, dStr, fp, dayElem) {
+                // dayElem.dateObj.getDay() -> 1 = Monday (সোমবার), 3 = Wednesday (বুধবার)
+                var day = dayElem.dateObj.getDay();
+                if (day === 1 || day === 3) {
+                    dayElem.classList.add("court-day-highlight");
+                    dayElem.title = "ধার্য দিন (সোম/বুধবার)";
+                }
+            }
+        });
+
+    });
+</script>
+@endsection
