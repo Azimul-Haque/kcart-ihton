@@ -5,15 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\User;
-use App\Models\Package;
-use App\Models\Payment;
+use App\Models\File;
 use App\Models\Message;
 use App\Models\Notification;
-use App\Models\Exam;
-use App\Models\Blog;
-use App\Models\Blogcategory;
-use App\Models\Meritlist;
-use App\Models\PayoutRequest;
 
 use Carbon\Carbon;
 use Illuminate\Support\Str;
