@@ -241,7 +241,7 @@
                     <div class="col-md-6 form-group">
                         <label>পদবী (Designation)</label>
                         <select name="designation" class="form-control" required>
-                            <option value="" selected disabled>চিহ্নিত করুন...</option>
+                            <option value="" selected disabled>নির্ধারণ করুন...</option>
                             <option value="সহকারী কমিশনার (ভূমি)">সহকারী কমিশনার (ভূমি)</option>
                             <option value="কানুনগো">কানুনগো</option>
                             <option value="সার্ভেয়ার">সার্ভেয়ার</option>
