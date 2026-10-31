@@ -122,14 +122,7 @@ class FileController extends Controller
      */
     public function show(File $file)
     {
-        // Eager loading for timeline and user details
-        $file->load([
-            'currentDesk', 
-            'movements.fromUser', 
-            'movements.toUser', 
-            'hearings.conductor'
-        ]);
-
+        $file->load(['currentDesk', 'movements.fromUser', 'movements.toUser', 'hearings.conductor']);
         $users = User::orderBy('name')->get();
 
         return view('dashboard.files.show', compact('file', 'users'));
