@@ -295,4 +295,48 @@ class FileController extends Controller
     {
         return view('dashboard.files.print_slip', compact('file'));
     }
+
+    private function applyFilters($query, Request $request)
+    {
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function ($q) use ($search) {
+                $q->where('case_number', 'LIKE', "%{$search}%")
+                  ->orWhere('badi_name', 'LIKE', "%{$search}%")
+                  ->orWhere('badi_mobile', 'LIKE', "%{$search}%")
+                  ->orWhere('bibadi_name', 'LIKE', "%{$search}%")
+                  ->orWhere('bibadi_mobile', 'LIKE', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->filled('desk_id')) {
+            $query->where('current_desk_id', $request->desk_id);
+        }
+
+        if ($request->has('status') && $request->status == 'overdue_14') {
+            $fourteenDaysAgo = now()->subDays(14);
+            $query->where(function ($q) use ($fourteenDaysAgo) {
+                $q->whereHas('movements', function ($mq) use ($fourteenDaysAgo) {
+                    $mq->whereRaw('id = (select max(id) from file_movements where file_id = files.id)')
+                       ->where(function ($sq) use ($fourteenDaysAgo) {
+                           $sq->where('received_at', '<=', $fourteenDaysAgo)
+                              ->orWhere(function ($ssq) use ($fourteenDaysAgo) {
+                                  $ssq->whereNull('received_at')
+                                      ->where('created_at', '<=', $fourteenDaysAgo);
+                              });
+                       });
+                })
+                ->orWhere(function ($fq) use ($fourteenDaysAgo) {
+                    $fq->doesntHave('movements')
+                       ->where('created_at', '<=', $fourteenDaysAgo);
+                });
+            });
+        } elseif ($request->filled('status') && $request->status != 'নিষ্পত্তি') {
+            $query->where('status', $request->status);
+        }
+    }
 }
