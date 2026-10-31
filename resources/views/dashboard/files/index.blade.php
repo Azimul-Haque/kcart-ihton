@@ -131,7 +131,7 @@
                                 <tr>
                                     <td>
                                         <strong class="text-primary font-weight-bold">
-                                            <a href="{{ route('files.show', $file->id) }}" class="btn btn-success btn-sm" title="শুনানি গ্রহন ও আদেশ লিখুন">
+                                            <a href="{{ route('files.show', $file->id) }}" title="শুনানি গ্রহন ও আদেশ লিখুন">
                                                 {{ $file->case_number ? bangla($file->case_number) : 'রুজু হয়নি' }}
                                             </a>
                                             
