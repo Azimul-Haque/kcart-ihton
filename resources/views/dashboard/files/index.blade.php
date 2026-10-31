@@ -239,7 +239,7 @@
 
                                             <!-- QR Print -->
                                             <a href="{{ route('files.receipt', $file->id) }}" target="_blank" class="btn btn-outline-info btn-sm" title="58mm QR স্টিকার প্রিন্ট">
-                                                <i class="fas fa-print"></i>
+                                                <i class="fas fa-qrcode"></i>
                                             </a>
 
                                             <!-- ফাইল ট্রান্সফার বাটন -->
