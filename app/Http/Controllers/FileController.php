@@ -133,7 +133,7 @@ class FileController extends Controller
     public function edit(File $file)
     {
         $users = User::orderBy('name')->get();
-        return view('files.edit', compact('file', 'users'));
+        return view('dashboard.files.edit', compact('file', 'users'));
     }
 
     /**
