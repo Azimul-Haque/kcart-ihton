@@ -213,15 +213,50 @@ class FileController extends Controller
     public function myDesk(Request $request)
     {
         $query = File::where('current_desk_id', Auth::id())
-            ->with(['currentDesk', 'movements' => function ($q) { $q->latest(); }]);
+            ->with(['currentDesk', 'movements' => function ($q) { 
+                $q->latest(); 
+            }]);
 
+        // ১. টেক্সট সার্চ (মামলা নম্বর, বাদি, বিবাদি বা মোবাইল)
         if ($request->filled('search')) {
             $search = trim($request->search);
             $query->where(function ($q) use ($search) {
                 $q->where('case_number', 'LIKE', "%{$search}%")
                   ->orWhere('badi_name', 'LIKE', "%{$search}%")
-                  ->orWhere('bibadi_name', 'LIKE', "%{$search}%");
+                  ->orWhere('badi_mobile', 'LIKE', "%{$search}%")
+                  ->orWhere('bibadi_name', 'LIKE', "%{$search}%")
+                  ->orWhere('bibadi_mobile', 'LIKE', "%{$search}%");
             });
+        }
+
+        // ২. নথির টাইপ (Type) ফিল্টার
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        // ৩. নথির স্ট্যাটাস (Status) ও ১৪+ দিন ঝুলন্ত নথি (Overdue) ফিল্টার
+        if ($request->has('status') && $request->status == 'overdue_14') {
+            $fourteenDaysAgo = now()->subDays(14);
+
+            $query->where(function ($q) use ($fourteenDaysAgo) {
+                // সর্বশেষ মুভমেন্টের তারিখ অথবা তৈরির তারিখ ১৪ দিনের পুরোনো
+                $q->whereHas('movements', function ($mq) use ($fourteenDaysAgo) {
+                    $mq->whereRaw('id = (select max(id) from file_movements where file_id = files.id)')
+                       ->where(function ($sq) use ($fourteenDaysAgo) {
+                           $sq->where('received_at', '<=', $fourteenDaysAgo)
+                              ->orWhere(function ($ssq) use ($fourteenDaysAgo) {
+                                  $ssq->whereNull('received_at')
+                                      ->where('created_at', '<=', $fourteenDaysAgo);
+                              });
+                       });
+                })
+                ->orWhere(function ($fq) use ($fourteenDaysAgo) {
+                    $fq->doesntHave('movements')
+                       ->where('created_at', '<=', $fourteenDaysAgo);
+                });
+            });
+        } elseif ($request->filled('status')) {
+            $query->where('status', $request->status);
         }
 
         $files = $query->latest()->paginate(15)->withQueryString();
