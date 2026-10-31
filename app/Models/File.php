@@ -35,13 +35,9 @@ class File extends Model
         return $this->belongsTo(User::class, 'current_desk_id');
     }
 
-    public function movements() {
-        return $this->hasMany(FileMovement::class)->orderBy('created_at', 'desc');
-    }
-
     public function movements()
     {
-        return $this->hasMany(FileMovement::class, 'file_id');
+        return $this->hasMany(FileMovement::class, 'file_id')->orderBy('created_at', 'desc');
     }
 
     public function hearings() {
