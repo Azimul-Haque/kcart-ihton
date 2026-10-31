@@ -31,7 +31,7 @@
                         
                         <div class="text-muted small mb-3">
                             <i class="fas fa-phone-alt mr-1"></i> {{ bangla($user->mobile) }} <br>
-                            <i class="fas fa-shield-alt mr-1"></i> রোল: {{ ucfirst($user->role) }} <br>
+                            {{-- <i class="fas fa-shield-alt mr-1"></i> রোল: {{ ucfirst($user->role) }} <br> --}}
                             <i class="fas fa-calendar-alt mr-1"></i> সিস্টেমে যোগদান: {{ date('d M, Y', strtotime($user->created_at)) }}
                         </div>
 
