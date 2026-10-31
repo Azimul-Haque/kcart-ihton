@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Api\ExamController;
+use App\Http\Controllers\Api\FileController;
+use App\Http\Controllers\Api\HearingController;
 
 /*
 |--------------------------------------------------------------------------
