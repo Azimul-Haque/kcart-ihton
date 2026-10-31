@@ -9,6 +9,7 @@
         body { background: #fff; display: flex; flex-direction: column; align-items: center; padding: 0; }
         
         .pos-slip {
+        	background: #fff;
             width: 58mm;
             padding: 1.5mm 1mm;
             color: #000;
