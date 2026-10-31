@@ -16,7 +16,6 @@ use DB;
 use Hash;
 use Auth;
 use Image;
-use File;
 use Session;
 use Artisan;
 // use Redirect;
