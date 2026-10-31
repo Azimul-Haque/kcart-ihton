@@ -86,7 +86,7 @@
 
                                 <td>
                                     <!-- Pending files on this user's desk -->
-                                    <span class="stat-pill text-dark border border-warning" title="উনার ডেস্কে আটকে থাকা ফাইল">
+                                    <span class="stat-pill text-warning border border-warning" title="উনার ডেস্কে আটকে থাকা ফাইল">
                                         <i class="fas fa-inbox"></i> পেন্ডিং ফাইল: {{ bangla($user->filesOnDesk->count() ?? 0) }}
                                     </span>
                                 </td>
