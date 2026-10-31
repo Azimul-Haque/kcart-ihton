@@ -31,7 +31,7 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6 form-group">
-                                    <label>মোকদ্দমা / নথি নম্বর <small class="text-muted">(ফাঁকা রাখলে পরে দেওয়া যাবে)</small></label>
+                                    <label>মোকদ্দমা / নথি নম্বর <small class="text-muted">(ফাঁকা রাখলে পরে দেওয়া যাবে)</small></label>
                                     <input type="text" name="case_number" class="form-control" placeholder="যেমন: ১২/২০২৬-২৭">
                                 </div>
                             </div>
@@ -46,7 +46,7 @@
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label>বাদির মোবাইল নম্বর</label>
-                                    <input type="number" name="badi_mobile" class="form-control" placeholder="01700000000">
+                                    <input type="text" name="badi_mobile" class="form-control" placeholder="01700000000">
                                 </div>
                             </div>
 
@@ -57,12 +57,34 @@
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label>বিবাদির মোবাইল নম্বর</label>
-                                    <input type="number" name="bibadi_mobile" class="form-control" placeholder="01700000000">
+                                    <input type="text" name="bibadi_mobile" class="form-control" placeholder="01700000000">
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <!-- শুনানির তারিখ ও প্রাথমিক ডেস্ক নির্বাচন -->
+                            <div class="row">
+                                <div class="col-md-6 form-group">
+                                    <label>পরবর্তী শুনানির তারিখ (ঐচ্ছিক)</label>
+                                    <input type="date" name="next_hearing_date" class="form-control">
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label>প্রাথমিকভাবে নথির অবস্থান / ডেস্কে প্রেরন (ঐচ্ছিক)</label>
+                                    <select name="to_user_id" class="form-control">
+                                        <option value="">নিজের ডেস্কে রাখুন (Default)</option>
+                                        @foreach($users as $user)
+                                            <option value="{{ $user->id }}">
+                                                {{ $user->designation ?? $user->name }} ({{ $user->name }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <small class="text-muted">বাছাই করলে ফাইলটি সরাসরি ওই কর্মকর্তার ডেস্কে পেন্ডিং হিসেবে জমা হবে।</small>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label>অতিরিক্ত মন্তব্য / বিষয়বস্তু</label>
+                                <label>অতিরিক্ত মন্তব্য / বিষয়বস্তু</label>
                                 <textarea name="remarks" class="form-control" rows="3" placeholder="নথি সংক্রান্ত সংক্ষিপ্ত বিবরণ বা আদেশ..."></textarea>
                             </div>
 
