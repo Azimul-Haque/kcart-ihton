@@ -159,7 +159,7 @@ class FileController extends Controller
     }
 
     /**
-     * ৫০৮মিমি থার্মাল স্টিকার প্রিন্ট ভিউ
+     * ৫৮মিমি থার্মাল স্টিকার প্রিন্ট ভিউ
      */
     public function receipt(File $file)
     {
