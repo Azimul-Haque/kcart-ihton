@@ -47,12 +47,6 @@
             body { background: white; padding: 0; }
             .no-print { display: none !important; }
             .pos-slip { border: none; width: 58mm; padding: 1mm 1mm; }
-            @page { margin: 0; size: auto; }
-        }
-        @media print {
-            body { background: white; padding: 0; }
-            .no-print { display: none !important; }
-            .sticker-card { border: none; width: 58mm; padding: 1mm 1mm; }
             @page { size: 58mm auto; margin: 0mm; }
         }
     </style>
