@@ -245,15 +245,16 @@
                             <option value="সহকারী কমিশনার (ভূমি)">সহকারী কমিশনার (ভূমি)</option>
                             <option value="কানুনগো">কানুনগো</option>
                             <option value="সার্ভেয়ার">সার্ভেয়ার</option>
-                            <option value="নাজির">নাজির</option>
-                            <option value="পেশকার">পেশকার</option>
-                            <option value="অফিস সহকারী">অফিস সহকারী</option>
-                            <option value="জারিকারক">জারিকারক</option>
-                            <option value="অফিস সহায়ক">অফিস সহায়ক</option>
                             <option value="ইভূসক (পৌর)">ইভূসক (পৌর)</option>
                             <option value="ইভূসক (শিমুলকান্দি)">ইভূসক (শিমুলকান্দি)</option>
                             <option value="ইভূসক (সাদেকপুর)">ইভূসক (সাদেকপুর)</option>
                             <option value="ইভূসক (আগানগর)">ইভূসক (আগানগর)</option>
+                            <option value="নাজির">নাজির</option>
+                            <option value="পেশকার">পেশকার</option>
+                            <option value="অফিস সহকারী">অফিস সহকারী</option>
+                            <option value="কম্পিউটার অপারেটর">কম্পিউটার অপারেটর</option>
+                            <option value="জারিকারক">জারিকারক</option>
+                            <option value="অফিস সহায়ক">অফিস সহায়ক</option>
                         </select>
                     </div>
                     <div class="col-md-6 form-group">
