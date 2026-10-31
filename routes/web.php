@@ -59,7 +59,7 @@ Route::middleware(['auth'])->group(function () {
 
     // 4. Staff & User Management Routes
     Route::get('/dashboard/users', [DashboardController::class, 'getUsers'])->name('dashboard.users');
-    Route::get('/dashboard/users/{user}', [DashboardController::class, 'getUsers'])->name('dashboard.users.single');
+    Route::get('/dashboard/users/{user}', [DashboardController::class, 'getUser'])->name('dashboard.users.single');
     Route::post('/dashboard/users/store', [DashboardController::class, 'storeUser'])->name('dashboard.users.store');
     Route::post('/dashboard/users/{id}/update', [DashboardController::class, 'updateUser'])->name('dashboard.users.update');
     Route::get('/dashboard/users/{id}/delete', [DashboardController::class, 'deleteUser'])->name('dashboard.users.delete');
