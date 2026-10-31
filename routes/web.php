@@ -65,14 +65,18 @@ Route::post('/dashboard/notifications/send/again', 'DashboardController@sendAgai
 // Files & Tracking Routes
 // ---------------------------------------------------------
 
-// কাস্টম ফাইল রাউটস (resource এর আগে ডিফাইন করতে হবে)
-Route::get('/dashboard/files/my-desk', [FileController::class, 'myDesk'])->name('files.my_desk'); // আমার ডেস্কের ফাইল
-Route::get('/dashboard/files/transit', [FileController::class, 'transit'])->name('files.transit'); // ট্রানজিটে থাকা ফাইল (রিসিভ হয়নি)
-Route::get('/dashboard/files/{file}/receipt', [FileController::class, 'receipt'])->name('files.receipt'); // 58mm QR প্রিন্ট ভিউ
-Route::post('/dashboard/files/{file}/transfer', [FileController::class, 'transfer'])->name('files.transfer'); // ড্যাশবোর্ড থেকে অন্য ডেস্কে পাঠানো
+// কাস্টম ফাইল রাউটস (Resource Route এর আগে রাখতে হবে)
+Route::get('/dashboard/files/my-desk', [FileController::class, 'myDesk'])->name('files.my_desk');
+Route::get('/dashboard/files/transit', [FileController::class, 'transit'])->name('files.transit');
+Route::get('/dashboard/files/{file}/receipt', [FileController::class, 'receipt'])->name('files.receipt');
+Route::post('/dashboard/files/{file}/transfer', [FileController::class, 'transfer'])->name('files.transfer');
 
-// বেসিক ফাইল ক্রিয়েট ও লিস্ট (Resource)
+// নথির রিসোর্স রাউট
 Route::resource('dashboard/files', FileController::class)->except(['edit', 'update', 'destroy']);
+
+// শুনানি রাউটস
+Route::get('/dashboard/hearings/today', [HearingController::class, 'todayHearings'])->name('hearings.today');
+Route::post('/dashboard/files/{file}/hearings', [HearingController::class, 'store'])->name('hearings.store');
 
 // ---------------------------------------------------------
 // Hearings (শুনানি) Routes
