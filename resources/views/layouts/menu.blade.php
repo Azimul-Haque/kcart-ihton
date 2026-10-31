@@ -16,7 +16,7 @@
 @endif
 
 
-{{-- @if(Auth::user()->role == 'admin' || Auth::user()->role == 'manager')
+@if(Auth::user()->role == 'admin' || Auth::user()->role == 'manager')
 <li class="nav-item">
     <a href="{{ route('dashboard.courses') }}" class="nav-link {{ Request::is('dashboard/courses') ? 'active' : '' }} {{ Request::is('dashboard/courses/*') ? 'active' : '' }}">
         <i class="nav-icon fas fa-layer-group"></i>
@@ -32,7 +32,7 @@
         <p>পরীক্ষাসমূহ</p>
     </a>
 </li>
-@endif --}}
+@endif
 
 
 @if(Auth::user()->role == 'admin')
