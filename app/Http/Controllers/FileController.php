@@ -50,7 +50,7 @@ class FileController extends Controller
         $files = $query->latest()->paginate(15)->withQueryString();
         $users = User::orderBy('name')->get();
 
-        return view('files.index', compact('files', 'users'));
+        return view('dashboard.files.index', compact('files', 'users'));
     }
 
     /**
@@ -75,7 +75,7 @@ class FileController extends Controller
         $files = $query->latest()->paginate(15)->withQueryString();
         $users = User::orderBy('name')->get();
 
-        return view('files.index', compact('files', 'users'))->with('isMyDesk', true);
+        return view('dashboard.files.index', compact('files', 'users'))->with('isMyDesk', true);
     }
 
     /**
@@ -96,7 +96,7 @@ class FileController extends Controller
 
         $users = User::orderBy('name')->get();
 
-        return view('files.index', compact('files', 'users'))->with('isTransit', true);
+        return view('dashboard.files.index', compact('files', 'users'))->with('isTransit', true);
     }
 
     /**
@@ -163,6 +163,6 @@ class FileController extends Controller
      */
     public function receipt(File $file)
     {
-        return view('files.receipt', compact('file'));
+        return view('dashboard.files.receipt', compact('file'));
     }
 }
