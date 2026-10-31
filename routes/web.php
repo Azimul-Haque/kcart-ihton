@@ -49,6 +49,17 @@ Route::post('/dashboard/users/{id}/single/notification', 'DashboardController@se
 Route::post('/dashboard/users/{id}/approve', 'DashboardController@toggleApprove')->name('dashboard.users.approve');
 Route::post('/dashboard/users/{id}/single/sms', 'DashboardController@sendSingleSMS')->name('dashboard.users.singlesms');
 
+Route::get('/dashboard/messages', 'DashboardController@getMessages')->name('dashboard.messages');
+Route::post('/dashboard/messages/{id}/update', 'DashboardController@updateMessage')->name('dashboard.messages.update');
+Route::get('/dashboard/messages/delete/{id}', 'DashboardController@deleteMessage')->name('dashboard.messages.delete');
+
+
+
+Route::get('/dashboard/notifications', 'DashboardController@getNotifications')->name('dashboard.notifications');
+Route::post('/dashboard/notifications/send', 'DashboardController@sendNotification')->name('dashboard.notifications.send');
+Route::get('/dashboard/notifications/delete/{id}', 'DashboardController@deleteNotification')->name('dashboard.notifications.delete');
+Route::post('/dashboard/notifications/send/again', 'DashboardController@sendAgainNotification')->name('dashboard.notifications.sendagain');
+
 // ---------------------------------------------------------
 // Files & Tracking Routes
 // ---------------------------------------------------------
