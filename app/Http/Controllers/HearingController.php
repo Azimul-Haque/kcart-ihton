@@ -66,10 +66,11 @@ class HearingController extends Controller
             'next_hearing_date' => 'nullable|date',
             'order_details'     => 'nullable|string',
             'status'            => 'required|string',
+            'to_user_id'        => 'nullable|exists:users,id', // অন্য ডেস্কে ফরোয়ার্ড করার জন্য
             'send_sms'          => 'nullable|boolean'
         ]);
 
-        // ১. শুনানির নতুন রেকর্ড তৈরি
+        // ১. শুনানির নতুন তথ্য সংরক্ষণ
         $hearing = Hearing::create([
             'file_id'           => $file->id,
             'conducted_by'      => Auth::id(),
@@ -78,20 +79,36 @@ class HearingController extends Controller
             'order_details'     => $request->order_details,
         ]);
 
-        // ২. মূল নথির স্ট্যাটাস, ধার্য তারিখ ও বর্তমান অবস্থান আপডেট
+        // ২. ট্রানজিট / ফাইল ফরোয়ার্ড লজিক
+        $targetDesk = Auth::id(); // ডিফল্ট নিজের ডেস্কে থাকবে
+
+        if ($request->filled('to_user_id') && $request->to_user_id != Auth::id()) {
+            $targetDesk = $request->to_user_id;
+
+            // ফাইল স্থানান্তরের মুভমেন্ট লগ তৈরি
+            FileMovement::create([
+                'file_id'      => $file->id,
+                'from_user_id' => Auth::id(),
+                'to_user_id'   => $targetDesk,
+                'is_received'  => false, // প্রাপকের মোবাইল অ্যাপ স্ক্যানের অপেক্ষায় থাকবে
+                'remarks'      => 'আদেশ প্রদানপূর্বক নথি স্থানান্তরিত করা হয়েছে'
+            ]);
+        }
+
+        // ৩. মূল নথির স্ট্যাটাস, ধার্য তারিখ ও বর্তমান অবস্থান আপডেট
         $file->update([
             'status'            => $request->status,
             'next_hearing_date' => $request->next_hearing_date,
-            'current_desk_id'   => Auth::id() // শুনানি নিলে ফাইল অটোমেটিক শুনানিকারীর ডেস্কে আসবে
+            'current_desk_id'   => $targetDesk,
         ]);
 
-        // ৩. বাদি ও বিবাদিকে এসএমএস নোটিফিকেশন পাঠানো (ঐচ্ছিক)
+        // ৪. এসএমএস পাঠানো (যদি টিক দেওয়া থাকে)
         if ($request->boolean('send_sms') && $request->next_hearing_date) {
             $this->sendSmsNotification($file, $request->next_hearing_date);
             $hearing->update(['sms_sent' => true]);
         }
 
-        return redirect()->route('files.receipt', $file->id)->with('success', 'শুনানির আদেশ সংরক্ষণ করা হয়েছে। ৫০৮মিমি স্লিপ প্রিন্ট করুন।');
+        return redirect()->route('files.show', $file->id)->with('success', 'শুনানির আদেশ ও ফাইল স্থানান্তর সফলভাবে সংরক্ষিত হয়েছে।');
     }
 
     /**
