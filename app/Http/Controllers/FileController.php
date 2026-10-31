@@ -68,7 +68,8 @@ class FileController extends Controller
 
     public function create()
     {
-        return view('dashboard.files.create');
+        $users = User::orderBy('name')->get();
+        return view('files.create', compact('users'));
     }
 
     /**
