@@ -244,7 +244,7 @@
 
                                             <!-- Hearing Date Print -->
                                             <a href="{{ route('files.receipt', $file->id) }}" target="_blank" class="btn btn-outline-info btn-sm" title="58mm QR স্টিকার প্রিন্ট">
-                                                <i class="fas fa-qrcode"></i>
+                                                <i class="fas fa-sticky-note-o"></i>
                                             </a>
 
                                             <!-- ফাইল ট্রান্সফার বাটন -->
