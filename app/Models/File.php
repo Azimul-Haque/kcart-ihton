@@ -39,6 +39,11 @@ class File extends Model
         return $this->hasMany(FileMovement::class)->orderBy('created_at', 'desc');
     }
 
+    public function movements()
+    {
+        return $this->hasMany(FileMovement::class, 'file_id');
+    }
+
     public function hearings() {
         return $this->hasMany(Hearing::class)->orderBy('hearing_date', 'desc');
     }
