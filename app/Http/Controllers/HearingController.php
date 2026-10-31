@@ -20,7 +20,7 @@ class HearingController extends Controller
         $unresolvedmessagecount = Message::where('status', 0)->count();
         View::share('unresolvedmessagecount', $unresolvedmessagecount);
 
-        // $this->middleware('auth')->except('clear');
+        $this->middleware('auth');
         // $this->middleware(['admin'])->only('getUsers', 'storeUser', 'updateUser', 'deleteUser', 'getUser', 'getMessages', 'updateMessage', 'getNotifications', 'sendSingleNotification', 'sendSingleSMS', 'getExamSolvePDF');
         
     }
