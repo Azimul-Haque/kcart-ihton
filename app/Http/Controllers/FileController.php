@@ -141,32 +141,46 @@ class FileController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'type'          => 'required|string',
-            'case_number'   => 'nullable|string',
-            'badi_name'     => 'nullable|string',
-            'badi_mobile'   => 'nullable|string',
-            'bibadi_name'   => 'nullable|string',
-            'bibadi_mobile' => 'nullable|string',
-            'remarks'       => 'nullable|string',
+            'type'              => 'required|string',
+            'case_number'       => 'nullable|string',
+            'badi_name'         => 'nullable|string',
+            'badi_mobile'       => 'nullable|string',
+            'bibadi_name'       => 'nullable|string',
+            'bibadi_mobile'     => 'nullable|string',
+            'next_hearing_date' => 'nullable|date',
+            'to_user_id'        => 'nullable|exists:users,id',
+            'remarks'           => 'nullable|string',
         ]);
 
-        $file = File::create(array_merge($validated, [
-            'status'          => File::STATUS_INITIATED,
-            'current_desk_id' => Auth::id(),
-            'created_by'      => Auth::id(),
-        ]));
+        // যদি সরাসরি অন্য কারও (যেমন: সার্ভেয়ার/কানুনগো) ডেস্কে পাঠানোর সিদ্ধান্ত নেওয়া হয়
+        $destinationDesk = $request->filled('to_user_id') ? $request->to_user_id : Auth::id();
+        $isDirectSelf = ($destinationDesk == Auth::id());
 
-        // শুরুর ফিজিক্যাল রেকর্ড এন্ট্রি
+        $file = File::create([
+            'type'              => $request->type,
+            'case_number'       => $request->case_number,
+            'badi_name'         => $request->badi_name,
+            'badi_mobile'       => $request->badi_mobile,
+            'bibadi_name'       => $request->bibadi_name,
+            'bibadi_mobile'     => $request->bibadi_mobile,
+            'next_hearing_date' => $request->next_hearing_date,
+            'remarks'           => $request->remarks,
+            'status'            => File::STATUS_INITIATED,
+            'current_desk_id'   => $destinationDesk,
+            'created_by'        => Auth::id(),
+        ]);
+
+        // প্রাথমিক ট্রান্সফার মুভমেন্ট লগ
         FileMovement::create([
             'file_id'      => $file->id,
             'from_user_id' => Auth::id(),
-            'to_user_id'   => Auth::id(),
-            'is_received'  => true,
-            'received_at'  => now(),
-            'remarks'      => 'ফাইল সিস্টেমে রুজু করা হয়েছে'
+            'to_user_id'   => $destinationDesk,
+            'is_received'  => $isDirectSelf,
+            'received_at'  => $isDirectSelf ? now() : null,
+            'remarks'      => $isDirectSelf ? 'নথি সিস্টেমে রুজু করা হয়েছে' : 'নথি রুজু করে স্থানান্তরিত করা হয়েছে'
         ]);
 
-        return redirect()->route('files.receipt', $file->id)->with('success', 'নতুন ফাইল এন্ট্রি সফল হয়েছে। QR স্টিকার প্রিন্ট করুন।');
+        return redirect()->route('files.receipt', $file->id)->with('success', 'নতুন ফাইল এন্ট্রি সফল হয়েছে। QR স্টিকার প্রিন্ট করুন।');
     }
 
     /**
