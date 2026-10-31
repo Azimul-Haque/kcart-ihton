@@ -49,4 +49,22 @@ Route::post('/dashboard/users/{id}/single/notification', 'DashboardController@se
 Route::post('/dashboard/users/{id}/approve', 'DashboardController@toggleApprove')->name('dashboard.users.approve');
 Route::post('/dashboard/users/{id}/single/sms', 'DashboardController@sendSingleSMS')->name('dashboard.users.singlesms');
 
+// ---------------------------------------------------------
+// Files & Tracking Routes
+// ---------------------------------------------------------
 
+// কাস্টম ফাইল রাউটস (resource এর আগে ডিফাইন করতে হবে)
+Route::get('/files/my-desk', [FileController::class, 'myDesk'])->name('files.my_desk'); // আমার ডেস্কের ফাইল
+Route::get('/files/transit', [FileController::class, 'transit'])->name('files.transit'); // ট্রানজিটে থাকা ফাইল (রিসিভ হয়নি)
+Route::get('/files/{file}/receipt', [FileController::class, 'receipt'])->name('files.receipt'); // 58mm QR প্রিন্ট ভিউ
+Route::post('/files/{file}/transfer', [FileController::class, 'transfer'])->name('files.transfer'); // ড্যাশবোর্ড থেকে অন্য ডেস্কে পাঠানো
+
+// বেসিক ফাইল ক্রিয়েট ও লিস্ট (Resource)
+Route::resource('files', FileController::class)->except(['edit', 'update', 'destroy']);
+
+// ---------------------------------------------------------
+// Hearings (শুনানি) Routes
+// ---------------------------------------------------------
+
+Route::get('/hearings/today', [HearingController::class, 'todayHearings'])->name('hearings.today'); // আজকের শুনানি তালিকা
+Route::post('/files/{file}/hearings', [HearingController::class, 'store'])->name('hearings.store'); // নতুন শুনানির আদেশ সেভ করা
