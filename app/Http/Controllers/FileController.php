@@ -52,9 +52,9 @@ class FileController extends Controller
             $query->where('type', $request->type);
         }
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
+        // if ($request->filled('status')) {
+        //     $query->where('status', $request->status);
+        // }
         if ($request->has('status') && $request->status == 'overdue_14') {
             // ১৪ দিনের চেয়ে পুরোনো নথি ফিল্টার
             $query->whereDate('updated_at', '<=', now()->subDays(14));
