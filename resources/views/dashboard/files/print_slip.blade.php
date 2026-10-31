@@ -66,7 +66,7 @@
         </table>
 
         <div class="qr-area">
-            {!! new QrCode::size(90)->generate($file->uuid) !!}
+            {!! QrCode::size(90)->generate($file->uuid) !!}
             <div style="font-size: 11px; margin-top: 5px;"><code>UUID: {{ $file->uuid }}</code></div>
         </div>
     </div>
