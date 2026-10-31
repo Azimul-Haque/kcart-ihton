@@ -24,7 +24,7 @@ Route::get('/privacy-policy', [IndexController::class, 'privacyPolicy'])->name('
 Route::get('/refund-policy', [IndexController::class, 'refundPolicy'])->name('index.refund-policy');
 Route::get('/faq', [IndexController::class, 'getFaq'])->name('index.faq');
 
-Route::get('/case-list', [App\Http\Controllers\FileController::class, 'publicCaseList'])->name('public.case_list');
+Route::get('/case-list', [IndexController::class, 'publicCaseList'])->name('public.case_list');
 
 // Utility Routes
 Route::get('/sessionsclear', [IndexController::class, 'deleteSessionFiles'])->name('sessionsclear');
