@@ -244,6 +244,34 @@ class DashboardController extends Controller
                     ->withUser($user);
     }
 
+    public function singleUser(User $user)
+    {
+        // ১. ইউজারের ডেস্কে বর্তমানে থাকা ফাইলসমূহ এবং লেটেস্ট মুভমেন্ট লগ
+        $filesOnDesk = File::where('current_desk_id', $user->id)
+            ->with(['movements' => function ($query) use ($user) {
+                $query->where('to_user_id', $user->id)->latest();
+            }])
+            ->latest()
+            ->get();
+
+        // ২. এই ইউজার মোট কতগুলো ফাইল অন্য ডেস্কে ফরোয়ার্ড/প্রসেস করেছেন
+        $totalProcessed = FileMovement::where('from_user_id', $user->id)
+            ->where('to_user_id', '!=', $user->id)
+            ->count();
+
+        // ৩. কতগুলো ফাইল ৭ দিনের বেশি সময় ধরে উনার ডেস্কে আটকে আছে (Overdue)
+        $overdueCount = 0;
+        foreach ($filesOnDesk as $file) {
+            $lastMovement = $file->movements->first();
+            $receivedAt = $lastMovement ? ($lastMovement->received_at ?? $lastMovement->created_at) : $file->created_at;
+            if (Carbon::parse($receivedAt)->diffInDays(now()) > 7) {
+                $overdueCount++;
+            }
+        }
+
+        return view('users.single', compact('user', 'filesOnDesk', 'totalProcessed', 'overdueCount'));
+    }
+
     public function storeUser(Request $request)
     {
         $request->validate([
