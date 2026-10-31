@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 
+use View;
+
 class HearingController extends Controller
 {
     public function __construct()
