@@ -128,7 +128,7 @@ class FileController extends Controller
             'remarks'      => $isDirectSelf ? 'নথি সিস্টেমে রুজু করা হয়েছে' : 'নথি রুজু করে স্থানান্তরিত করা হয়েছে'
         ]);
 
-        return redirect()->route('files.receipt', $file->id)->with('success', 'নতুন ফাইল এন্ট্রি সফল হয়েছে। QR স্টিকার প্রিন্ট করুন।');
+        return redirect()->route('files.index', $file->id)->with('success', 'নতুন ফাইল এন্ট্রি সফল হয়েছে। QR স্টিকার প্রিন্ট করুন।');
     }
 
     public function edit(File $file)
