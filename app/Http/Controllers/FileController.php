@@ -36,7 +36,6 @@ class FileController extends Controller
             $q->latest();
         }]);
 
-        // ১. বহুমুখী সার্চ লজিক (মামলা নং, বাদি/বিবাদির নাম, মোবাইল, UUID)
         if ($request->filled('search')) {
             $search = trim($request->search);
             $query->where(function ($q) use ($search) {
@@ -49,17 +48,14 @@ class FileController extends Controller
             });
         }
 
-        // ২. নথির ধরন ফিল্টার
         if ($request->filled('type')) {
             $query->where('type', $request->type);
         }
 
-        // ৩. বর্তমান স্ট্যাটাস ফিল্টার
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
-        // ৪. নির্দিষ্ট ডেস্কে থাকা নথি ফিল্টার
         if ($request->filled('desk_id')) {
             $query->where('current_desk_id', $request->desk_id);
         }
@@ -67,7 +63,7 @@ class FileController extends Controller
         $files = $query->latest()->paginate(15)->withQueryString();
         $users = User::orderBy('name')->get();
 
-        return view('dashboard.files.index', compact('files', 'users'));
+        return view('files.index', compact('files', 'users'));
     }
 
     /**
