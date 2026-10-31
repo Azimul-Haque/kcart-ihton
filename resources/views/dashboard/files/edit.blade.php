@@ -127,3 +127,27 @@
         </div>
     </div>
 @endsection
+
+@section('third_party_scripts')
+<!-- Flatpickr Datepicker JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        
+        // ২. পরবর্তী ধার্য তারিখ (সোম ও বুধবার স্বয়ংস্ক্রিয় হাইলাইট)
+        flatpickr("#next_hearing_date", {
+            dateFormat: "Y-m-d",
+            minDate: "today",
+            onDayCreate: function(dObj, dStr, fp, dayElem) {
+                var day = dayElem.dateObj.getDay();
+                if (day === 1 || day === 3) { // ১ = সোমবার, ৩ = বুধবার
+                    dayElem.classList.add("court-day-highlight");
+                    dayElem.title = "ধার্য দিন (সোম/বুধবার)";
+                }
+            }
+        });
+
+    });
+</script>
+@endsection
