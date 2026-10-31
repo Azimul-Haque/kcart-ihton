@@ -276,7 +276,6 @@
                                         কোনো নথি বা মোকদ্দমা পাওয়া যায়নি।
                                     </td>
                                 </tr>
-                            @empty
                             @endforelse
                         </tbody>
                     </table>
