@@ -49,7 +49,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/dashboard/files/{file}/transfer', [FileController::class, 'transfer'])->name('files.transfer');
     
     // Resource Route for Files
-    Route::resource('dashboard/files', FileController::class)->except(['edit', 'update', 'destroy']);
+    Route::resource('dashboard/files', FileController::class)->except(['destroy']);
 
 
     // 3. Hearings (শুনানি) Routes
