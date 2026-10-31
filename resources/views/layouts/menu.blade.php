@@ -18,7 +18,7 @@
 
 @if(Auth::user()->role == 'admin' || Auth::user()->role == 'manager')
 <li class="nav-item">
-    <a href="{{ route('files.index') }}" class="nav-link {{ Request::is('dashboard/courses') ? 'active' : '' }} {{ Request::is('dashboard/courses/*') ? 'active' : '' }}">
+    <a href="{{ route('files.index') }}" class="nav-link {{ Request::is('dashboard/files') ? 'active' : '' }} {{ Request::is('dashboard/files/*') ? 'active' : '' }}">
         <i class="nav-icon fas fa-layer-group"></i>
         <p>কোর্সসমূহ</p>
     </a>
