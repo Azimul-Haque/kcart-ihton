@@ -39,7 +39,7 @@ class HearingController extends Controller
 
         $files = $query->latest()->paginate(15)->withQueryString();
 
-        return view('hearings.today', compact('files', 'selectedDate'));
+        return view('dashboard.hearings.today', compact('files', 'selectedDate'));
     }
 
     /**
