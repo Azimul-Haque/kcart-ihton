@@ -46,8 +46,7 @@ Route::post('/dashboard/users/bulk/package/update', 'DashboardController@updateB
 Route::get('/dashboard/users/{id}/delete', 'DashboardController@deleteUser')->name('dashboard.users.delete');
 Route::post('/dashboard/users/{id}/single/notification', 'DashboardController@sendSingleNotification')->name('dashboard.users.singlenotification');
 
-
 Route::post('/dashboard/users/{id}/approve', 'DashboardController@toggleApprove')->name('dashboard.users.approve');
-
-
 Route::post('/dashboard/users/{id}/single/sms', 'DashboardController@sendSingleSMS')->name('dashboard.users.singlesms');
+
+
