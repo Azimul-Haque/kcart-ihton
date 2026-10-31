@@ -69,6 +69,10 @@ class HearingController extends Controller
             'status'            => 'required|string',
             'to_user_id'        => 'nullable|exists:users,id', // অন্য ডেস্কে ফরোয়ার্ড করার জন্য
             'send_sms'          => 'nullable|boolean'
+        ], [
+            // কাস্টম এরর মেসেজ (বাংলায়)
+            'next_hearing_date.required' => 'পরবর্তী ধার্য তারিখ নির্বাচন করা বাধ্যতামূলক!',
+            'next_hearing_date.date'     => 'পরবর্তী ধার্য তারিখটি সঠিক তারিখ হতে হবে!',
         ]);
 
         // ১. শুনানির নতুন তথ্য সংরক্ষণ
