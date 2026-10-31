@@ -62,7 +62,7 @@ class DashboardController extends Controller
         // $totalsites = Site::count();
         $totalusers = User::count();
 
-        $totalexamsattendedtoday = Meritlist::whereDate('created_at', Carbon::today())->count();
+        
 
         
 
@@ -110,10 +110,6 @@ class DashboardController extends Controller
                                       ->withDaysforchartc($daysforchartc)
                                       ->withTotalusersforchartc($totalusersforchartc)
                                       ->withTotaluserscumulitiveforchartc($totaluserscumulitiveforchartc);
-                                    // ->withTotalbalance($totalbalance)
-                                    // ->withTotalexpense($totalexpense)
-                                    // ->withTodaystotalexpense($todaystotalexpense)
-                                    // ->withTodaystotaldeposit($todaystotaldeposit);
     }
 
     public function clearQueryCache()
