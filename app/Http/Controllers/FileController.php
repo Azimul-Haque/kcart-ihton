@@ -55,6 +55,12 @@ class FileController extends Controller
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
+        if ($request->has('status') && $request->status == 'overdue_14') {
+            // ১৪ দিনের চেয়ে পুরোনো নথি ফিল্টার
+            $query->whereDate('updated_at', '<=', now()->subDays(14));
+        } elseif ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
 
         if ($request->filled('desk_id')) {
             $query->where('current_desk_id', $request->desk_id);
