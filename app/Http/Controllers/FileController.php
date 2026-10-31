@@ -56,8 +56,27 @@ class FileController extends Controller
         //     $query->where('status', $request->status);
         // }
         if ($request->has('status') && $request->status == 'overdue_14') {
-            // ১৪ দিনের চেয়ে পুরোনো নথি ফিল্টার
-            $query->whereDate('updated_at', '<=', now()->subDays(14));
+            // ১৪+ দিন ধরে ডেস্কে আটকে থাকা নথি ফিল্টার (Subquery/WhereHas লজিক)
+            $query->where(function ($q) {
+                $fourteenDaysAgo = now()->subDays(14);
+
+                // ১. যেসব ফাইলের মুভমেন্ট আছে, সেগুলোর সর্বশেষ মুভমেন্টের তারিখ ১৪ দিনের পুরনো কিনা
+                $q->whereHas('movements', function ($mq) use ($fourteenDaysAgo) {
+                    $mq->whereRaw('id = (select max(id) from file_movements where file_id = files.id)')
+                       ->where(function ($sq) use ($fourteenDaysAgo) {
+                           $sq->where('received_at', '<=', $fourteenDaysAgo)
+                              ->orWhere(function ($ssq) use ($fourteenDaysAgo) {
+                                  $ssq->whereNull('received_at')
+                                      ->where('created_at', '<=', $fourteenDaysAgo);
+                              });
+                       });
+                })
+                // ২. অথবা যেসব ফাইলের এখনো কোনো মুভমেন্ট হয়নি, সেটির মূল এন্ট্রি তারিখ (created_at) ১৪ দিনের পুরনো কিনা
+                ->orWhere(function ($fq) use ($fourteenDaysAgo) {
+                    $fq->doesntHave('movements')
+                       ->where('created_at', '<=', $fourteenDaysAgo);
+                });
+            });
         } elseif ($request->filled('status')) {
             $query->where('status', $request->status);
         }
