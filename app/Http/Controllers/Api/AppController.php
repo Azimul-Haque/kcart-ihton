@@ -57,20 +57,28 @@ class AppController extends Controller
     {
         $userId = Auth::id();
         
-        // যেগুলো ট্রানজিটে আছে (রিসিভ করা হয়নি)
+        // ১. অপেক্ষমান (Incoming) ফাইলসমূহ
         $incoming = FileMovement::where('to_user_id', $userId)
             ->where('is_received', false)
-            ->with(['file', 'fromUser:id,name,designation'])
-            ->latest()->get();
+            // সতর্কতা: আপনার FileMovement মডেলে সম্পর্কটির নাম fromUser না হয়ে from_user হলে নিচের লাইনে 'from_user:id,name,designation' লিখবেন।
+            ->with(['file', 'fromUser:id,name,designation']) 
+            ->latest()
+            ->get();
 
-        // যেগুলো অলরেডি ডেস্কে আছে
+        // অপেক্ষমান ফাইলের আইডিগুলো আলাদা করা হলো
+        $incomingFileIds = $incoming->pluck('file_id')->toArray();
+
+        // ২. রিসিভ করা ডেস্কে থাকা ফাইলসমূহ
         $onDesk = File::where('current_desk_id', $userId)
-            ->latest()->get();
+            // যে ফাইলগুলো এখনো ইনকামিং-এ আছে, সেগুলো যেন ডেস্কে ডাবল না দেখায় তার ফিল্টার
+            ->whereNotIn('id', $incomingFileIds) 
+            ->latest()
+            ->get();
 
         return response()->json([
             'incoming_files' => $incoming,
-            'on_desk_files' => $onDesk,
-            'users' => User::where('id', '!=', $userId)->select('id', 'name', 'designation')->get() // ফরোয়ার্ড করার জন্য
+            'on_desk_files'  => $onDesk,
+            'users'          => User::where('id', '!=', $userId)->select('id', 'name', 'designation')->get()
         ]);
     }
 
