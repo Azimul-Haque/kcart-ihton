@@ -263,7 +263,7 @@ class DashboardController extends Controller
             }
         }
         
-        return view('dashboard.users.single', compact('user', 'filesOnDesk', 'totalProcessed', 'overdueCount'));
+        return view('dashboard.users.single', compact('user', 'filesOnDesk', 'pendingCount', 'overdueCount', 'totalProcessed'));
     }
 
     public function showStaffProfile(Request $request, User $user)
