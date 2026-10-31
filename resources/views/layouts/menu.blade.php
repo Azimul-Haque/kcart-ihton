@@ -24,7 +24,7 @@
 
 <!-- নথি ব্যবস্থাপনা (ট্রি-ভিউ / ড্রপডাউন) -->
 <li class="nav-item {{ Request::is('/dashboard/files*') && !Route::is('files.my_desk') ? 'menu-open' : 'menu-open' }}">
-    <a href="#" class="nav-link {{ Request::is('files*') && !Route::is('files.my_desk') ? 'active' : '' }}">
+    <a href="#" class="nav-link {{ Request::is('/dashboard/files*') && !Route::is('files.my_desk') ? 'active' : '' }}">
         <i class="nav-icon fas fa-folder-open"></i>
         <p>
             নথি ব্যবস্থাপনা
