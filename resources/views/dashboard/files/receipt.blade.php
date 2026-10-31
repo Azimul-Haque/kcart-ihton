@@ -16,17 +16,17 @@
             color: #000;
         }
 
-        .header h3 { font-size: 12px; font-weight: bold; margin-bottom: 2px; }
-        .header p { font-size: 8px; border-bottom: 1px dashed #000; padding-bottom: 3px; margin-bottom: 5px; }
+        .header h3 { font-size: 13px; font-weight: bold; margin-bottom: 2px; }
+        .header p { font-size: 10px; border-bottom: 1px dashed #000; padding-bottom: 3px; margin-bottom: 5px; }
 
-        .details { font-size: 10px; text-align: left; line-height: 1.3; margin-bottom: 5px; }
+        .details { font-size: 11px; text-align: left; line-height: 1.3; margin-bottom: 5px; }
         .details div { margin-bottom: 2px; }
 
         .qr-container { margin: 6px 0; display: flex; justify-content: center; }
 
         .btn-print {
             background: #059669; color: white; border: none; padding: 10px 20px;
-            font-size: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-bottom: 15px;
+            font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-bottom: 15px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
@@ -42,7 +42,7 @@
         .btn-nav {
             text-decoration: none;
             padding: 8px 14px;
-            font-size: 11px;
+            font-size: 13px;
             font-weight: bold;
             border-radius: 6px;
             color: white;
