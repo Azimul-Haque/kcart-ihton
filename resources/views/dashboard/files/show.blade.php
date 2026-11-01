@@ -286,7 +286,7 @@
                                         <i class="fas {{ $movement->is_received ? 'fa-check bg-success' : 'fa-shipping-fast bg-warning' }}"></i>
                                         <div class="timeline-item">
                                             <div class="d-flex justify-content-between align-items-center mb-1">
-                                                <h6 class="font-weight-bold m-0 text-dark" style="font-size: 0.88rem;">
+                                                <h6 class="font-weight-bold m-0 text-dark" style="font-size: 0.80rem;">
                                                     {{ $movement->fromUser->name ?? ($movement->fromUser->name ?? 'অজ্ঞাত') }} 
                                                     <i class="fas fa-arrow-right text-muted mx-1" style="font-size: 10px;"></i>
                                                     {{ $movement->toUser->name ?? ($movement->toUser->name ?? 'অজ্ঞাত') }}
