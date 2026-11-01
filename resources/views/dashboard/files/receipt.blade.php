@@ -136,7 +136,7 @@
                     @if($file->bibadi_name)
                     <div><strong>বিবাদি:</strong> {{ $file->bibadi_name }}</div>
                     @endif
-                    <div><strong>তারিখ:</strong> {{ bangla(date('d/m/Y', strtotime($file->created_at))) }}</div>
+                    <div><strong>এন্ট্রি:</strong> {{ bangla(date('d/m/Y', strtotime($file->created_at))) }}</div>
                 </div>
             </div>
 
