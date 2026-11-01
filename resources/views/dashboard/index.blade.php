@@ -95,7 +95,7 @@
                 </div>
                 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('settings.app-version.update') }}">
+                    <form method="POST" action="{{ route('dashboard.app-version.update') }}">
                         @csrf
                         
                         <!-- ভার্শন ইনপুট -->
