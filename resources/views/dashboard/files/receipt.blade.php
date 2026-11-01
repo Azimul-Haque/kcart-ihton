@@ -103,7 +103,7 @@
                 margin: 0 auto;
             }
             @page { 
-                size: 58mm auto; 
+                size: 56mm auto; 
                 margin: 0mm; 
             }
         }
