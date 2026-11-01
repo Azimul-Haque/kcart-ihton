@@ -60,6 +60,8 @@ Route::middleware(['auth'])->group(function () {
     // 3. Hearings (শুনানি) Routes
     Route::get('/dashboard/hearings/today', [HearingController::class, 'todayHearings'])->name('hearings.today');
     Route::delete('/hearings/{hearing}', [HearingController::class, 'destroy'])->name('hearings.destroy');
+    Route::get('/hearings/pdf', [HearingController::class, 'downloadPdf'])->name('hearings.pdf');
+    
     Route::post('/dashboard/files/{file}/hearings', [HearingController::class, 'store'])->name('hearings.store');
 
 
