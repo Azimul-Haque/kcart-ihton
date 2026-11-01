@@ -287,9 +287,9 @@
                                         <div class="timeline-item">
                                             <div class="d-flex justify-content-between align-items-center mb-1">
                                                 <h6 class="font-weight-bold m-0 text-dark" style="font-size: 0.88rem;">
-                                                    {{ $movement->fromUser->designation ?? ($movement->fromUser->name ?? 'অজ্ঞাত') }} 
+                                                    {{ $movement->fromUser->name ?? ($movement->fromUser->name ?? 'অজ্ঞাত') }} 
                                                     <i class="fas fa-arrow-right text-muted mx-1" style="font-size: 10px;"></i>
-                                                    {{ $movement->toUser->designation ?? ($movement->toUser->name ?? 'অজ্ঞাত') }}
+                                                    {{ $movement->toUser->name ?? ($movement->toUser->name ?? 'অজ্ঞাত') }}
                                                 </h6>
                                                 <span class="text-muted small">
                                                     <i class="far fa-clock mr-1"></i>{{ bangla(date('d M, Y - h:i A', strtotime($movement->created_at))) }}
