@@ -30,6 +30,7 @@
             line-height: 1.25; 
             border-bottom: 1px dotted #ccc; 
             word-break: break-word;
+            font-weight: bold;
         }
         .info-table tr:last-child td { border-bottom: none; }
         
