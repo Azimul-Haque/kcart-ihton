@@ -47,7 +47,7 @@
 
         /* ডান কলাম (সেফটি মার্জিন সহ ৫০px QR কোড) */
         .right-col {
-            width: 65px;
+            width: 75px;
             flex-shrink: 0;
             display: flex;
             justify-content: center;
