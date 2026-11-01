@@ -20,7 +20,7 @@
         .header { text-align: center; border-bottom: 1px solid #000; padding-bottom: 3px; margin-bottom: 4px; }
         .header h3 { font-size: 14px; font-weight: bold; line-height: 1.15; }
         .header h4 { font-size: 11px; font-weight: bold; }
-        .header p { font-size: 10px; border-top: 1px dashed #000; margin-top: 2px; padding-top: 2px; font-weight: bold; }
+        .header p { font-size: 11px; border-top: 1px dashed #000; margin-top: 2px; padding-top: 2px; font-weight: bold; }
 
         .info-table { width: 100%; border-collapse: collapse; }
         .info-table td { 
