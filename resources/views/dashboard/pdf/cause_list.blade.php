@@ -59,7 +59,7 @@
 
         .cause-table th, .cause-table td {
             border: 1px solid #444;
-            padding: 3px 2px;
+            padding: 3px 4px;
             text-align: left;
             vertical-align: top;
         }
