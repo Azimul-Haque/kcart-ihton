@@ -134,7 +134,7 @@
 
             <tr>
                 <td><strong>আদেশের তারিখ:</strong></td>
-                <td><strong>{{ bangla(date('d/m/Y')) }} ({{ getBanglaDay(date('Y-m-d')) }})<strong></td>
+                <td>{{ bangla(date('d/m/Y')) }} ({{ getBanglaDay(date('Y-m-d')) }})</td>
             </tr>
             <tr>
                 <td><strong>পরবর্তী তারিখ:</strong></td>
