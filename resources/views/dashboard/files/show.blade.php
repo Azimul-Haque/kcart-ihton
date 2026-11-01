@@ -290,7 +290,7 @@
                                                     <!-- প্রেরক (From User) -->
                                                     {{ $movement->fromUser->name ?? 'অজ্ঞাত' }}
                                                     @if(!empty($movement->fromUser->designation))
-                                                        <small class="text-muted font-weight-normal">({{ $movement->fromUser->designation }})</small>
+                                                        <span class="font-weight-normal">({{ $movement->fromUser->designation }})</span>
                                                     @endif
 
                                                     <!-- তীর চিহ্ন -->
