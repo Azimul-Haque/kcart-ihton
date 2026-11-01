@@ -47,7 +47,7 @@
 
         /* ডান কলাম (সেফটি মার্জিন সহ ৫০px QR কোড) */
         .right-col {
-            width: 70px;
+            width: 80px;
             flex-shrink: 0;
             display: flex;
             justify-content: center;
@@ -57,8 +57,8 @@
 
         #qrcode canvas, #qrcode img {
             display: block;
-            width: 70px !important;
-            height: 70px !important;
+            width: 80px !important;
+            height: 80px !important;
         }
 
         .btn-print {
