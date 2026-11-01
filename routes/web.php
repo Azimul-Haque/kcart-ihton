@@ -53,7 +53,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/files/{file}/print-slip', [FileController::class, 'printSlip'])->name('files.print_slip');
     Route::post('/dashboard/files/{file}/dispose', [FileController::class, 'dispose'])->name('files.dispose');
     Route::get('/dashboard/files/archived', [FileController::class, 'archivedList'])->name('files.archived');
-    Route::get('/dashboard/files/archived', [FileController::class, 'archivedList'])->name('dashboard.app-version.update');
+    Route::get('/dashboard/app-version.update', [FileController::class, 'updateAppVersion'])->name('dashboard.app-version.update');
     
     // Resource Route for Files
     Route::resource('dashboard/files', FileController::class)->except(['destroy']);
