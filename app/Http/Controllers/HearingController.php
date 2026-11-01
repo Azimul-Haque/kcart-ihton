@@ -144,4 +144,34 @@ class HearingController extends Controller
             // Http::post('SMS_GATEWAY_URL', ['number' => $file->bibadi_mobile, 'text' => $message]);
         }
     }
+
+    public function downloadPdf(Request $request)
+    {
+        $selectedDate = $request->input('date', date('Y-m-d'));
+        $search = $request->input('search');
+
+        $query = File::whereDate('next_hearing_date', $selectedDate);
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('case_number', 'like', "%{$search}%")
+                  ->orWhere('badi_name', 'like', "%{$search}%")
+                  ->orWhere('bibadi_name', 'like', "%{$search}%");
+            });
+        }
+
+        // পিডিএফে পেজিনেশন ছাড়া সব ফাইল একই তালিকায় দেখানোর জন্য get() ব্যবহার করা হচ্ছে
+        $files = $query->get();
+
+        $pdf = PDF::loadView('pdf.cause_list', [
+            'files' => $files,
+            'selectedDate' => $selectedDate
+        ], [], [
+            'format' => 'A4-L', // A4 Landscape
+            'orientation' => 'L'
+        ]);
+
+        $fileName = 'Cause_List_' . $selectedDate . '.pdf';
+        return $pdf->stream($fileName);
+    }
 }
