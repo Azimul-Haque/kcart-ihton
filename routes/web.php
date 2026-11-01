@@ -43,6 +43,7 @@ Route::middleware(['auth'])->group(function () {
     // 1. Dashboard Landing & Cache
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
     Route::get('/dashboard/clear/query/cache', [DashboardController::class, 'clearQueryCache'])->name('dashboard.clearquerycache');
+    Route::post('/dashboard/app-version-update', [DashboardController::class, 'updateAppVersion'])->name('dashboard.app-version.update');
 
 
     // 2. Files & Tracking Routes (কাস্টম রাউটগুলো Resource Route এর আগে থাকবে)
@@ -53,7 +54,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/files/{file}/print-slip', [FileController::class, 'printSlip'])->name('files.print_slip');
     Route::post('/dashboard/files/{file}/dispose', [FileController::class, 'dispose'])->name('files.dispose');
     Route::get('/dashboard/files/archived', [FileController::class, 'archivedList'])->name('files.archived');
-    Route::post('/dashboard/app-version-update', [FileController::class, 'updateAppVersion'])->name('dashboard.app-version.update');
     
     // Resource Route for Files
     Route::resource('dashboard/files', FileController::class)->except(['destroy']);
