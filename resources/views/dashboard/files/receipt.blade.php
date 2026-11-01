@@ -99,7 +99,7 @@
             .sticker-card { 
                 border: none; 
                 width: 56mm; 
-                padding: 2mm 4mm; /* প্রিন্ট অপশনে সেফ মার্জিন */
+                padding: 3mm 2mm; /* প্রিন্ট অপশনে সেফ মার্জিন */
                 margin: 0 auto;
             }
             @page { 
