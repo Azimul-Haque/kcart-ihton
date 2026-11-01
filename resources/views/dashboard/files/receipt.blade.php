@@ -31,7 +31,7 @@
             flex: 1;
             min-width: 0;
             text-align: left;
-            padding-right: 50px; /* ডানে পর্যাপ্ত ফাঁকা জায়গা */
+            padding-right: 3px; /* ডানে পর্যাপ্ত ফাঁকা জায়গা */
         }
 
         .header h3 { font-size: 11px; font-weight: bold; line-height: 1.15; margin-bottom: 2px; white-space: nowrap; }
