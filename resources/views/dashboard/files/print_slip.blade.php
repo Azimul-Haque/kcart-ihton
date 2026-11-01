@@ -26,7 +26,7 @@
         .info-table td { 
             padding: 2.5px 0; 
             vertical-align: top; 
-            font-size: 11px; 
+            font-size: 11.5px; 
             line-height: 1.25; 
             border-bottom: 1px dotted #ccc; 
             word-break: break-word;
