@@ -10,7 +10,7 @@
         
         .pos-slip {
         	background: #fff;
-            width: 58mm;
+            width: 56mm;
             padding: 1.5mm 1mm;
             border: 1px solid #ccc;
         }
@@ -46,7 +46,7 @@
         @media print {
             body { background: white; padding: 0; }
             .no-print { display: none !important; }
-            .pos-slip { border: none; width: 58mm; padding: 1mm 1mm; }
+            .pos-slip { border: none; width: 56mm; padding: 1mm 1mm; }
             @page { size: 58mm auto; margin: 0mm; }
         }
     </style>
