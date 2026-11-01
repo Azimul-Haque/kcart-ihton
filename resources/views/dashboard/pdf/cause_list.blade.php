@@ -67,7 +67,7 @@
         .cause-table th {
             background-color: #f0f2f5;
             font-weight: bold;
-            font-size: 10.5pt;
+            font-size: 10pt;
             text-align: center;
         }
 
