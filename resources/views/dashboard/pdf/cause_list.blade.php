@@ -128,7 +128,7 @@
     <table class="cause-table">
         <thead>
             <tr>
-                <th width="5%">ক্র.নং</th>
+                <th width="5%">ক্রমিক</th>
                 <th width="20%">মামলা / নথি নম্বর</th>
                 <th width="12%">ধরন</th>
                 <th width="33%">বাদি ও বিবাদির নাম</th>
