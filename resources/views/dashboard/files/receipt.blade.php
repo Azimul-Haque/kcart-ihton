@@ -52,7 +52,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding-left: 2px;
+            padding-left: 1px;
         }
 
         #qrcode canvas, #qrcode img {
