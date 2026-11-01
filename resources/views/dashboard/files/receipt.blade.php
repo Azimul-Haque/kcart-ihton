@@ -47,7 +47,7 @@
 
         /* ডান কলাম (সেফটি মার্জিন সহ ৫০px QR কোড) */
         .right-col {
-            width: 65px;
+            width: 70px;
             flex-shrink: 0;
             display: flex;
             justify-content: center;
@@ -98,7 +98,7 @@
             .no-print { display: none !important; }
             .sticker-card { 
                 border: none; 
-                width: 52mm; 
+                width: 54mm; 
                 padding: 2mm 3mm; /* প্রিন্ট অপশনে সেফ মার্জিন */
                 margin: 0 auto;
             }
