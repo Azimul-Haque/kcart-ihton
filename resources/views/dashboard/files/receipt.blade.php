@@ -4,24 +4,26 @@
     <meta charset="UTF-8">
     <title>QR Sticker - {{ $file->case_number ?? 'File' }}</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Kalpurush', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Kalpurush', 'SolaimanLipi', sans-serif; }
         body { background: #f1f5f9; display: flex; flex-direction: column; align-items: center; padding: 20px; }
         
-        /* ৫০৮মিমি স্টিকার মূল কার্ড */
+        /* Rongta 58mm প্রিন্টারের প্রিন্টযোগ্য এলাকা (Printable Area = 48mm) */
         .sticker-card {
             background: #fff;
-            width: 58mm;
-            padding: 1.5mm 1mm;
+            width: 48mm;
+            padding: 1mm;
             border: 1px solid #ccc;
             color: #000;
+            overflow: hidden;
         }
 
-        /* ২-কলামের ফ্লেক্সবক্স লেআউট */
+        /* ২-কলামের ফ্লুইড লেআউট */
         .sticker-body {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 2px;
+            width: 100%;
         }
 
         /* বাম কলাম (হেডার ও বিস্তারিত তথ্য) */
@@ -29,19 +31,32 @@
             flex: 1;
             min-width: 0;
             text-align: left;
+            padding-right: 2px;
         }
 
-        .header h3 { font-size: 9.5px; font-weight: bold; line-height: 1.1; margin-bottom: 1px; white-space: nowrap; }
-        .header p { font-size: 7.5px; border-bottom: 1px dashed #000; padding-bottom: 2px; margin-bottom: 3px; line-height: 1; }
+        .header h3 { font-size: 9px; font-weight: bold; line-height: 1.1; margin-bottom: 1px; white-space: nowrap; }
+        .header p { font-size: 7px; border-bottom: 1px dashed #000; padding-bottom: 1px; margin-bottom: 2px; line-height: 1; }
 
-        .details { font-size: 8px; line-height: 1.25; color: #000; }
-        .details div { margin-bottom: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .details { font-size: 7.5px; line-height: 1.2; color: #000; }
+        .details div { 
+            margin-bottom: 1px; 
+            white-space: normal; 
+            word-wrap: break-word;
+            overflow: hidden; 
+        }
 
-        .uuid-text { font-size: 6.5px; font-family: monospace; word-break: break-all; margin-top: 2px; line-height: 1; }
+        .uuid-text { 
+            font-size: 6px; 
+            font-family: monospace; 
+            word-break: break-all; 
+            margin-top: 2px; 
+            line-height: 1; 
+            letter-spacing: -0.2px;
+        }
 
-        /* ডান কলাম (স্ক্যানযোগ্য কিউআর কোড) */
+        /* ডান কলাম (Rongta-তে কাটা না পড়ার মতো কম্প্যাক্ট QR কোড) */
         .right-col {
-            width: 85px;
+            width: 65px;
             flex-shrink: 0;
             display: flex;
             justify-content: center;
@@ -50,8 +65,8 @@
 
         #qrcode canvas, #qrcode img {
             display: block;
-            width: 85px !important;
-            height: 85px !important;
+            width: 65px !important;
+            height: 65px !important;
         }
 
         .btn-print {
@@ -87,10 +102,18 @@
         .btn-dark:hover { background: #334155; }
 
         @media print {
-            body { background: white; padding: 0; }
+            body { background: white; padding: 0; margin: 0; }
             .no-print { display: none !important; }
-            .sticker-card { border: none; width: 58mm; padding: 1mm 1mm; }
-            @page { size: 58mm auto; margin: 0mm; }
+            .sticker-card { 
+                border: none; 
+                width: 48mm; 
+                padding: 0mm; 
+                margin: 0 auto;
+            }
+            @page { 
+                size: 58mm auto; 
+                margin: 0mm; 
+            }
         }
     </style>
     <!-- Pure JS QR Code Library -->
@@ -101,7 +124,7 @@
     <!-- প্রিন্ট বাটন (প্রিন্টে আসবে না) -->
     <button class="btn-print no-print" onclick="window.print()">🖨️ প্রিন্ট করুন (Print Sticker)</button>
 
-    <!-- ২-কলামের স্টিকার ভিউ -->
+    <!-- Rongta 58mm ফ্রেন্ডলি স্টিকার ভিউ -->
     <div class="sticker-card">
         <div class="sticker-body">
             
@@ -129,7 +152,7 @@
                 </div>
             </div>
 
-            <!-- ডান কলাম (বড় ও স্পষ্ট QR কোড) -->
+            <!-- ডান কলাম (৬৫px QR কোড) -->
             <div class="right-col">
                 <div id="qrcode"></div>
             </div>
@@ -137,18 +160,18 @@
         </div>
     </div>
 
-    <!-- নিচে ফিরে যাওয়ার বাটনসমূহ (প্রিন্টে আসবে না) -->
+    <!-- নিচে ফিরে যাওয়ার বাটনসমূহ (প্রিন্টে আসবে না) -->
     <div class="bottom-buttons no-print">
         <a href="{{ route('files.index') }}" class="btn-nav btn-blue">📋 সকল নথি তালিকা</a>
         <a href="{{ route('files.my_desk') }}" class="btn-nav btn-dark">📥 আমার ডেস্ক</a>
     </div>
 
     <script>
-        // Generate QR code with UUID
+        // Generate QR code (Width/Height adjusted to 65px for Rongta 58mm)
         new QRCode(document.getElementById("qrcode"), {
             text: "{{ $file->uuid }}",
-            width: 85,
-            height: 85,
+            width: 65,
+            height: 65,
             correctLevel : QRCode.CorrectLevel.M
         });
     </script>
