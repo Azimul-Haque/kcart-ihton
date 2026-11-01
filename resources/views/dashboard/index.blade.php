@@ -144,7 +144,7 @@
                       </form>
                   </div>
               </div>
-          </div>
+            </div>
         </div>
 
         <!-- 3rd Row: Charts & Analytics -->
