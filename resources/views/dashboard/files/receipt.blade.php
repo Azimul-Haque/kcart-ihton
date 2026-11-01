@@ -98,7 +98,7 @@
             .no-print { display: none !important; }
             .sticker-card { 
                 border: none; 
-                width: 44mm; 
+                width: 52mm; 
                 padding: 2mm 3mm; /* প্রিন্ট অপশনে সেফ মার্জিন */
                 margin: 0 auto;
             }
