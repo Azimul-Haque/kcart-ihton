@@ -8,22 +8,32 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'SolaimanLipi', 'Nikosh', 'Kalpurush', sans-serif; }
         body { background: #f1f5f9; display: flex; flex-direction: column; align-items: center; padding: 0; }
         
+        /* Rongta 58mm প্রিন্টারের জন্য সেফ Printable Area (44mm wide + 2mm 3mm Padding) */
         .pos-slip {
-        	background: #fff;
-            width: 56mm;
-            padding: 1.5mm 1mm;
+            background: #fff;
+            width: 44mm;
+            padding: 2mm 3mm; /* চাহিদা অনুযায়ী উপরে-নিচে 2mm এবং ডানে-বামে 3mm প্যাডিং */
             border: 1px solid #ccc;
+            overflow: hidden;
         }
 
         .header { text-align: center; border-bottom: 1px solid #000; padding-bottom: 3px; margin-bottom: 4px; }
-        .header h3 { font-size: 13px; font-weight: bold; line-height: 1.1; }
-        .header h4 { font-size: 10px; font-weight: bold; }
-        .header p { font-size: 9.5px; border-top: 1px dashed #000; margin-top: 2px; padding-top: 1px; font-weight: bold; }
+        .header h3 { font-size: 13.5px; font-weight: bold; line-height: 1.15; }
+        .header h4 { font-size: 10.5px; font-weight: bold; }
+        .header p { font-size: 9.5px; border-top: 1px dashed #000; margin-top: 2px; padding-top: 2px; font-weight: bold; }
 
         .info-table { width: 100%; border-collapse: collapse; }
-        .info-table td { padding: 2px 0; vertical-align: top; font-size: 10.5px; line-height: 1.2; border-bottom: 1px dotted #ccc; }
+        .info-table td { 
+            padding: 2.5px 0; 
+            vertical-align: top; 
+            font-size: 10.5px; 
+            line-height: 1.25; 
+            border-bottom: 1px dotted #ccc; 
+            word-break: break-word;
+        }
         .info-table tr:last-child td { border-bottom: none; }
         
+        /* QR সেকশন সেফ মার্জিন */
         .qr-section { 
             display: flex; 
             justify-content: center; 
@@ -34,19 +44,25 @@
 
         #qrcode canvas, #qrcode img {
             display: block;
-            width: 70px !important;
-            height: 70px !important;
+            width: 60px !important;
+            height: 60px !important;
         }
 
         .btn-print {
-            background: #059669; color: white; border: none; padding: 6px 12px;
-            font-size: 12px; font-weight: bold; border-radius: 4px; cursor: pointer; margin: 10px 0;
+            background: #059669; color: white; border: none; padding: 8px 16px;
+            font-size: 13px; font-weight: bold; border-radius: 4px; cursor: pointer; margin: 12px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         @media print {
-            body { background: white; padding: 0; }
+            body { background: white; padding: 0; margin: 0; }
             .no-print { display: none !important; }
-            .pos-slip { border: none; width: 56mm; padding: 1mm 1mm; }
+            .pos-slip { 
+                border: none; 
+                width: 44mm; 
+                padding: 2mm 3mm; 
+                margin: 0 auto; 
+            }
             @page { size: 58mm auto; margin: 0mm; }
         }
     </style>
@@ -64,7 +80,7 @@
         </div>
 
         @php
-            // ইংরেজি বারকে বাংলায় রূপান্তর
+            // ইংরেজি বারকে বাংলায় রূপান্তর
             function getBanglaDay($dateStr) {
                 if (!$dateStr) return '';
                 $days = [
@@ -83,7 +99,7 @@
 
         <table class="info-table">
             <tr>
-                <td width="38%"><strong>ধরন:</strong></td>
+                <td width="40%"><strong>ধরন:</strong></td>
                 <td>{{ $file->type }}</td>
             </tr>
             <tr>
@@ -144,10 +160,11 @@
     </div>
 
     <script>
+        // QR কোডের সাইজ 60px করা হয়েছে যাতে ডানে-বামে সেফটি মার্জিন অক্ষত থাকে
         new QRCode(document.getElementById("qrcode"), {
             text: "{{ $file->uuid }}",
-            width: 70,
-            height: 70,
+            width: 60,
+            height: 60,
             correctLevel: QRCode.CorrectLevel.M
         });
     </script>
