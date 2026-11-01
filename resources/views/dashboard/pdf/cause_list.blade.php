@@ -48,7 +48,7 @@
         .meta-info {
             width: 100%;
             margin-bottom: 10px;
-            font-size: 11px;
+            font-size: 10pt;
         }
 
         .cause-table {
