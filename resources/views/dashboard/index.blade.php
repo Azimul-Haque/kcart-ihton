@@ -86,65 +86,65 @@
             </a>
           </div>
           <div class="col-md-6">
-              <div class="card shadow-sm border-0">
-                  <div class="card-header bg-white d-flex align-items-center justify-content-between py-3">
-                      <h5 class="m-0 font-weight-bold text-dark">
-                          <i class="fas fa-mobile-alt mr-2 text-success"></i>মোবাইল অ্যাপ সেটিং (Nothi Tracker)
-                      </h5>
-                      <span class="badge badge-light border text-muted">v{{ \Illuminate\Support\Facades\Cache::get('app_min_version', '1.0.0') }}</span>
-                  </div>
-                  
-                  <div class="card-body">
-                      <form method="POST" action="{{ route('settings.app-version.update') }}">
-                          @csrf
-                          
-                          <!-- ভার্শন ইনপুট -->
-                          <div class="form-group mb-3">
-                              <label class="font-weight-bold text-dark small mb-1">সর্বনিম্ন প্রয়োজনীয় ভার্শন (Min Version):</label>
-                              <div class="input-group input-group-sm">
-                                  <div class="input-group-prepend">
-                                      <span class="input-group-text"><i class="fas fa-code-branch text-muted"></i></span>
-                                  </div>
-                                  <input type="text" name="min_version" class="form-control" 
-                                         value="{{ \Illuminate\Support\Facades\Cache::get('app_min_version', '1.0.0') }}" 
-                                         required placeholder="e.g. 1.0.1">
-                              </div>
-                              <small class="form-text text-muted">এই ভার্সনের নিচের সব ইউজার অ্যাপ চালু করলে ফোর্স আপডেট পপ-আপ দেখতে পাবে।</small>
-                          </div>
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white d-flex align-items-center justify-content-between py-3">
+                    <h5 class="m-0 font-weight-bold text-dark">
+                        <i class="fas fa-mobile-alt mr-2 text-success"></i>মোবাইল অ্যাপ সেটিং (Nothi Tracker)
+                    </h5>
+                    <span class="badge badge-light border text-muted">v{{ \Illuminate\Support\Facades\Cache::get('app_min_version', '1.0.0') }}</span>
+                </div>
+                
+                <div class="card-body">
+                    <form method="POST" action="{{ route('settings.app-version.update') }}">
+                        @csrf
+                        
+                        <!-- ভার্শন ইনপুট -->
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold text-dark small mb-1">সর্বনিম্ন প্রয়োজনীয় ভার্শন (Min Version):</label>
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-code-branch text-muted"></i></span>
+                                </div>
+                                <input type="text" name="min_version" class="form-control" 
+                                       value="{{ \Illuminate\Support\Facades\Cache::get('app_min_version', '1.0.0') }}" 
+                                       required placeholder="e.g. 1.0.1">
+                            </div>
+                            <small class="form-text text-muted">এই ভার্সনের নিচের সব ইউজার অ্যাপ চালু করলে ফোর্স আপডেট পপ-আপ দেখতে পাবে।</small>
+                        </div>
 
-                          <!-- প্লে স্টোর ইউআরএল -->
-                          <div class="form-group mb-3">
-                              <label class="font-weight-bold text-dark small mb-1">প্লে স্টোর লিংক (Play Store URL):</label>
-                              <div class="input-group input-group-sm">
-                                  <div class="input-group-prepend">
-                                      <span class="input-group-text"><i class="fab fa-google-play text-muted"></i></span>
-                                  </div>
-                                  <input type="url" name="update_url" class="form-control" 
-                                         value="{{ \Illuminate\Support\Facades\Cache::get('app_update_url', 'https://play.google.com/store/apps/details?id=com.orbachinujbuk.nothi_tracker') }}" required>
-                              </div>
-                          </div>
+                        <!-- প্লে স্টোর ইউআরএল -->
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold text-dark small mb-1">প্লে স্টোর লিংক (Play Store URL):</label>
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fab fa-google-play text-muted"></i></span>
+                                </div>
+                                <input type="url" name="update_url" class="form-control" 
+                                       value="{{ \Illuminate\Support\Facades\Cache::get('app_update_url', 'https://play.google.com/store/apps/details?id=com.orbachinujbuk.nothi_tracker') }}" required>
+                            </div>
+                        </div>
 
-                          <!-- চেককন্ট্রোল -->
-                          <div class="custom-control custom-switch mb-3">
-                              <input type="checkbox" name="force_update" class="custom-control-input" id="forceUpdateCheck" value="1" 
-                                     {{ \Illuminate\Support\Facades\Cache::get('app_force_update', true) ? 'checked' : '' }}>
-                              <label class="custom-control-label font-weight-bold text-dark small" for="forceUpdateCheck">
-                                  বাধ্যতামূলক আপডেট চালু রাখুন (Force Update)
-                              </label>
-                          </div>
+                        <!-- চেককন্ট্রোল -->
+                        <div class="custom-control custom-switch mb-3">
+                            <input type="checkbox" name="force_update" class="custom-control-input" id="forceUpdateCheck" value="1" 
+                                   {{ \Illuminate\Support\Facades\Cache::get('app_force_update', true) ? 'checked' : '' }}>
+                            <label class="custom-control-label font-weight-bold text-dark small" for="forceUpdateCheck">
+                                বাধ্যতামূলক আপডেট চালু রাখুন (Force Update)
+                            </label>
+                        </div>
 
-                          <hr class="my-3">
+                        <hr class="my-3">
 
-                          <!-- সেভ বাটন -->
-                          <div class="text-right">
-                              <button type="submit" class="btn btn-success btn-sm px-3 shadow-sm">
-                                  <i class="fas fa-save mr-1"></i> আপডেট সেভ করুন
-                              </button>
-                          </div>
-                      </form>
-                  </div>
-              </div>
+                        <!-- সেভ বাটন -->
+                        <div class="text-right">
+                            <button type="submit" class="btn btn-success btn-sm px-3 shadow-sm">
+                                <i class="fas fa-save mr-1"></i> আপডেট সেভ করুন
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
+          </div>
         </div>
 
         <!-- 3rd Row: Charts & Analytics -->
