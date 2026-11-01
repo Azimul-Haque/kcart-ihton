@@ -61,7 +61,7 @@
             .pos-slip { 
                 border: none; 
                 width: 56mm; 
-                padding: 2mm 3mm; 
+                padding: 1mm 2mm; 
                 margin: 0 auto; 
             }
             @page { size: 56mm auto; margin: 0mm; }
