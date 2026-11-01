@@ -6,7 +6,7 @@
     <style>
         body {
             font-family: 'Kalpurush', 'Nikosh', sans-serif;
-            font-size: 11pt;
+            font-size: 10pt;
             color: #222;
         }
 
