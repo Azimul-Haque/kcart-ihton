@@ -17,7 +17,7 @@
 <!-- আজকের শুনানি (এসি ল্যান্ড বা দায়িত্বপ্রাপ্তদের জন্য) -->
 <li class="nav-item">
     <a href="{{ route('hearings.today') }}" class="nav-link {{ Route::is('hearings.today') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-gavel text-success"></i>
+        <i class="nav-icon fas fa-gavel text-primary"></i>
         <p>আজকের শুনানি</p>
     </a>
 </li>
