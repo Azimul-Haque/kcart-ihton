@@ -34,7 +34,7 @@
             padding-right: 4px; /* ডানে পর্যাপ্ত ফাঁকা জায়গা */
         }
 
-        .header h3 { font-size: 11.5px; font-weight: bold; line-height: 1.15; margin-bottom: 2px; white-space: nowrap; }
+        .header h3 { font-size: 11px; font-weight: bold; line-height: 1.15; margin-bottom: 2px; white-space: nowrap; }
         .header p { font-size: 9px; border-bottom: 1px dashed #000; padding-bottom: 2px; margin-bottom: 4px; line-height: 1; }
 
         .details { font-size: 9.5px; line-height: 1.3; color: #000; }
