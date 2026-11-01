@@ -33,14 +33,7 @@
                         <input type="text" name="search" class="form-control form-control-sm" placeholder="খুঁজুন..." value="{{ request('search') }}">
                     </div>
 
-                    <div class="col-md-3 col-sm-12 mb-2 pt-4 d-flex gap-1">
-                        <button type="submit" class="btn btn-primary btn-sm flex-fill mr-1">
-                            <i class="fas fa-search mr-1"></i> তালিকা দেখুন
-                        </button>
-                        <a href="{{ route('hearings.today') }}" class="btn btn-outline-secondary btn-sm" title="আজকের তারিখ">
-                            আজকে
-                        </a>
-                    </div>
+                    
                     <!-- ফিল্টার বার -->
                     <div class="col-md-3 col-sm-12 mb-2 pt-4 d-flex gap-1">
                         <button type="submit" class="btn btn-primary btn-sm mr-1">
