@@ -158,8 +158,8 @@
         // Generate QR code (Width/Height set to 50px for extra margin safety)
         new QRCode(document.getElementById("qrcode"), {
             text: "{{ $file->uuid }}",
-            width: 80,
-            height: 80,
+            width: 50,
+            height: 50,
             correctLevel : QRCode.CorrectLevel.M
         });
     </script>
