@@ -187,10 +187,20 @@
                             <span class="lang-en">5. Third-Party Services</span>
                             <span class="lang-bn">৫. থার্ড-পার্টি সার্ভিস</span>
                         </a>
+                        <a href="#deletion-policy" class="flex items-center px-3 py-2 text-slate-700 hover:text-brand-600 hover:bg-brand-50 rounded-xl transition-all">
+                            <i class="fa-solid fa-trash-can w-6 text-brand-600"></i>
+                            <span class="lang-en">6. Data Deletion Policy</span>
+                            <span class="lang-bn">৬. ডেটা মুছে ফেলার নিয়ম</span>
+                        </a>
+                        <a href="#data-deletion-form" class="flex items-center px-3 py-2 text-slate-700 hover:text-brand-600 hover:bg-brand-50 rounded-xl transition-all">
+                            <i class="fa-solid fa-paper-plane w-6 text-brand-600"></i>
+                            <span class="lang-en">7. Data Deletion Form</span>
+                            <span class="lang-bn">৭. ডেটা ডিলিট আবেদন ফর্ম</span>
+                        </a>
                         <a href="#contact" class="flex items-center px-3 py-2 text-slate-700 hover:text-brand-600 hover:bg-brand-50 rounded-xl transition-all">
                             <i class="fa-solid fa-envelope w-6 text-brand-600"></i>
-                            <span class="lang-en">6. Contact Us</span>
-                            <span class="lang-bn">৬. যোগাযোগ</span>
+                            <span class="lang-en">8. Contact Us</span>
+                            <span class="lang-bn">৮. যোগাযোগ</span>
                         </a>
                     </nav>
 
@@ -373,10 +383,151 @@
                     </p>
                 </section>
 
-                <!-- Section 6: Contact Information -->
+                <!-- Section 6: User Rights & Data Deletion Overview -->
+                <section id="deletion-policy" class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/80 shadow-sm print-shadow-none">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-8 h-8 rounded-lg bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-sm">6</div>
+                        <h3 class="text-xl font-bold text-slate-900">
+                            <span class="lang-en">User Rights & Data Retention Policy</span>
+                            <span class="lang-bn">ব্যবহারকারীর অধিকার ও ডেটা মুছে ফেলার নীতি</span>
+                        </h3>
+                    </div>
+
+                    <div class="text-slate-600 space-y-4 text-sm sm:text-base leading-relaxed">
+                        <p class="lang-en">
+                            In compliance with Google Play Store Developer Policies regarding User Data, all users have the right to request full account removal or deletion of their associated personal data stored in the Nothi Tracker system.
+                        </p>
+                        <p class="lang-bn">
+                            গুগল প্লে স্টোর ডেভলপার পলিসি অনুযায়ী, সকল ব্যবহারকারীর নথি ট্র্যাকার সিস্টেমে সংরক্ষিত তাদের ব্যক্তিগত তথ্য এবং অ্যাকাউন্ট সম্পূর্ণভাবে মুছে ফেলার আবেদন করার অধিকার রয়েছে।
+                        </p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                            <div class="p-4 bg-emerald-50/50 rounded-xl border border-emerald-100">
+                                <h4 class="font-bold text-slate-900 mb-1 text-sm flex items-center gap-2">
+                                    <i class="fa-solid fa-user-xmark text-brand-600"></i>
+                                    <span class="lang-en">What Data Can Be Deleted</span>
+                                    <span class="lang-bn">যেসব তথ্য মুছে ফেলা যাবে</span>
+                                </h4>
+                                <ul class="text-xs text-slate-600 space-y-1.5 list-disc pl-4 mt-2">
+                                    <li><span class="lang-en">User profile details (Name, Registered Mobile Number, Designation)</span><span class="lang-bn">ব্যবহারকারী প্রোফাইল (নাম, মোবাইল নম্বর, পদবি)</span></li>
+                                    <li><span class="lang-en">Authentication tokens and login session logs</span><span class="lang-bn">অথেনটিকেশন টোকেন এবং সেশন তথ্য</span></li>
+                                    <li><span class="lang-en">Desk notification preferences</span><span class="lang-bn">নোটিফিকেশন ও পছন্দসমূহ</span></li>
+                                </ul>
+                            </div>
+
+                            <div class="p-4 bg-amber-50/50 rounded-xl border border-amber-100">
+                                <h4 class="font-bold text-slate-900 mb-1 text-sm flex items-center gap-2">
+                                    <i class="fa-solid fa-box-archive text-amber-600"></i>
+                                    <span class="lang-en">Official Administrative Audit Records</span>
+                                    <span class="lang-bn">অফিসিয়াল প্রশাসনিক রেকর্ড</span>
+                                </h4>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    <span class="lang-en">Under land administration regulations, official file movements, case numbers, and order sheets are retained for audit and legal compliance. However, personal credentials linked to deleted accounts are anonymized (`[Deleted Staff]`).</span>
+                                    <span class="lang-bn">ভূমি সরকারি বিধিমালা অনুযায়ী অফিসিয়াল নথির চলাচলের ইতিহাস ও মামলা নম্বর অডিট ও আইনি প্রয়োজনে সংরক্ষিত থাকে। তবে অ্যাকাউন্ট মুছে ফেলার পর সেই রেকর্ডের সাথে জড়িত ব্যবহারকারীর নাম অটোক্লিন (`[মুছে ফেলা স্টাফ]`) হয়ে যায়।</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 7: Data Deletion Request & Contact Form -->
+                <section id="data-deletion-form" class="bg-white p-6 sm:p-8 rounded-2xl border border-brand-200 shadow-md relative overflow-hidden print-shadow-none">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-8 h-8 rounded-lg bg-brand-600 text-white flex items-center justify-center font-bold text-sm">7</div>
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-900">
+                                <span class="lang-en">Data Deletion & Support Request Form</span>
+                                <span class="lang-bn">ডেটা ডিলিট ও সাপোর্ট রিকোয়েস্ট ফর্ম</span>
+                            </h3>
+                            <p class="text-xs text-slate-500">
+                                <span class="lang-en">Submit a formal request to delete your account data or get support</span>
+                                <span class="lang-bn">আপনার অ্যাকাউন্ট মুছে ফেলা বা সহায়তার জন্য আবেদন সাবমিট করুন</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <form id="deletionForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Full Name -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                                    <span class="lang-en">Full Name *</span>
+                                    <span class="lang-bn">পূর্ণ নাম *</span>
+                                </label>
+                                <input type="text" id="fullName" required placeholder="e.g. A.H.M. Azimul Haque" 
+                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all">
+                            </div>
+
+                            <!-- Mobile Number / Account ID -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                                    <span class="lang-en">Mobile Number / Account ID *</span>
+                                    <span class="lang-bn">মোবাইল নম্বর / ইউজার আইডি *</span>
+                                </label>
+                                <input type="text" id="accountID" required placeholder="017XXXXXXXX" 
+                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Designation / Office Desk -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                                    <span class="lang-en">Designation / Office Desk</span>
+                                    <span class="lang-bn">পদবি / নথি কক্ষ (ঐচ্ছিক)</span>
+                                </label>
+                                <input type="text" id="designation" placeholder="e.g. AC Land / Surveyor" 
+                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all">
+                            </div>
+
+                            <!-- Request Type -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                                    <span class="lang-en">Request Category *</span>
+                                    <span class="lang-bn">আবেদনের ধরন *</span>
+                                </label>
+                                <select id="requestType" required class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all bg-white">
+                                    <option value="Account & Data Deletion">Account & Personal Data Deletion (অ্যাকাউন্ট ও তথ্য ডিলিট)</option>
+                                    <option value="File History Cleanup">File History Anonymization (নথি তথ্য গোপনকরণ)</option>
+                                    <option value="General Support Inquiry">General Support Inquiry (সাধারণ সহায়তা)</option>
+                                    <option value="Privacy Concern">Privacy & Security Concern (গোপনীয়তা সংক্রান্ত)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Details / Reason -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                                <span class="lang-en">Reason / Request Details *</span>
+                                <span class="lang-bn">আবেদনের বিবরণ / কারণ *</span>
+                            </label>
+                            <textarea id="reasonDetails" required rows="3" placeholder="Please describe your request..." 
+                                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"></textarea>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="flex flex-col sm:flex-row items-center gap-3 pt-2">
+                            <button type="submit" 
+                                class="w-full sm:w-auto px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm rounded-xl transition-all shadow-md shadow-brand-600/30 flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-paper-plane"></i>
+                                <span class="lang-en">Submit Request</span>
+                                <span class="lang-bn">আবেদন জমা দিন</span>
+                            </button>
+
+                            <button type="button" onclick="generateMailto()" 
+                                class="w-full sm:w-auto px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm rounded-xl transition-all flex items-center justify-center space-x-2 border border-slate-200">
+                                <i class="fa-solid fa-envelope text-brand-600"></i>
+                                <span class="lang-en">Send via Email app</span>
+                                <span class="lang-bn">ইমেইল অ্যাপ খুলুন</span>
+                            </button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Section 8: Contact Information -->
                 <section id="contact" class="bg-gradient-to-br from-brand-900 to-slate-900 text-white p-6 sm:p-8 rounded-2xl shadow-lg print-shadow-none">
                     <div class="flex items-center space-x-3 mb-4">
-                        <div class="w-8 h-8 rounded-lg bg-brand-500 text-white flex items-center justify-center font-bold text-sm">6</div>
+                        <div class="w-8 h-8 rounded-lg bg-brand-500 text-white flex items-center justify-center font-bold text-sm">8</div>
                         <h3 class="text-xl font-bold">
                             <span class="lang-en">Contact Developer & Support</span>
                             <span class="lang-bn">যোগাযোগ ও সহায়তা</span>
@@ -410,6 +561,37 @@
         </div>
     </main>
 
+    <!-- Submission Modal Notification -->
+    <div id="submissionModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 hidden no-print">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 text-center space-y-4 m-4 transform transition-all scale-100">
+            <div class="w-16 h-16 bg-brand-100 text-brand-600 rounded-full flex items-center justify-center mx-auto text-2xl">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            
+            <h4 class="text-lg font-bold text-slate-900">
+                <span class="lang-en">Request Received!</span>
+                <span class="lang-bn">আবেদন গৃহীত হয়েছে!</span>
+            </h4>
+            
+            <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                <span class="lang-en">Your request has been logged. Reference Ticket ID:</span>
+                <span class="lang-bn">আপনার আবেদনটি গ্রহণ করা হয়েছে। ট্র্যাকিং রেফারেন্স নম্বর:</span>
+                <br>
+                <span id="refCode" class="inline-block font-mono font-bold bg-slate-100 text-brand-700 px-3 py-1 rounded-lg mt-2 text-sm border border-slate-200">REQ-2026-8942</span>
+            </p>
+
+            <p class="text-xs text-slate-500">
+                <span class="lang-en">App Lab IT support team will process your deletion request within 48-72 business hours.</span>
+                <span class="lang-bn">অ্যাপ ল্যাব আইটি সাপোর্ট টিম আগামী ৪৮-৭২ কর্মঘণ্টার মধ্যে আপনার আবেদনটি প্রক্রিয়া করবে।</span>
+            </p>
+
+            <button onclick="closeModal()" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-sm transition-all shadow-md">
+                <span class="lang-en">Done</span>
+                <span class="lang-bn">ঠিক আছে</span>
+            </button>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-200 mt-12 py-6 no-print">
         <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
@@ -417,7 +599,7 @@
         </div>
     </footer>
 
-    <!-- JavaScript Logic for Language Toggle & Search -->
+    <!-- JavaScript Logic for Language Toggle, Search & Form Submission -->
     <script>
         let currentLang = 'en';
 
@@ -448,6 +630,31 @@
                     section.style.display = "none";
                 }
             });
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            const randomCode = 'REQ-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('refCode').innerText = randomCode;
+            document.getElementById('submissionModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('submissionModal').classList.add('hidden');
+            document.getElementById('deletionForm').reset();
+        }
+
+        function generateMailto() {
+            const name = document.getElementById('fullName').value || 'User';
+            const account = document.getElementById('accountID').value || 'N/A';
+            const reqType = document.getElementById('requestType').value;
+            const details = document.getElementById('reasonDetails').value || 'Requesting data deletion.';
+
+            const subject = encodeURIComponent(`Nothi Tracker Data Deletion Request - ${reqType}`);
+            const body = encodeURIComponent(`Full Name: ${name}\nMobile/Account ID: ${account}\nRequest Type: ${reqType}\nDetails: ${details}\n\nSent from Nothi Tracker Privacy Portal.`);
+            
+            window.location.href = `mailto:bsse0519@iit.du.ac.bd?subject=${subject}&body=${body}`;
         }
     </script>
 </body>
