@@ -57,8 +57,8 @@
 
         #qrcode canvas, #qrcode img {
             display: block;
-            width: 60px !important;
-            height: 60px !important;
+            width: 65px !important;
+            height: 65px !important;
         }
 
         .btn-print {
