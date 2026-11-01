@@ -7,11 +7,11 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Kalpurush', 'SolaimanLipi', sans-serif; }
         body { background: #f1f5f9; display: flex; flex-direction: column; align-items: center; padding: 20px; }
         
-        /* Rongta 58mm প্রিন্টারের নিরাপদ প্রিন্টেবল উইডথ (44mm Safe Area) */
+        /* Rongta 58mm প্রিন্টারের জন্য প্যাডিং ও মার্জিন বাড়ানো হয়েছে (Safe Printable Area) */
         .sticker-card {
             background: #fff;
             width: 44mm;
-            padding: 1mm 1.5mm 1mm 0.5mm;
+            padding: 3mm 4mm 3mm 4mm; /* ডানে ও বামে প্যাডিং বাড়ানো হয়েছে */
             border: 1px solid #ccc;
             color: #000;
             overflow: hidden;
@@ -22,53 +22,43 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 2px;
+            gap: 4px;
             width: 100%;
         }
 
-        /* বাম কলাম (হেডার ও বিস্তারিত তথ্য - ফন্ট সাইজ বাড়ানো হয়েছে) */
+        /* বাম কলাম (বড় ফন্ট ও অতিরিক্ত প্যাডিং সহ) */
         .left-col {
             flex: 1;
             min-width: 0;
             text-align: left;
-            padding-right: 2px;
+            padding-right: 4px; /* ডানে পর্যাপ্ত ফাঁকা জায়গা */
         }
 
-        .header h3 { font-size: 11px; font-weight: bold; line-height: 1.1; margin-bottom: 1px; white-space: nowrap; }
-        .header p { font-size: 8.5px; border-bottom: 1px dashed #000; padding-bottom: 1px; margin-bottom: 3px; line-height: 1; }
+        .header h3 { font-size: 11.5px; font-weight: bold; line-height: 1.15; margin-bottom: 2px; white-space: nowrap; }
+        .header p { font-size: 9px; border-bottom: 1px dashed #000; padding-bottom: 2px; margin-bottom: 4px; line-height: 1; }
 
-        .details { font-size: 9px; line-height: 1.25; color: #000; }
+        .details { font-size: 9.5px; line-height: 1.3; color: #000; }
         .details div { 
-            margin-bottom: 1.5px; 
+            margin-bottom: 2px; 
             white-space: normal; 
             word-wrap: break-word;
             overflow: hidden; 
         }
 
-        .uuid-text { 
-            font-size: 7px; 
-            font-family: monospace; 
-            word-break: break-all; 
-            margin-top: 2px; 
-            line-height: 1; 
-            letter-spacing: -0.2px;
-            font-weight: bold;
-        }
-
-        /* ডান কলাম (QR কোড সাইজ ৫৫px করে ডানের সেফটি নিশ্চিত করা হলো) */
+        /* ডান কলাম (সেফটি মার্জিন সহ ৫০px QR কোড) */
         .right-col {
-            width: 55px;
+            width: 50px;
             flex-shrink: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding-right: 2px;
+            padding-left: 2px;
         }
 
         #qrcode canvas, #qrcode img {
             display: block;
-            width: 55px !important;
-            height: 55px !important;
+            width: 50px !important;
+            height: 50px !important;
         }
 
         .btn-print {
@@ -109,7 +99,7 @@
             .sticker-card { 
                 border: none; 
                 width: 44mm; 
-                padding: 0mm; 
+                padding: 2mm 3mm; /* প্রিন্ট অপশনে সেফ মার্জিন */
                 margin: 0 auto;
             }
             @page { 
@@ -126,11 +116,11 @@
     <!-- প্রিন্ট বাটন (প্রিন্টে আসবে না) -->
     <button class="btn-print no-print" onclick="window.print()">🖨️ প্রিন্ট করুন (Print Sticker)</button>
 
-    <!-- Rongta 58mm অ্যাডজাস্টেড স্টিকার ভিউ -->
+    <!-- Rongta 58mm অতিরিক্ত প্যাডিং যুক্ত স্টিকার ভিউ -->
     <div class="sticker-card">
         <div class="sticker-body">
             
-            <!-- বাম কলাম (বড় ফন্ট সহ) -->
+            <!-- বাম কলাম -->
             <div class="left-col">
                 <div class="header">
                     <h3>উপজেলা ভূমি অফিস</h3>
@@ -148,13 +138,9 @@
                     @endif
                     <div><strong>তারিখ:</strong> {{ bangla(date('d/m/Y', strtotime($file->created_at))) }}</div>
                 </div>
-
-                <div class="uuid-text">
-                    {{ substr($file->uuid, 0, 18) }}
-                </div>
             </div>
 
-            <!-- ডান কলাম (৫৫px কম্প্যাক্ট QR কোড) -->
+            <!-- ডান কলাম (৫০px QR কোড) -->
             <div class="right-col">
                 <div id="qrcode"></div>
             </div>
@@ -169,11 +155,11 @@
     </div>
 
     <script>
-        // Generate QR code (Width/Height set to 55px to prevent right side clipping)
+        // Generate QR code (Width/Height set to 50px for extra margin safety)
         new QRCode(document.getElementById("qrcode"), {
             text: "{{ $file->uuid }}",
-            width: 55,
-            height: 55,
+            width: 50,
+            height: 50,
             correctLevel : QRCode.CorrectLevel.M
         });
     </script>
