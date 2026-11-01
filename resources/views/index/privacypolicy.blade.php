@@ -361,7 +361,7 @@
                             <li class="flex items-center gap-2">
                                 <i class="fa-solid fa-circle-check text-brand-600"></i>
                                 <span class="lang-en"><strong>Archive Exclusion:</strong> Completed or disposed files (`নিষ্পত্তি`) are auto-excluded from public listing.</span>
-                                <span class="lang-bn"><strong>অার্কাইভ ফিল্টারিং:</strong> নিষ্পত্তি হওয়া নথি সাধারণ তালিকা থেকে সুরক্ষিতভাবে সরিয়ে রাখা হয়।</span>
+                                <span class="lang-bn"><strong>আর্কাইভ ফিল্টারিং:</strong> নিষ্পত্তি হওয়া নথি সাধারণ তালিকা থেকে সুরক্ষিতভাবে সরিয়ে রাখা হয়।</span>
                             </li>
                         </ul>
                     </div>
