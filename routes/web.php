@@ -23,6 +23,7 @@ Route::get('/terms-and-conditions', [IndexController::class, 'termsAndConditions
 Route::get('/privacy-policy', [IndexController::class, 'privacyPolicy'])->name('index.privacy-policy');
 Route::get('/refund-policy', [IndexController::class, 'refundPolicy'])->name('index.refund-policy');
 Route::get('/faq', [IndexController::class, 'getFaq'])->name('index.faq');
+Route::get('/contact', [IndexController::class, 'getContact'])->name('index.contact');
 
 Route::get('/case-list', [IndexController::class, 'publicCaseList'])->name('public.case_list');
 
@@ -61,7 +62,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/hearings/today', [HearingController::class, 'todayHearings'])->name('hearings.today');
     Route::delete('/hearings/{hearing}', [HearingController::class, 'destroy'])->name('hearings.destroy');
     Route::get('/hearings/pdf', [HearingController::class, 'downloadPdf'])->name('hearings.pdf');
-    
+
     Route::post('/dashboard/files/{file}/hearings', [HearingController::class, 'store'])->name('hearings.store');
 
 
