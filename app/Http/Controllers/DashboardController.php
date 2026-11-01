@@ -155,6 +155,16 @@ class DashboardController extends Controller
         ]);
     }
 
+    public function updateAppVersion(Request $request)
+    {
+        // SharedPreferences-এর মতো ক্যাশ টেবিলে সেভ করা
+        Cache::forever('app_min_version', $request->input('min_version', '1.0.0'));
+        Cache::forever('app_force_update', $request->has('force_update'));
+        Cache::forever('app_update_url', $request->input('update_url'));
+
+        return redirect()->back()->with('success', 'অ্যাপ ভার্শন সেটিংস সফলভাবে আপডেট হয়েছে!');
+    }
+
     public function clearQueryCache()
     {
         Cache::flush();
