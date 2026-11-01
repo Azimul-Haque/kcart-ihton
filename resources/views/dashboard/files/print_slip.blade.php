@@ -44,8 +44,8 @@
 
         #qrcode canvas, #qrcode img {
             display: block;
-            width: 60px !important;
-            height: 60px !important;
+            width: 70px !important;
+            height: 70px !important;
         }
 
         .btn-print {
@@ -160,11 +160,11 @@
     </div>
 
     <script>
-        // QR কোডের সাইজ 60px করা হয়েছে যাতে ডানে-বামে সেফটি মার্জিন অক্ষত থাকে
+        // QR কোডের সাইজ 70px করা হয়েছে যাতে ডানে-বামে সেফটি মার্জিন অক্ষত থাকে
         new QRCode(document.getElementById("qrcode"), {
             text: "{{ $file->uuid }}",
-            width: 60,
-            height: 60,
+            width: 70,
+            height: 70,
             correctLevel: QRCode.CorrectLevel.M
         });
     </script>
