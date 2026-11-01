@@ -40,6 +40,19 @@
                         <a href="{{ route('hearings.today') }}" class="btn btn-outline-secondary btn-sm" title="আজকের তারিখ">
                             আজকে
                         </a>
+                        <button type="submit" class="btn btn-primary btn-sm mr-1">
+                            <i class="fas fa-search mr-1"></i> দেখুন
+                        </button>
+                        <a href="{{ route('hearings.today') }}" class="btn btn-outline-secondary btn-sm mr-1" title="আজকের তারিখ">
+                            আজকে
+                        </a>
+                        <!-- পিডিএফ ডাউনলোড বাটন -->
+                        <a href="{{ route('hearings.pdf', ['date' => $selectedDate, 'search' => request('search')]) }}" 
+                           target="_blank" 
+                           class="btn btn-danger btn-sm" 
+                           title="পিডিএফ ডাউনলোড করুন">
+                            <i class="fas fa-file-pdf mr-1"></i> পিডিএফ
+                        </a>
                     </div>
                     <!-- ফিল্টার বার -->
                     <div class="col-md-3 col-sm-12 mb-2 pt-4 d-flex gap-1">
