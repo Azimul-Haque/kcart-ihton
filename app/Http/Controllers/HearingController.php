@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 
 use View;
+use PDF;
 
 class HearingController extends Controller
 {
