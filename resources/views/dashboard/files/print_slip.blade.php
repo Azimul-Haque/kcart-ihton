@@ -11,7 +11,7 @@
         /* Rongta 58mm প্রিন্টারের জন্য সেফ Printable Area (44mm wide + 2mm 3mm Padding) */
         .pos-slip {
             background: #fff;
-            width: 44mm;
+            width: 56mm;
             padding: 2mm 3mm; /* চাহিদা অনুযায়ী উপরে-নিচে 2mm এবং ডানে-বামে 3mm প্যাডিং */
             border: 1px solid #ccc;
             overflow: hidden;
@@ -59,7 +59,7 @@
             .no-print { display: none !important; }
             .pos-slip { 
                 border: none; 
-                width: 44mm; 
+                width: 56mm; 
                 padding: 2mm 3mm; 
                 margin: 0 auto; 
             }
