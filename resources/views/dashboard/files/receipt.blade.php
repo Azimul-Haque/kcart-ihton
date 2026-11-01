@@ -10,7 +10,7 @@
         /* Rongta 58mm প্রিন্টারের জন্য প্যাডিং ও মার্জিন বাড়ানো হয়েছে (Safe Printable Area) */
         .sticker-card {
             background: #fff;
-            width: 56mm;
+            width: 54mm;
             padding: 2mm 3mm; /* ডানে ও বামে প্যাডিং বাড়ানো হয়েছে */
             border: 1px solid #ccc;
             color: #000;
@@ -98,7 +98,7 @@
             .no-print { display: none !important; }
             .sticker-card { 
                 border: none; 
-                width: 56mm; 
+                width: 54mm; 
                 padding: 2mm 3mm; /* প্রিন্ট অপশনে সেফ মার্জিন */
                 margin: 0 auto;
             }
