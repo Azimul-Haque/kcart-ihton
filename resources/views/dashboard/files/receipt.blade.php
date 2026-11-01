@@ -99,7 +99,7 @@
             .sticker-card { 
                 border: none; 
                 width: 54mm; 
-                padding: 2mm 4mm 2mm 1mm; /* ডানে ও বামে প্যাডিং বাড়ানো হয়েছে */
+                padding: 2mm 4mm 2mm 0mm; /* ডানে ও বামে প্যাডিং বাড়ানো হয়েছে */
                 margin: 0 auto;
             }
             @page { 
