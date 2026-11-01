@@ -5,7 +5,7 @@
     <title>শুনানির কার্যতালিকা - {{ bangla(date('d/m/Y', strtotime($selectedDate))) }}</title>
     <style>
         body {
-            font-family: 'Kalpurush', 'Nikosh', sans-serif;
+            font-family: 'Nikosh', 'Nikosh', sans-serif;
             font-size: 11pt;
             color: #222;
         }
