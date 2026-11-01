@@ -37,7 +37,7 @@
                         <button type="submit" class="btn btn-primary btn-sm flex-fill mr-1">
                             <i class="fas fa-search mr-1"></i> তালিকা দেখুন
                         </button>
-                        <a href="{{ route('hearings.today') }}" class="btn btn-outline-secondary btn-sm" title="আজকের তারিখ">
+                        <a href="{{ route('hearings.today') }}" class="btn btn-outline-secondary btn-sm mr-1" title="আজকের তারিখ">
                             আজকে
                         </a>
                         <!-- পিডিএফ ডাউনলোড বাটন -->
