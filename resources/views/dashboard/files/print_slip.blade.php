@@ -63,7 +63,7 @@
                 padding: 2mm 3mm; 
                 margin: 0 auto; 
             }
-            @page { size: 58mm auto; margin: 0mm; }
+            @page { size: 56mm auto; margin: 0mm; }
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
