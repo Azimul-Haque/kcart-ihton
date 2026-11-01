@@ -35,7 +35,7 @@
         }
 
         .header h3 { font-size: 11px; font-weight: bold; line-height: 1.15; margin-bottom: 2px; white-space: nowrap; }
-        .header p { font-size: 9px; border-bottom: 1px dashed #000; padding-bottom: 2px; margin-bottom: 4px; line-height: 1; }
+        .header p { font-size: 9px; border-bottom: 1px dashed #000; padding-bottom: 2px; margin-bottom: 4px; line-height: 1; font-weight: bold; }
 
         .details { font-size: 8.5px; line-height: 1.2; color: #000; }
         .details div { 
@@ -43,6 +43,7 @@
             white-space: normal; 
             word-wrap: break-word;
             overflow: hidden; 
+            font-weight: bold; 
         }
 
         /* ডান কলাম (সেফটি মার্জিন সহ ৫০px QR কোড) */
