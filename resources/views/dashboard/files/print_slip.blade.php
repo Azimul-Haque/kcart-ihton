@@ -12,7 +12,7 @@
         .pos-slip {
             background: #fff;
             width: 56mm;
-            padding: 2mm 3mm; /* চাহিদা অনুযায়ী উপরে-নিচে 2mm এবং ডানে-বামে 3mm প্যাডিং */
+            padding: 1mm 2mm; /* চাহিদা অনুযায়ী উপরে-নিচে 2mm এবং ডানে-বামে 3mm প্যাডিং */
             border: 1px solid #ccc;
             overflow: hidden;
         }
