@@ -11,7 +11,7 @@
         .sticker-card {
             background: #fff;
             width: 54mm;
-            padding: 2mm 3mm; /* ডানে ও বামে প্যাডিং বাড়ানো হয়েছে */
+            padding: 3mm 3mm; /* ডানে ও বামে প্যাডিং বাড়ানো হয়েছে */
             border: 1px solid #ccc;
             color: #000;
             overflow: hidden;
@@ -22,7 +22,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 2px;
+            gap: 4px;
             width: 100%;
         }
 
