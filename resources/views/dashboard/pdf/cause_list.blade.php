@@ -161,7 +161,6 @@
                         এই তারিখে কোনো শুনানির বাধ্যবাধকতা নেই।
                     </td>
                 </tr>
-            @empty
             @endforelse
         </tbody>
     </table>
