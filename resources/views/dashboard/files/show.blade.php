@@ -287,9 +287,20 @@
                                         <div class="timeline-item">
                                             <div class="d-flex justify-content-between align-items-center mb-1">
                                                 <h6 class="font-weight-bold m-0 text-dark" style="font-size: 0.80rem;">
-                                                    {{ $movement->fromUser->name ?? ($movement->fromUser->name ?? 'অজ্ঞাত') }} 
+                                                    <!-- প্রেরক (From User) -->
+                                                    {{ $movement->fromUser->name ?? 'অজ্ঞাত' }}
+                                                    @if(!empty($movement->fromUser->designation))
+                                                        <small class="text-muted font-weight-normal">({{ $movement->fromUser->designation }})</small>
+                                                    @endif
+
+                                                    <!-- তীর চিহ্ন -->
                                                     <i class="fas fa-arrow-right text-muted mx-1" style="font-size: 10px;"></i>
-                                                    {{ $movement->toUser->name ?? ($movement->toUser->name ?? 'অজ্ঞাত') }}
+
+                                                    <!-- প্রাপক (To User) -->
+                                                    {{ $movement->toUser->name ?? 'অজ্ঞাত' }}
+                                                    @if(!empty($movement->toUser->designation))
+                                                        <small class="text-muted font-weight-normal">({{ $movement->toUser->designation }})</small>
+                                                    @endif
                                                 </h6>
                                                 <span class="text-muted small">
                                                     <i class="far fa-clock mr-1"></i>{{ bangla(date('d M, Y - h:i A', strtotime($movement->created_at))) }}
