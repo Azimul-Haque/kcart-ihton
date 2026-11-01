@@ -163,7 +163,7 @@ class HearingController extends Controller
         // পিডিএফে পেজিনেশন ছাড়া সব ফাইল একই তালিকায় দেখানোর জন্য get() ব্যবহার করা হচ্ছে
         $files = $query->get();
 
-        $pdf = PDF::loadView('pdf.cause_list', [
+        $pdf = PDF::loadView('dashboard.pdf.cause_list', [
             'files' => $files,
             'selectedDate' => $selectedDate
         ], [], [
