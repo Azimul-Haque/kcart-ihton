@@ -299,7 +299,7 @@
                                                     <!-- প্রাপক (To User) -->
                                                     {{ $movement->toUser->name ?? 'অজ্ঞাত' }}
                                                     @if(!empty($movement->toUser->designation))
-                                                        <small class="text-muted font-weight-normal">({{ $movement->toUser->designation }})</small>
+                                                        <small class="font-weight-normal">({{ $movement->toUser->designation }})</small>
                                                     @endif
                                                 </h6>
                                                 <span class="text-muted small">
