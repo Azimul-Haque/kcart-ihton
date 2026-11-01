@@ -7,11 +7,11 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Kalpurush', 'SolaimanLipi', sans-serif; }
         body { background: #f1f5f9; display: flex; flex-direction: column; align-items: center; padding: 20px; }
         
-        /* Rongta 58mm প্রিন্টারের প্রিন্টযোগ্য এলাকা (Printable Area = 48mm) */
+        /* Rongta 58mm প্রিন্টারের নিরাপদ প্রিন্টেবল উইডথ (44mm Safe Area) */
         .sticker-card {
             background: #fff;
-            width: 48mm;
-            padding: 1mm;
+            width: 44mm;
+            padding: 1mm 1.5mm 1mm 0.5mm;
             border: 1px solid #ccc;
             color: #000;
             overflow: hidden;
@@ -26,7 +26,7 @@
             width: 100%;
         }
 
-        /* বাম কলাম (হেডার ও বিস্তারিত তথ্য) */
+        /* বাম কলাম (হেডার ও বিস্তারিত তথ্য - ফন্ট সাইজ বাড়ানো হয়েছে) */
         .left-col {
             flex: 1;
             min-width: 0;
@@ -34,39 +34,41 @@
             padding-right: 2px;
         }
 
-        .header h3 { font-size: 9px; font-weight: bold; line-height: 1.1; margin-bottom: 1px; white-space: nowrap; }
-        .header p { font-size: 7px; border-bottom: 1px dashed #000; padding-bottom: 1px; margin-bottom: 2px; line-height: 1; }
+        .header h3 { font-size: 11px; font-weight: bold; line-height: 1.1; margin-bottom: 1px; white-space: nowrap; }
+        .header p { font-size: 8.5px; border-bottom: 1px dashed #000; padding-bottom: 1px; margin-bottom: 3px; line-height: 1; }
 
-        .details { font-size: 7.5px; line-height: 1.2; color: #000; }
+        .details { font-size: 9px; line-height: 1.25; color: #000; }
         .details div { 
-            margin-bottom: 1px; 
+            margin-bottom: 1.5px; 
             white-space: normal; 
             word-wrap: break-word;
             overflow: hidden; 
         }
 
         .uuid-text { 
-            font-size: 6px; 
+            font-size: 7px; 
             font-family: monospace; 
             word-break: break-all; 
             margin-top: 2px; 
             line-height: 1; 
             letter-spacing: -0.2px;
+            font-weight: bold;
         }
 
-        /* ডান কলাম (Rongta-তে কাটা না পড়ার মতো কম্প্যাক্ট QR কোড) */
+        /* ডান কলাম (QR কোড সাইজ ৫৫px করে ডানের সেফটি নিশ্চিত করা হলো) */
         .right-col {
-            width: 65px;
+            width: 55px;
             flex-shrink: 0;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding-right: 2px;
         }
 
         #qrcode canvas, #qrcode img {
             display: block;
-            width: 65px !important;
-            height: 65px !important;
+            width: 55px !important;
+            height: 55px !important;
         }
 
         .btn-print {
@@ -106,7 +108,7 @@
             .no-print { display: none !important; }
             .sticker-card { 
                 border: none; 
-                width: 48mm; 
+                width: 44mm; 
                 padding: 0mm; 
                 margin: 0 auto;
             }
@@ -124,11 +126,11 @@
     <!-- প্রিন্ট বাটন (প্রিন্টে আসবে না) -->
     <button class="btn-print no-print" onclick="window.print()">🖨️ প্রিন্ট করুন (Print Sticker)</button>
 
-    <!-- Rongta 58mm ফ্রেন্ডলি স্টিকার ভিউ -->
+    <!-- Rongta 58mm অ্যাডজাস্টেড স্টিকার ভিউ -->
     <div class="sticker-card">
         <div class="sticker-body">
             
-            <!-- বাম কলাম -->
+            <!-- বাম কলাম (বড় ফন্ট সহ) -->
             <div class="left-col">
                 <div class="header">
                     <h3>উপজেলা ভূমি অফিস</h3>
@@ -152,7 +154,7 @@
                 </div>
             </div>
 
-            <!-- ডান কলাম (৬৫px QR কোড) -->
+            <!-- ডান কলাম (৫৫px কম্প্যাক্ট QR কোড) -->
             <div class="right-col">
                 <div id="qrcode"></div>
             </div>
@@ -167,11 +169,11 @@
     </div>
 
     <script>
-        // Generate QR code (Width/Height adjusted to 65px for Rongta 58mm)
+        // Generate QR code (Width/Height set to 55px to prevent right side clipping)
         new QRCode(document.getElementById("qrcode"), {
             text: "{{ $file->uuid }}",
-            width: 65,
-            height: 65,
+            width: 55,
+            height: 55,
             correctLevel : QRCode.CorrectLevel.M
         });
     </script>
