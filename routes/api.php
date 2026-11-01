@@ -17,8 +17,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::get('/app-version', function () {
     return response()->json([
-        'min_version' => '1.0.0', // প্লে স্টোরে থাকা বর্তমান রিলিজ ভার্শন
-        'force_update' => true,
-        'update_url' => 'https://play.google.com/store/apps/details?id=com.orbachinujbuk.nothi_tracker'
+        'min_version'  => Cache::get('app_min_version', '1.0.0'),
+        'force_update' => (bool) Cache::get('app_force_update', true),
+        'update_url'   => Cache::get('app_update_url', 'https://play.google.com/store/apps/details?id=com.orbachinujbuk.nothi_tracker')
     ]);
 });
