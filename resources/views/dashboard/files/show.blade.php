@@ -294,7 +294,7 @@
                                                     @endif
 
                                                     <!-- তীর চিহ্ন -->
-                                                    <i class="fas fa-arrow-right mx-1" style="font-size: 11px;"></i>
+                                                    <i class="fas fa-arrow-right mx-1" style="font-size: 12px;"></i>
 
                                                     <!-- প্রাপক (To User) -->
                                                     {{ $movement->toUser->name ?? 'অজ্ঞাত' }}
