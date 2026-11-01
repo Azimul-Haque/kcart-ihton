@@ -18,15 +18,15 @@
         }
 
         .header { text-align: center; border-bottom: 1px solid #000; padding-bottom: 3px; margin-bottom: 4px; }
-        .header h3 { font-size: 13.5px; font-weight: bold; line-height: 1.15; }
-        .header h4 { font-size: 10.5px; font-weight: bold; }
-        .header p { font-size: 9.5px; border-top: 1px dashed #000; margin-top: 2px; padding-top: 2px; font-weight: bold; }
+        .header h3 { font-size: 14px; font-weight: bold; line-height: 1.15; }
+        .header h4 { font-size: 11px; font-weight: bold; }
+        .header p { font-size: 10px; border-top: 1px dashed #000; margin-top: 2px; padding-top: 2px; font-weight: bold; }
 
         .info-table { width: 100%; border-collapse: collapse; }
         .info-table td { 
             padding: 2.5px 0; 
             vertical-align: top; 
-            font-size: 10.5px; 
+            font-size: 11px; 
             line-height: 1.25; 
             border-bottom: 1px dotted #ccc; 
             word-break: break-word;
