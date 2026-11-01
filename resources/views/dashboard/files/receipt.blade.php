@@ -22,7 +22,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 4px;
+            gap: 2px;
             width: 100%;
         }
 
