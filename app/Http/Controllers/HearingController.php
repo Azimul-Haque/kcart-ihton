@@ -132,7 +132,7 @@ class HearingController extends Controller
     {
         // Format date and case number in Bangla
         $formattedDate = bangla(date('d/m/Y', strtotime($nextDate)));
-        $caseNo = !empty($file->case_number) ? bangla($file->case_number) : 'রুজুকৃত';
+        $caseNo = !empty($file->case_number) ? bangla($file->case_number) : 'অরুজুকৃত';
 
         // 📩 Optimized SMS Content (Under 70 Unicode chars = 1 SMS credit)
         $message = "ভূমি অফিস ভৈরব: মামলা নং {$caseNo} এর পরবর্তী তারিখ {$formattedDate}।";
