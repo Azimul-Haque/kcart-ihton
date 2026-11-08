@@ -136,7 +136,7 @@ class HearingController extends Controller
         $caseNo = !empty($file->case_number) ? bangla($file->case_number) : 'অরুজুকৃত';
 
         // 📩 Optimized SMS Content (Under 70 Unicode chars = 1 SMS credit)
-        $message = "ভূমি অফিস ভৈরব: মামলা নং {$caseNo} এর পরবর্তী তারিখ {$formattedDate}।";
+        $message = "ভূমি অফিস ভৈরব: মামলা নং {$caseNo}। পরবর্তী তারিখ {$formattedDate}।";
 
         // Collect recipient numbers and filter out empty or duplicate entries
         $recipients = array_unique(array_filter([
