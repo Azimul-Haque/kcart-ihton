@@ -130,18 +130,55 @@ class HearingController extends Controller
      */
     private function sendSmsNotification(File $file, $nextDate)
     {
+        // Format date and case number in Bangla
         $formattedDate = bangla(date('d/m/Y', strtotime($nextDate)));
-        $caseNo = $file->case_number ? bangla($file->case_number) : 'রুজুকৃত';
-        
-        $message = "উপজেলা ভূমি অফিস, ভৈরব: আপনার মোকদ্দমা নং {$caseNo} এর পরবর্তী ধার্য তারিখ {$formattedDate}।";
+        $caseNo = !empty($file->case_number) ? bangla($file->case_number) : 'রুজুকৃত';
 
-        // Bulk SMS Gateway Integration (e.g., BDBulkSMS / SMSQ)
-        if (!empty($file->badi_mobile)) {
-            // Http::post('SMS_GATEWAY_URL', ['number' => $file->badi_mobile, 'text' => $message]);
+        // 📩 Optimized SMS Content (Under 70 Unicode chars = 1 SMS credit)
+        $message = "ভূমি অফিস ভৈরব: মামলা নং {$caseNo} এর পরবর্তী তারিখ {$formattedDate}।";
+
+        // Collect recipient numbers and filter out empty or duplicate entries
+        $recipients = array_unique(array_filter([
+            $file->badi_mobile,
+            $file->bibadi_mobile,
+        ]));
+
+        if (empty($recipients)) {
+            return;
         }
 
-        if (!empty($file->bibadi_mobile)) {
-            // Http::post('SMS_GATEWAY_URL', ['number' => $file->bibadi_mobile, 'text' => $message]);
+        $url = config('sms.url2');
+        $apiKey = config('sms.api_key');
+        $senderId = config('sms.senderid');
+
+        foreach ($recipients as $number) {
+            try {
+                $response = Http::asForm()
+                    ->withoutVerifying() // Equivalent to CURLOPT_SSL_VERIFYPEER = false
+                    ->post($url, [
+                        'api_key'  => $apiKey,
+                        'senderid' => $senderId,
+                        'number'   => $number,
+                        'message'  => $message,
+                    ]);
+
+                if ($response->successful()) {
+                    $jsonResponse = $response->json();
+                    $code = $jsonResponse['response_code'] ?? null;
+
+                    if ($code == 202) {
+                        Log::info("Hearing SMS sent successfully to {$number} for File ID: {$file->id}");
+                    } elseif ($code == 1007) {
+                        Log::warning("Insufficient SMS Balance while sending to {$number}");
+                    } else {
+                        Log::error("SMS Gateway Error ({$code}) for number: {$number}");
+                    }
+                } else {
+                    Log::error("SMS HTTP Request failed for number: {$number}");
+                }
+            } catch (\Exception $e) {
+                Log::error("SMS Dispatch Exception for {$number}: " . $e->getMessage());
+            }
         }
     }
 
