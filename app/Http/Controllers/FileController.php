@@ -116,7 +116,7 @@ class FileController extends Controller
 
     public function edit(File $file)
     {
-        $users = User::orderBy('name')->get();
+        $users = User::orderBy('id', 'asc')->get();
         return view('dashboard.files.edit', compact('file', 'users'));
     }
 
