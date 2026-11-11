@@ -228,8 +228,6 @@
                                     <td class="text-right">
                                         <div class="btn-group">
                                             <!-- শুনানি বাটন -->
-                                            
-
                                             @if(Auth::user()->role == 'admin')
                                             <a href="{{ route('files.show', $file->id) }}" class="btn btn-success btn-sm" title="শুনানি গ্রহন ও আদেশ লিখুন">
                                                 <i class="fas fa-gavel"></i> শুনানি
