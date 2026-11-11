@@ -149,6 +149,7 @@ class FileController extends Controller
             'remarks'    => 'nullable|string'
         ]);
 
+        // ১. মুভমেন্ট লগ তৈরি
         FileMovement::create([
             'file_id'      => $file->id,
             'from_user_id' => Auth::id(),
@@ -157,7 +158,18 @@ class FileController extends Controller
             'remarks'      => $request->remarks,
         ]);
 
+        // ২. কারেন্ট ডেস্ক আপডেট
         $file->update(['current_desk_id' => $request->to_user_id]);
+
+        // 🔔 ৩. প্রাপক ইউজারকে OneSignal পুশ নোটিফিকেশন পাঠানো
+        $targetUser = User::find($request->to_user_id);
+        if ($targetUser && !empty($targetUser->onesignal_id)) {
+            $caseNo = $file->case_number ? bangla($file->case_number) : 'রুজুকৃত';
+            $title = "নতুন নথি গ্রহণ";
+            $message = "নথি নং {$caseNo} আপনার ডেস্কে প্রেরিত হয়েছে।";
+
+            $this->sendOneSignalPush($targetUser->onesignal_id, $title, $message);
+        }
 
         return back()->with('success', 'নথিটি সফলভাবে ফরোয়ার্ড করা হয়েছে।');
     }
