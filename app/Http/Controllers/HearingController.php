@@ -31,7 +31,7 @@ class HearingController extends Controller
         View::share('unresolvedmessagecount', $unresolvedmessagecount);
 
         $this->middleware('auth');
-        $this->middleware(['admin'])->only('todayHearings', 'store', 'destroy', 'sendSmsNotification');
+        $this->middleware(['admin'])->only('todayHearings', 'store', 'destroy', 'sendSmsNotification', 'downloadPdf');
         
     }
     /**
