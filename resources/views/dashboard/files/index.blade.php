@@ -228,9 +228,13 @@
                                     <td class="text-right">
                                         <div class="btn-group">
                                             <!-- শুনানি বাটন -->
+                                            
+
+                                            @if($file->current_desk_id == Auth::id() || Auth::user()->role == 'admin')
                                             <a href="{{ route('files.show', $file->id) }}" class="btn btn-success btn-sm" title="শুনানি গ্রহন ও আদেশ লিখুন">
                                                 <i class="fas fa-gavel"></i> শুনানি
                                             </a>
+                                            @endif
 
                                             <!-- নথির তথ্য এডিট বাটন -->
                                             <a href="{{ route('files.edit', $file->id) }}" class="btn btn-outline-primary btn-sm" title="তথ্য সংশোধন করুন">
