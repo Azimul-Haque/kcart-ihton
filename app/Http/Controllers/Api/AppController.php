@@ -15,6 +15,8 @@ use App\Traits\SendsOneSignalPush; // 🚀 ১. Trait Import
 
 class AppController extends Controller
 {
+    use SendsOneSignalPush; // 🚀 ২. Trait Use করুন
+    
     // ১. লগইন (মোবাইল ও পাসওয়ার্ড দিয়ে)
     public function login(Request $request)
     {
