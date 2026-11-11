@@ -21,6 +21,8 @@ use PDF;
 
 class HearingController extends Controller
 {
+    use SendsOneSignalPush; // 🚀 ২. Trait Use করুন
+    
     public function __construct()
     {
         parent::__construct();

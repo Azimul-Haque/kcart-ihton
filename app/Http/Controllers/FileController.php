@@ -16,6 +16,8 @@ use View;
 
 class FileController extends Controller
 {
+    use SendsOneSignalPush; // 🚀 ২. Trait Use করুন
+    
     public function __construct()
     {
         parent::__construct();
