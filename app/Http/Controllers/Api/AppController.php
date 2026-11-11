@@ -49,12 +49,18 @@ class AppController extends Controller
         ]);
 
         $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['message' => 'Unauthenticated user'], 401);
+        }
+
         $user->onesignal_id = $request->onesignal_id;
         $user->save();
 
         return response()->json([
             'success' => true,
-            'message' => 'OneSignal ID আপডেট হয়েছে।'
+            'message' => 'OneSignal ID আপডেট হয়েছে।',
+            'saved_id' => $user->onesignal_id
         ]);
     }
 
