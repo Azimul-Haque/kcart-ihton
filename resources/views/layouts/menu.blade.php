@@ -15,12 +15,14 @@
 </li>
 
 <!-- আজকের শুনানি (এসি ল্যান্ড বা দায়িত্বপ্রাপ্তদের জন্য) -->
+@if(Auth::user()->role == 'admin')
 <li class="nav-item">
     <a href="{{ route('hearings.today') }}" class="nav-link {{ Route::is('hearings.today') ? 'active' : '' }}">
         <i class="nav-icon fas fa-gavel text-primary"></i>
         <p>আজকের শুনানি</p>
     </a>
 </li>
+@endif
 
 <!-- নথি ব্যবস্থাপনা (ট্রি-ভিউ / ড্রপডাউন) -->
 <li class="nav-item {{ Request::is('dashboard/files*') && !Route::is('files.my_desk') ? 'menu-open' : 'menu-open' }}">
