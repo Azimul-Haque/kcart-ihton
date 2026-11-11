@@ -73,7 +73,6 @@ class HearingController extends Controller
             'to_user_id'        => 'nullable|exists:users,id', // অন্য ডেস্কে ফরোয়ার্ড করার জন্য
             'send_sms'          => 'nullable|boolean'
         ], [
-            // কাস্টম এরর মেসেজ (বাংলায়)
             'next_hearing_date.required' => 'পরবর্তী ধার্য তারিখ নির্বাচন করা বাধ্যতামূলক!',
             'next_hearing_date.date'     => 'পরবর্তী ধার্য তারিখটি সঠিক তারিখ হতে হবে!',
         ]);
@@ -98,9 +97,19 @@ class HearingController extends Controller
                 'file_id'      => $file->id,
                 'from_user_id' => Auth::id(),
                 'to_user_id'   => $targetDesk,
-                'is_received'  => false, // প্রাপকের মোবাইল অ্যাপ স্ক্যানের অপেক্ষায় থাকবে
-                'remarks'      => 'আদেশ প্রদানপূর্বক নথি স্থানান্তরিত করা হয়েছে'
+                'is_received'  => false, // প্রাপকের মোবাইল অ্যাপ স্ক্যানের অপেক্ষায় থাকবে
+                'remarks'      => 'আদেশ প্রদানপূর্বক নথি স্থানান্তরিত করা হয়েছে'
             ]);
+
+            // 🔔 প্রাপক ইউজারকে OneSignal পুশ নোটিফিকেশন পাঠানো
+            $targetUser = User::find($targetDesk);
+            if ($targetUser && !empty($targetUser->onesignal_id)) {
+                $caseNo = $file->case_number ? bangla($file->case_number) : 'রুজুকৃত';
+                $title = "নতুন নথি গ্রহণ";
+                $message = "আদেশ প্রদানপূর্বক নথি নং {$caseNo} আপনার ডেস্কে প্রেরিত হয়েছে।";
+
+                $this->sendOneSignalPush($targetUser->onesignal_id, $title, $message);
+            }
         }
 
         // ৩. মূল নথির স্ট্যাটাস, ধার্য তারিখ ও বর্তমান অবস্থান আপডেট
@@ -110,7 +119,7 @@ class HearingController extends Controller
             'current_desk_id'   => $targetDesk,
         ]);
 
-        // ৪. এসএমএস পাঠানো (যদি টিক দেওয়া থাকে)
+        // ৪. এসএমএস পাঠানো (যদি টিক দেওয়া থাকে)
         if ($request->boolean('send_sms') && $request->next_hearing_date) {
             $this->sendSmsNotification($file, $request->next_hearing_date);
             $hearing->update(['sms_sent' => true]);
