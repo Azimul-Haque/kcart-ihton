@@ -238,7 +238,7 @@ class FileController extends Controller
         $this->applyFilters($query, $request);
 
         $files = $query->latest()->paginate(15)->withQueryString();
-        $users = User::orderBy('name')->get();
+        $users = User::orderBy('id', 'asc')->get();
 
         return view('dashboard.files.index', compact('files', 'users'))->with('isArchived', true);
     }
