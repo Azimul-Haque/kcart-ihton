@@ -66,7 +66,8 @@
 
                                 <td>
                                     <span class="text-dark small font-weight-bold">
-                                        <i class="fas fa-phone-alt mr-1 text-muted"></i> {{ bangla($user->mobile) }}
+                                        <i class="fas fa-phone-alt mr-1 text-muted"></i> {{ bangla($user->mobile) }}<br/>
+                                        
                                     </span>
                                 </td>
 
