@@ -67,7 +67,7 @@
                                 <td>
                                     <span class="text-dark small font-weight-bold">
                                         <i class="fas fa-phone-alt mr-1 text-muted"></i> {{ bangla($user->mobile) }}<br/>
-                                        <small>OneSignal ID: {{ bangla($user->filesOnDesk->count() ?? 0) }}</small>
+                                        <small>OneSignal ID: {{ $user->filesOnDesk->count() ?? '' }}</small>
                                     </span>
                                 </td>
 
