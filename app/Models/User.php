@@ -20,7 +20,7 @@ class User extends Authenticatable
         'designation',
         'email',
         'password',
-        'onesignal_id'
+        'onesignal_id',
     ];
 
     protected $hidden = [
