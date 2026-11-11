@@ -13,6 +13,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/file/{file_id}/receive', [AppController::class, 'receiveFile']);
     Route::post('/file/{file_id}/forward', [AppController::class, 'forwardFile']);
     Route::post('/logout', [AppController::class, 'logout']);
+    Route::post('/update-onesignal-id', [AppController::class, 'updateOnesignalId']);
 });
 
 Route::get('/app-version', function () {

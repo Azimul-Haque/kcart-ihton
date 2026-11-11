@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\File;
 use App\Models\FileMovement;
@@ -31,21 +33,37 @@ class AppController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'designation' => $user->designation ?? 'অফিস স্টাফ',
+                'onesignal_id' => $user->onesignal_id ?? null,
             ]
         ]);
     }
 
-    // ২. ড্যাশবোর্ড সামারি (নিষ্পত্তিকৃত ফাইল ট্রানজিট ও মূল হিসাব থেকে পুরোপুরি মুক্ত)
+    // 🚀 ২. OneSignal ID সেভ/আপডেট করা
+    public function updateOnesignalId(Request $request)
+    {
+        $request->validate([
+            'onesignal_id' => 'required|string|max:191'
+        ]);
+
+        $user = Auth::user();
+        $user->onesignal_id = $request->onesignal_id;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'OneSignal ID আপডেট হয়েছে।'
+        ]);
+    }
+
+    // ৩. ড্যাশবোর্ড সামারি
     public function dashboard(Request $request)
     {
         $userId = Auth::id();
 
-        // ডেস্কে জমা থাকা চলমান নথি (নিষ্পত্তিকৃত ফাইল বাদ)
         $pendingFilesCount = File::where('current_desk_id', $userId)
             ->where('status', '!=', 'নিষ্পত্তি')
             ->count();
         
-        // অপেক্ষমান (রিসিভ করা হয়নি) ট্রানজিট নথি (নিষ্পত্তিকৃত ফাইল বাদ)
         $unreceivedCount = FileMovement::where('to_user_id', $userId)
             ->where('is_received', false)
             ->whereHas('file', function ($q) {
@@ -53,7 +71,6 @@ class AppController extends Controller
             })
             ->count();
 
-        // ডেস্কে ১৪+ দিন ঝুলন্ত ফাইলের সংখ্যা (রিয়েল-টাইম এজিং ক্যালকুলেশন)
         $fourteenDaysAgo = now()->subDays(14);
         $overdueCount = File::where('current_desk_id', $userId)
             ->where('status', '!=', 'নিষ্পত্তি')
@@ -82,12 +99,11 @@ class AppController extends Controller
         ]);
     }
 
-    // ৩. আমার ডেস্ক (চলমান ইনকামিং ট্রানজিট ও অন-ডেস্ক ফাইলসমূহ)
+    // ৪. আমার ডেস্ক
     public function myDesk(Request $request)
     {
         $userId = Auth::id();
         
-        // ১. অপেক্ষমান (Incoming) ফাইলসমূহ (নিষ্পত্তিকৃত ফাইল বাদ)
         $incoming = FileMovement::where('to_user_id', $userId)
             ->where('is_received', false)
             ->whereHas('file', function ($q) {
@@ -99,7 +115,6 @@ class AppController extends Controller
 
         $incomingFileIds = $incoming->pluck('file_id')->toArray();
 
-        // ২. রিসিভ করা ডেস্কে থাকা ফাইলসমূহ (নিষ্পত্তিকৃত ফাইল বাদ)
         $onDesk = File::where('current_desk_id', $userId)
             ->where('status', '!=', 'নিষ্পত্তি')
             ->whereNotIn('id', $incomingFileIds) 
@@ -113,7 +128,7 @@ class AppController extends Controller
         ]);
     }
 
-    // ৪. QR স্ক্যান করার পর নথির তথ্য
+    // ৫. QR স্ক্যান করার পর নথির তথ্য
     public function fileDetails($uuid)
     {
         $file = File::where('uuid', $uuid)->with('currentDesk')->first();
@@ -124,12 +139,12 @@ class AppController extends Controller
         return response()->json(['file' => $file]);
     }
 
-    // ৫. নথি রিসিভ করা (QR স্ক্যান করে বা ম্যানুয়ালি)
+    // ৬. নথি রিসিভ করা
     public function receiveFile(Request $request, $file_id)
     {
         $file = File::find($file_id);
         if ($file && $file->status == 'নিষ্পত্তি') {
-            return response()->json(['message' => 'এই নথিটি ইতোমধ্যে নিষ্পত্তি ও আর্কাইভ করা হয়েছে।'], 400);
+            return response()->json(['message' => 'এই নথিটি ইতোমধ্যে নিষ্পত্তি ও আর্কাইভ করা হয়েছে।'], 400);
         }
 
         $movement = FileMovement::where('file_id', $file_id)
@@ -143,7 +158,6 @@ class AppController extends Controller
                 'received_at' => now(),
             ]);
 
-            // নথির বর্তমান ডেস্ক আপডেট নিশ্চিত করা
             File::where('id', $file_id)->update(['current_desk_id' => Auth::id()]);
 
             return response()->json(['message' => 'নথিটি সফলভাবে রিসিভ করা হয়েছে।']);
@@ -152,7 +166,7 @@ class AppController extends Controller
         return response()->json(['message' => 'এই নথিটি আপনার ডেস্কে অপেক্ষমান নেই।'], 400);
     }
 
-    // ৬. নথি অন্য ডেস্কে পাঠানো ও মন্তব্য
+    // 🚀 ৭. নথি অন্য ডেস্কে পাঠানো ও OneSignal নোটিফিকেশন সেন্ড
     public function forwardFile(Request $request, $file_id)
     {
         $request->validate(['to_user_id' => 'required', 'remarks' => 'nullable']);
@@ -163,11 +177,11 @@ class AppController extends Controller
             return response()->json(['message' => 'নিষ্পত্তিকৃত নথি ফরোয়ার্ড করা সম্ভব নয়।'], 400);
         }
 
-        // নিরাপত্তা চেক: ফাইলটি বর্তমানে ইউজারের ডেস্কে আছে কিনা (অথবা এডমিন)
         if ($file->current_desk_id != Auth::id() && Auth::user()->role != 'admin') {
             return response()->json(['message' => 'এই নথিটি আপনার ডেস্কে নেই, ফরোয়ার্ড করা যাবে না।'], 403);
         }
         
+        // ১. ট্রানজিট তৈরি
         FileMovement::create([
             'file_id' => $file->id,
             'from_user_id' => Auth::id(),
@@ -176,15 +190,45 @@ class AppController extends Controller
             'remarks' => $request->remarks,
         ]);
 
+        // ২. কারেন্ট ডেস্ক আপডেট
         $file->update(['current_desk_id' => $request->to_user_id]);
+
+        // 🔔 ৩. টার্গেট ইউজারকে OneSignal পুশ নোটিফিকেশন পাঠানো
+        $targetUser = User::find($request->to_user_id);
+        if ($targetUser && !empty($targetUser->onesignal_id)) {
+            $caseNo = $file->case_number ? bangla($file->case_number) : 'রুজুকৃত';
+            $title = "নতুন নথি গ্রহণ";
+            $message = "নথি নং {$caseNo} আপনার ডেস্কে প্রেরিত হয়েছে।";
+
+            $this->sendOneSignalPush($targetUser->onesignal_id, $title, $message);
+        }
 
         return response()->json(['message' => 'নথিটি ফরোয়ার্ড করা হয়েছে।']);
     }
 
-    // ৭. লগআউট
+    // ৮. লগআউট
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'লগআউট সফল।']);
+    }
+
+    // 🔔 হেল্পার মেথড: OneSignal REST API কল
+    private function sendOneSignalPush($onesignalId, $title, $message)
+    {
+        try {
+            Http::withHeaders([
+                'Authorization' => 'Basic ' . config('services.onesignal.rest_api_key', env('ONESIGNAL_REST_API_KEY')),
+                'Accept'        => 'application/json',
+                'Content-Type'  => 'application/json',
+            ])->post('https://onesignal.com/api/v1/notifications', [
+                'app_id'             => config('services.onesignal.app_id', env('ONESIGNAL_APP_ID')),
+                'include_player_ids' => [$onesignalId],
+                'headings'           => ['en' => $title],
+                'contents'           => ['en' => $message],
+            ]);
+        } catch (\Exception $e) {
+            Log::error("OneSignal Push Error: " . $e->getMessage());
+        }
     }
 }
