@@ -94,7 +94,7 @@ class DashboardController extends Controller
 
         foreach ($deskPendingData as $data) {
             // Using designation or name for the chart labels
-            $label = $data->currentDesk ? $data->currentDesk->designation;
+            $label = $data->currentDesk ? $data->currentDesk->designation : 'Unknown';
             $deskNames[] = $label;
             $deskPendingCounts[] = $data->total;
         }
