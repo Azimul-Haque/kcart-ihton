@@ -22,7 +22,7 @@ use PDF;
 class HearingController extends Controller
 {
     use SendsOneSignalPush; // 🚀 Trait Use করুন
-    
+
     public function __construct()
     {
         parent::__construct();
@@ -108,7 +108,7 @@ class HearingController extends Controller
             $targetUser = User::find($targetDesk);
             if ($targetUser && !empty($targetUser->onesignal_id)) {
                 $caseNo = $file->case_number ? bangla($file->case_number) : 'রুজুকৃত';
-                $title = "নতুন নথি গ্রহণ";
+                $title = "নতুন নথি প্রাপ্ত";
                 $message = "আদেশ প্রদানপূর্বক নথি নং {$caseNo} আপনার ডেস্কে প্রেরিত হয়েছে।";
 
                 $this->sendOneSignalPush($targetUser->onesignal_id, $title, $message);
