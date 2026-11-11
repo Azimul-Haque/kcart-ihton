@@ -206,7 +206,7 @@ class AppController extends Controller
         $targetUser = User::find($request->to_user_id);
         if ($targetUser && !empty($targetUser->onesignal_id)) {
             $caseNo = $file->case_number ? bangla($file->case_number) : 'রুজুকৃত';
-            $title = "নতুন নথি গ্রহণ";
+            $title = "নতুন নথি প্রাপ্ত";
             $message = "নথি নং {$caseNo} আপনার ডেস্কে প্রেরিত হয়েছে।";
 
             $this->sendOneSignalPush($targetUser->onesignal_id, $title, $message);
