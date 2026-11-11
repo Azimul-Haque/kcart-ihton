@@ -61,7 +61,7 @@ class FileController extends Controller
     public function show(File $file)
     {
         $file->load(['currentDesk', 'movements.fromUser', 'movements.toUser', 'hearings.conductor']);
-        $users = User::orderBy('name')->orderBy('id', 'asc')get();
+        $users = User::orderBy('name')->orderBy('id', 'asc')->get();
 
         return view('dashboard.files.show', compact('file', 'users'));
     }
