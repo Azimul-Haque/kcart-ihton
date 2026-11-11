@@ -257,7 +257,7 @@
                                             @endif
 
                                             <!-- ফাইল চূড়ান্ত নিষ্পত্তি বাটন -->
-                                            @if($file->status != 'নিষ্পত্তি' && ($file->current_desk_id == Auth::id() || Auth::user()->role == 'admin'))
+                                            @if($file->status != 'নিষ্পত্তি' && Auth::user()->role == 'admin')
                                             <button type="button" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#disposeModal{{ $file->id }}" title="নথি চূড়ান্ত নিষ্পত্তি করুন">
                                                 <i class="fas fa-check-double"></i> নিষ্পত্তি
                                             </button>
