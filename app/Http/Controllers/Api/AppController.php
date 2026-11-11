@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\File;
 use App\Models\FileMovement;
+use App\Traits\SendsOneSignalPush; // 🚀 ১. Trait Import
 
 class AppController extends Controller
 {
