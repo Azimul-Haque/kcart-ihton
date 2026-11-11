@@ -35,7 +35,7 @@ return [
     ],
     
     'onesignal' => [
-        'secret' => env('TURNSTILE_SECRET_KEY'),
+        'rest_api_key' => env('TURNSTILE_SECRET_KEY'),
     ],
 
 ];
